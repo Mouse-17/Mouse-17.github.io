@@ -30,6 +30,7 @@
             <tr>
               <th class="checkbox-col"><input class="master-checkbox" type="checkbox"></th>
               <th class="product-col">Tên sản phẩm</th>
+              <th class="quantity-col">Số lượng</th>
               <th class="price-col">Giá</th>
               <th class="description-col">Mô tả</th>
               <th class="status-col">Trạng thái</th>
@@ -40,14 +41,15 @@
             <tr v-for="product in products" :key="product.id">
               <td><input type="checkbox"></td>
               <td class="product-info">
-                <img :src="product.image" alt="" class="product-thumbnail">
+                <img :src="apiURL + product.image" alt="" class="product-thumbnail" />
                 <span class="product-name">{{ product.name }}</span>
               </td>
+              <td class="quantity">{{ product.quantity }}</td>
               <td class="price">{{ product.price }}</td>
               <td class="description">{{ product.description }}</td>
               <td class="status">
                   <span
-                      :class="['status-badge', product.status]"
+                      :class="['status-badge', product.status === 1 ? 'in-stock' : 'discontinued']"
                       title="Click để thay đổi trạng thái"
                       @click="changeStatus(product)"
                   >
@@ -70,18 +72,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
 import axios from 'axios';
+const apiURL = import.meta.env.VITE_API_URL;
 
-// Mảng các trạng thái sản phẩm
-const statuses = [
-  { id: 'in-stock', name: 'Còn hàng' },
-  { id: 'out-of-stock', name: 'Hết hàng' },
-  { id: 'sale', name: 'Giảm giá' },
-  { id: 'new', name: 'Mới về' },
-  { id: 'discontinued', name: 'Ngừng kinh doanh' }
-];
+// Mảng trạng thái sản phẩm
+const STATUS_TYPES = {
+  0: 'Ngừng kinh doanh',
+  1: 'Còn hàng',
+};
 
 // Dữ liệu sản phẩm
 const products = ref([]);
@@ -102,11 +101,12 @@ async function fetchProducts() {
     if (response.data.status === 'success') {
       products.value = response.data.data.map(product => ({
         id: product.id,
-        name: product.name,
-        price: `${parseFloat(product.price).toLocaleString()}đ`,
-        status: product.status,
-        image: product.image || 'https://via.placeholder.com/50',
-        description: product.description,
+        name: product.Ten_san_pham,
+        price: `${parseFloat(product.Gia).toLocaleString()}đ`,
+        description: product.Mo_ta,
+        image: product.Anh_dai_dien ? `/images/products/${product.Anh_dai_dien}` : 'https://via.placeholder.com/50',
+        status: product.Trang_thai,
+        quantity: product.So_luong,
       }));
     }
   } catch (err) {
@@ -117,17 +117,14 @@ async function fetchProducts() {
   }
 }
 
-// Hàm thay đổi trạng thái khi click
+// Hàm thay đổi trạng thái sản phẩm
 function changeStatus(product) {
-  const currentIndex = statuses.findIndex(s => s.id === product.status);
-  const nextIndex = (currentIndex + 1) % statuses.length;
-  product.status = statuses[nextIndex].id;
+  product.status = product.status === 1 ? 0 : 1; // Chuyển đổi giữa 'Còn hàng' và 'Ngừng kinh doanh'
 }
 
-// Hàm lấy tên trạng thái từ id
-function getStatusName(statusId) {
-  const status = statuses.find(s => s.id === statusId);
-  return status ? status.name : '';
+// Hàm lấy tên trạng thái từ ID
+function getStatusName(status) {
+  return STATUS_TYPES[status] || 'Không xác định';
 }
 
 // Tải dữ liệu khi component được mount
