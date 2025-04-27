@@ -78,7 +78,7 @@ const fetchUser = async () => {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
     });
-    user.value = response.data;
+    user.value = response.data.user;
   } catch (err) {
     console.error("Lỗi khi tải thông tin người dùng:", err);
     alert("Không thể tải thông tin người dùng. Vui lòng thử lại sau.");
@@ -96,7 +96,7 @@ const handleEditUser = async () => {
       },
     });
     alert("Cập nhật thông tin người dùng thành công!");
-    window.location.href = "/admin/users";
+    window.location.href = "/admin/quanlinguoidung";
   } catch (err) {
     console.error("Lỗi khi cập nhật người dùng:", err);
     alert("Không thể cập nhật thông tin. Vui lòng thử lại sau.");

@@ -67,7 +67,7 @@ const handleAddUser = async () => {
       },
     });
     alert("Thêm người dùng thành công!");
-    window.location.href = "/admin/users";
+    window.location.href = "/admin/quanlinguoidung";
   } catch (err) {
     console.error("Lỗi khi thêm người dùng:", err);
     alert("Không thể thêm người dùng. Vui lòng thử lại sau.");
