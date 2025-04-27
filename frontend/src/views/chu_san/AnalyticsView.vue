@@ -8,14 +8,6 @@ import Sidebar from './partials/Sidebar.vue'
 const router = useRouter();
 const authStore = useAuthStore();
 // Hàm đăng xuất
-const handleLogout = async () => {
-  try {
-    await authStore.logout();
-    router.push("/dangnhap");
-  } catch (error) {
-    console.error("Lỗi khi đăng xuất:", error);
-  }
-};
 
 // biểu đồ doanh thu
 const revenueCanvas = ref<HTMLCanvasElement | null>(null);

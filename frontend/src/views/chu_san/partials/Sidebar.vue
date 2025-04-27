@@ -62,8 +62,11 @@
 </template>
 <script setup lang="ts">
 import {ref} from "vue";
-import {RouterLink} from "vue-router";
+import {RouterLink, useRouter} from "vue-router";
+import { useAuthStore } from "../../../stores/auth";
 
+const authStore = useAuthStore();
+const router = useRouter();
 const selectedItem = ref(0);
 const menuItems = ref([
   { text: "Thống kê", icon: "bi bi-bar-chart", link: "/chusan" },
@@ -72,5 +75,12 @@ const menuItems = ref([
   { text: "Khách hàng thân thiết", icon: "bi bi-hearts", link: "/khyeuthich" },
   { text: "Cài đặt", icon: "bi bi-gear", link: "/caidat" },
 ]);
-
+const handleLogout = async () => {
+  try {
+    await authStore.logout();
+    router.push("/dangnhap");
+  } catch (error) {
+    console.error("Lỗi khi đăng xuất:", error);
+  }
+};
 </script>
