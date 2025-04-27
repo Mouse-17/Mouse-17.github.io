@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class DonHangChiTiet extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'don_hang_chi_tiet';
     protected $primaryKey = 'id';
     public $timestamps = true;
-    
+
     protected $fillable = [
         'ID_DH',
         'ID_SP',
         'So_luong',
         'Thanh_tien'
     ];
-    
+
     /**
      * Get the order that owns the item
      */
@@ -27,15 +27,15 @@ class DonHangChiTiet extends Model
     {
         return $this->belongsTo(DonHang::class, 'ID_DH', 'id');
     }
-    
+
     /**
      * Get the product
      */
     public function sanPham()
     {
-        return $this->belongsTo(SanPham::class, 'ID_SP', 'id');
+        return $this->belongsTo(SanP::class, 'ID_SP', 'id');
     }
-    
+
     /**
      * Get the color
      */
@@ -43,7 +43,7 @@ class DonHangChiTiet extends Model
     {
         return $this->belongsTo(MauSac::class, 'id_mau', 'id');
     }
-    
+
     /**
      * Get the size
      */
@@ -51,4 +51,4 @@ class DonHangChiTiet extends Model
     {
         return $this->belongsTo(Size::class, 'id_size', 'id');
     }
-} 
+}

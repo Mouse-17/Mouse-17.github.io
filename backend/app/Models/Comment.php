@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'binh_luan';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
         'id_kh',
         'id_sp',
@@ -20,7 +20,7 @@ class Comment extends Model
         'Noi_dung',
         'Trang_thai'
     ];
-    
+
     /**
      * Get the user who made the comment
      */
@@ -28,7 +28,7 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class, 'id_kh');
     }
-    
+
     /**
      * Get the post associated with the comment
      */
@@ -36,15 +36,15 @@ class Comment extends Model
     {
         return $this->belongsTo(Post::class, 'bai_viet_id');
     }
-    
+
     /**
      * Get the product associated with the comment
      */
     public function product()
     {
-        return $this->belongsTo(SanPham::class, 'id_sp');
+        return $this->belongsTo(SanP::class, 'id_sp');
     }
-    
+
     /**
      * Get the field associated with the comment
      */

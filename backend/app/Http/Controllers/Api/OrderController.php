@@ -11,7 +11,7 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\SanPham;
+use App\Models\SanP;
 use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
@@ -36,7 +36,7 @@ class OrderController extends Controller
 
             // Lấy thông tin user nếu đã đăng nhập
             $userId = Auth::id();
-            
+
             // Lấy session ID từ cookie hoặc header
             $cartSessionId = $request->cookie('cart_session'); // Thử lấy từ cookie
             if (!$cartSessionId) {
@@ -45,7 +45,7 @@ class OrderController extends Controller
 
             // Nếu không có cart_session, lấy session Laravel
             $sessionId = $cartSessionId ?: session()->getId();
-            
+
             // Debug thông tin session
             \Log::info('Order Creation - Session Info', [
                 'cartSessionId' => $cartSessionId,
@@ -54,7 +54,7 @@ class OrderController extends Controller
                 'all_cookies' => $request->cookie(),
                 'headers' => $request->headers->all()
             ]);
-            
+
             // Truy vấn cart với điều kiện có thể linh hoạt hơn
             $cart = Cart::where(function($query) use ($userId, $sessionId) {
                 if ($userId) {
@@ -71,7 +71,7 @@ class OrderController extends Controller
                     'userId' => $userId,
                     'sessionId' => $sessionId
                 ]);
-                
+
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Không tìm thấy giỏ hàng',
@@ -124,11 +124,11 @@ class OrderController extends Controller
 
             try {
                 $order->save();
-                
+
                 // Tạo sản phẩm đầu tiên làm sản phẩm chính của đơn hàng
                 if ($cartItems->count() > 0) {
                     $firstItem = $cartItems->first();
-                    $mainProduct = SanPham::find($firstItem->id_sp);
+                    $mainProduct = SanP::find($firstItem->id_sp);
                     if ($mainProduct) {
                         $order->id_san_pham = $mainProduct->id;
                         $order->ten_san_pham = $mainProduct->Ten_san_pham;
@@ -146,9 +146,9 @@ class OrderController extends Controller
             // Thêm chi tiết đơn hàng
             foreach ($cartItems as $item) {
                 try {
-                    $product = SanPham::find($item->id_sp);
+                    $product = SanP::find($item->id_sp);
                     $productName = $product ? $product->Ten_san_pham : 'Unknown Product';
-                    
+
                     $orderItem = new OrderItem();
                     $orderItem->ID_DH = $order->id;
                     $orderItem->user_id = $userId;
@@ -161,7 +161,7 @@ class OrderController extends Controller
                     $orderItem->Thanh_tien = $item->don_gia * $item->so_luong;
                     $orderItem->hinh_anh = $product ? $product->Anh_dai_dien : null;
                     $orderItem->save();
-                    
+
                     \Log::info('Added order item', [
                         'order_id' => $order->id,
                         'product_id' => $item->id_sp,
@@ -181,7 +181,7 @@ class OrderController extends Controller
 
             // Xử lý phương thức thanh toán
             $paymentUrl = null;
-            
+
             if ($request->phuong_thuc_thanh_toan == 2) {
                 // Xử lý thanh toán qua ngân hàng (chuyển khoản)
                 // Trường hợp này có thể chỉ hiển thị thông tin chuyển khoản
@@ -224,7 +224,7 @@ class OrderController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'request' => $request->all()
             ]);
-            
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Đã có lỗi xảy ra: ' . $e->getMessage(),
@@ -243,17 +243,17 @@ class OrderController extends Controller
     public function getOrdersByUser()
     {
         $userId = Auth::id();
-        
+
         if (!$userId) {
             return response()->json(['error' => 'Bạn cần đăng nhập để xem đơn hàng'], 401);
         }
-        
+
         // Ghi log để debug
         \Log::info('Fetching orders for user', [
             'user_id' => $userId,
             'timestamp' => now()->format('Y-m-d H:i:s')
         ]);
-        
+
         $orders = Order::where('ID_KH', $userId)
                       ->orderBy('created_at', 'desc')
                       ->with([
@@ -262,13 +262,13 @@ class OrderController extends Controller
                         'orderItems.size'
                       ])
                       ->get();
-        
+
         // Log số lượng đơn hàng tìm thấy
         \Log::info('Orders found', [
             'count' => $orders->count(),
             'order_ids' => $orders->pluck('id')->toArray()
         ]);
-                      
+
         return response()->json([
             'status' => 'success',
             'data' => $orders,
@@ -285,7 +285,7 @@ class OrderController extends Controller
     public function getOrderDetail($id)
     {
         $userId = Auth::id();
-        
+
         $order = Order::where('id', $id)
                      ->with([
                         'orderItems.product',
@@ -293,11 +293,11 @@ class OrderController extends Controller
                         'orderItems.size'
                      ])
                      ->first();
-        
+
         if (!$order) {
             return response()->json(['error' => 'Không tìm thấy đơn hàng'], 404);
         }
-        
+
         // Kiểm tra quyền truy cập
         if ($userId && $order->ID_KH != $userId) {
             return response()->json(['error' => 'Bạn không có quyền xem đơn hàng này'], 403);
@@ -309,7 +309,7 @@ class OrderController extends Controller
             'user_id' => $userId,
             'items_count' => $order->orderItems->count()
         ]);
-        
+
         return response()->json([
             'status' => 'success',
             'data' => $order,
@@ -329,21 +329,21 @@ class OrderController extends Controller
             $request->validate([
                 'trang_thai' => 'required|integer|min:1|max:5',
             ]);
-            
+
             $order = Order::findOrFail($id);
             $order->Trang_thai = $request->trang_thai;
-            
+
             if ($request->trang_thai == 5) {
                 $order->ngay_hoan_thanh = now();
             }
-            
+
             $order->save();
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cập nhật trạng thái đơn hàng thành công'
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -383,7 +383,7 @@ class OrderController extends Controller
 
             // Lấy thông tin user nếu đã đăng nhập, có thể null nếu chưa đăng nhập
             $userId = Auth::id();
-            
+
             // Tạo đơn hàng mới
             $order = new Order();
             $order->ID_KH = $userId; // Có thể null
@@ -412,12 +412,12 @@ class OrderController extends Controller
             // Thêm chi tiết đơn hàng
             $tongTien = 0;
             foreach ($request->direct_items as $item) {
-                $sanPham = SanPham::find($item['ID_SP']);
+                $sanPham = SanP::find($item['ID_SP']);
                 if (!$sanPham) continue;
 
                 $donGia = $item['don_gia'] ?? $sanPham->Gia ?? 0;
                 $thanhTien = $donGia * $item['So_luong'];
-                
+
                 $orderItem = new OrderItem();
                 $orderItem->ID_DH = $order->id;
                 $orderItem->user_id = $userId;
@@ -430,7 +430,7 @@ class OrderController extends Controller
                 $orderItem->don_gia = $donGia;
                 $orderItem->hinh_anh = $item['hinh_anh'] ?? ($sanPham->Anh_dai_dien ?? null);
                 $orderItem->save();
-                
+
                 $tongTien += $thanhTien;
             }
 
@@ -467,11 +467,11 @@ class OrderController extends Controller
             \Log::error('Lỗi đặt hàng trực tiếp: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Đã có lỗi xảy ra: ' . $e->getMessage()
             ], 500);
         }
     }
-} 
+}

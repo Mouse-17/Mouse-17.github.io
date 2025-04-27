@@ -19,6 +19,6 @@ class DanhMuc extends Model
 
     public function sanPham()
     {
-        return $this->hasMany(SanPham::class, 'id_danhmuc');
+        return $this->hasMany(SanP::class, 'id_danhmuc');
     }
-} 
+}

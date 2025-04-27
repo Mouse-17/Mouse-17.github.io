@@ -17,13 +17,13 @@ class SP_MauSize extends Model
     ];
 
     public function sanpham(){
-        return $this->belongsTo(SanPham::class, 'ID_SP');
+        return $this->belongsTo(SanP::class, 'ID_SP');
     }
-    
+
     public function mau(){
         return $this->belongsTo(MauSac::class, 'ID_Mau');
     }
-    
+
     public function size(){
         return $this->belongsTo(Size::class, 'ID_Kichthuoc');
     }

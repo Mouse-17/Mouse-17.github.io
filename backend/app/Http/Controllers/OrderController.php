@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\SanPham;
+use App\Models\SanP;
 use App\Models\Cart;
 use App\Models\CartItem;
 
@@ -81,7 +81,7 @@ class OrderController extends Controller
             // Lưu chi tiết đơn hàng
             if (is_array($request->items) && count($request->items) > 0) {
                 foreach ($request->items as $item) {
-                    $sanPham = SanPham::find($item['product_id']);
+                    $sanPham = SanP::find($item['product_id']);
                     if (!$sanPham) continue;
 
                     $orderItem = new OrderItem();
@@ -92,21 +92,21 @@ class OrderController extends Controller
                     $orderItem->don_gia = $item['price'];
                     $orderItem->Gia = $item['price'];
                     $orderItem->Thanh_tien = $item['price'] * $item['quantity'];
-                    
+
                     // Lưu thông tin màu và kích thước nếu có
                     if (isset($item['color_id'])) {
                         $orderItem->color_id = $item['color_id'];
                     }
-                    
+
                     if (isset($item['size_id'])) {
                         $orderItem->size_id = $item['size_id'];
                     }
-                    
+
                     // Lưu đường dẫn hình ảnh nếu có
                     if (isset($item['hinh_anh'])) {
                         $orderItem->hinh_anh = $item['hinh_anh'];
                     }
-                    
+
                     $orderItem->save();
 
                     $tongTien += $orderItem->Thanh_tien;
@@ -217,7 +217,7 @@ class OrderController extends Controller
             $limit = $request->input('limit', 10);
             $sort = $request->input('sort', 'created_at:desc');
             list($sortField, $sortDirection) = explode(':', $sort);
-            
+
             $orders = Order::with(['user'])
                 ->orderBy($sortField, $sortDirection)
                 ->limit($limit)
@@ -236,7 +236,7 @@ class OrderController extends Controller
                         'updated_at' => $order->updated_at
                     ];
                 });
-                
+
             return response()->json([
                 'status' => 'success',
                 'data' => $orders

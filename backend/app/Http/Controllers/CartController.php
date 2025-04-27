@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\CartItem;
 use App\Models\Cart;
-use App\Models\SanPham;
+use App\Models\SanP;
 use App\Models\MauSac;
 use App\Models\Size;
 
@@ -74,7 +74,7 @@ class CartController extends Controller
                 $cart->id_kh = $user_id;
                 $cart->session_id = $user_id ? null : $session_id;
                 $cart->save();
-                
+
                 if ($request->has('debug')) {
                     $debug_info['cart_created'] = [
                         'id' => $cart->id,
@@ -91,7 +91,7 @@ class CartController extends Controller
             }
 
             // Lấy thông tin sản phẩm
-            $product = SanPham::find($request->product_id);
+            $product = SanP::find($request->product_id);
             if (!$product) {
                 return response()->json([
                     'status' => 'error',
@@ -112,7 +112,7 @@ class CartController extends Controller
                 // Cập nhật số lượng nếu sản phẩm đã tồn tại
                 $cart_item->so_luong += $request->quantity;
                 $cart_item->save();
-                
+
                 if ($request->has('debug')) {
                     $debug_info['cart_item_updated'] = [
                         'id' => $cart_item->id,
@@ -129,7 +129,7 @@ class CartController extends Controller
                 $cart_item->id_size = $request->size_id;
                 $cart_item->don_gia = $product->Gia;
                 $cart_item->save();
-                
+
                 if ($request->has('debug')) {
                     $debug_info['cart_item_created'] = [
                         'id' => $cart_item->id,
@@ -142,7 +142,7 @@ class CartController extends Controller
 
             // Format dữ liệu giỏ hàng để trả về
             $result = $this->formatCartData($cart);
-            
+
             $response = response()->json([
                 'status' => 'success',
                 'message' => 'Đã thêm sản phẩm vào giỏ hàng',
@@ -155,7 +155,7 @@ class CartController extends Controller
             if (!$user_id && (!$request->cookie('cart_session') || $request->cookie('cart_session') !== $session_id)) {
                 // Đặt cookie với SameSite=None và Secure=true để hoạt động trên mọi môi trường
                 $response->cookie('cart_session', $session_id, 60 * 24 * 30, '/', null, false, false);
-                
+
                 if ($request->has('debug')) {
                     $debug_info['cookie_set'] = [
                         'name' => 'cart_session',
@@ -172,7 +172,7 @@ class CartController extends Controller
                 $debug_info['error'] = $e->getMessage();
                 $debug_info['trace'] = $e->getTraceAsString();
             }
-            
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Có lỗi xảy ra: ' . $e->getMessage(),
@@ -180,7 +180,7 @@ class CartController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Format dữ liệu giỏ hàng
      */
@@ -190,14 +190,14 @@ class CartController extends Controller
         $items = CartItem::with(['product', 'color', 'size'])
             ->where('cart_id', $cart->id)
             ->get();
-            
+
         $total_price = 0;
         $total_items = 0;
-        
+
         $formatted_items = $items->map(function ($item) use (&$total_price, &$total_items) {
             $total_price += $item->don_gia * $item->so_luong;
             $total_items += $item->so_luong;
-            
+
             // Lấy thông tin sản phẩm
             $product = $item->product;
             $product_data = [
@@ -205,7 +205,7 @@ class CartController extends Controller
                 'image' => null,
                 'current_price' => 0,
             ];
-            
+
             if ($product) {
                 $product_data = [
                     'name' => $product->Ten_san_pham,
@@ -213,7 +213,7 @@ class CartController extends Controller
                     'current_price' => (float)$product->Gia,
                 ];
             }
-            
+
             // Lấy thông tin màu sắc
             $color_data = null;
             if ($item->id_mau && $item->color) {
@@ -222,7 +222,7 @@ class CartController extends Controller
                     'name' => $item->color->Ten_mau ?? 'Màu không xác định'
                 ];
             }
-            
+
             // Lấy thông tin kích thước
             $size_data = null;
             if ($item->id_size && $item->size) {
@@ -231,7 +231,7 @@ class CartController extends Controller
                     'name' => $item->size->Ten_size ?? 'Size không xác định'
                 ];
             }
-            
+
             return [
                 'id' => $item->id,
                 'product_id' => $item->id_sp,
@@ -243,7 +243,7 @@ class CartController extends Controller
                 'size' => $size_data
             ];
         });
-        
+
         return [
             'id' => $cart->id,
             'items' => $formatted_items,
@@ -265,7 +265,7 @@ class CartController extends Controller
 
         // Lấy session_id từ cookie
         $session_id = $request->cookie('cart_session');
-        
+
         // Debug info nếu có request debug=true
         $debug_info = [];
         if ($request->has('debug')) {
@@ -298,7 +298,7 @@ class CartController extends Controller
                     $debug_info['all_carts'] = Cart::all(['id', 'id_kh', 'session_id'])->toArray();
                     $debug_info['all_cart_items'] = CartItem::all(['id', 'cart_id', 'id_sp', 'so_luong'])->toArray();
                 }
-                
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Giỏ hàng trống',
@@ -314,7 +314,7 @@ class CartController extends Controller
 
             // Format dữ liệu giỏ hàng
             $result = $this->formatCartData($cart);
-            
+
             if ($request->has('debug')) {
                 $debug_info['cart_found'] = [
                     'id' => $cart->id,
@@ -335,7 +335,7 @@ class CartController extends Controller
                 $debug_info['error'] = $e->getMessage();
                 $debug_info['trace'] = $e->getTraceAsString();
             }
-            
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Có lỗi xảy ra: ' . $e->getMessage(),
@@ -372,10 +372,10 @@ class CartController extends Controller
                     'message' => 'Không tìm thấy sản phẩm trong giỏ hàng'
                 ], 404);
             }
-            
+
             $cartItem->so_luong = $request->quantity;
             $cartItem->save();
-            
+
             // Lấy giỏ hàng để format và trả về dữ liệu mới nhất
             $cart = Cart::find($cartItem->cart_id);
             $result = $this->formatCartData($cart);
@@ -421,10 +421,10 @@ class CartController extends Controller
                     'message' => 'Không tìm thấy sản phẩm trong giỏ hàng'
                 ], 404);
             }
-            
+
             $cart_id = $cartItem->cart_id;
             $cartItem->delete();
-            
+
             // Lấy giỏ hàng để format và trả về dữ liệu mới nhất
             $cart = Cart::find($cart_id);
             $result = $this->formatCartData($cart);
@@ -500,4 +500,4 @@ class CartController extends Controller
             ], 500);
         }
     }
-} 
+}

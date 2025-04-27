@@ -22,9 +22,9 @@ class ThuongHieu extends Model
      */
     public function sanPham()
     {
-        return $this->hasMany(SanPham::class, 'id_thuonghieu');
+        return $this->hasMany(SanP::class, 'id_thuonghieu');
     }
-    
+
     /**
      * Lấy số lượng sản phẩm đang còn hàng của thương hiệu
      */
@@ -32,7 +32,7 @@ class ThuongHieu extends Model
     {
         return $this->sanPham()->where('So_luong', '>', 0)->count();
     }
-    
+
     /**
      * Scope để lấy các thương hiệu có sản phẩm
      */
@@ -42,4 +42,4 @@ class ThuongHieu extends Model
             $q->where('So_luong', '>', 0);
         });
     }
-} 
+}

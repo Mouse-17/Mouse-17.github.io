@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 
-use App\Models\SanPham;
+use App\Models\SanP;
 use App\Models\DanhMuc;
 use App\Models\ThuongHieu;
 use App\Models\SanPhamMauSize;
@@ -22,9 +22,9 @@ class ProductController extends Controller
         try {
             // Lấy trang hiện tại từ request, mặc định là 1
             $page = $request->input('trang', 1);
-            
+
             // Khởi tạo query builder
-            $query = SanPham::join('danh_muc', 'san_pham.ID_Danhmuc', '=', 'danh_muc.id')
+            $query = SanP::join('danh_muc', 'san_pham.ID_Danhmuc', '=', 'danh_muc.id')
             ->join('thuong_hieu', 'san_pham.ID_Thuonghieu', '=', 'thuong_hieu.id')
             ->leftJoin('san_pham_mau_size', 'san_pham.id', '=', 'san_pham_mau_size.ID_SP')
             ->leftJoin('danh_gia', 'san_pham.id', '=', 'danh_gia.ID_SP')
@@ -37,7 +37,7 @@ class ProductController extends Controller
                 DB::raw('COUNT(danh_gia.id) as tong_danh_gia')
             )
             ->groupBy('san_pham.id', 'thuong_hieu.Ten_thuong_hieu', 'danh_muc.Ten_danh_muc');
-        
+
 
             if (!empty($request->input('tukhoa'))) {
                 $search = $request->input('tukhoa');
@@ -50,10 +50,10 @@ class ProductController extends Controller
                 });
             }
 
-            
+
             // Phân trang
             $products = $query->paginate(9, ['*'], 'trang', $page);
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $products->items(),
@@ -78,10 +78,10 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            $products = SanPham::with(['danhMuc', 'thuongHieu'])
+            $products = SanP::with(['danhMuc', 'thuongHieu'])
                 ->orderBy('created_at', 'desc')
                 ->get();
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $products
@@ -101,7 +101,7 @@ class ProductController extends Controller
     {
         try {
             $categories = DanhMuc::all();
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $categories
@@ -121,7 +121,7 @@ class ProductController extends Controller
     {
         try {
             $brands = ThuongHieu::all();
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $brands
@@ -144,7 +144,7 @@ class ProductController extends Controller
                 'Ten_danh_muc' => 'required|string|max:255|unique:danh_muc',
                 'Mo_ta' => 'nullable|string'
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -152,12 +152,12 @@ class ProductController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             $category = DanhMuc::create([
                 'Ten_danh_muc' => $request->Ten_danh_muc,
                 'Mo_ta' => $request->Mo_ta ?? ''
             ]);
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã tạo danh mục thành công',
@@ -178,12 +178,12 @@ class ProductController extends Controller
     {
         try {
             $category = DanhMuc::findOrFail($id);
-            
+
             $validator = Validator::make($request->all(), [
                 'Ten_danh_muc' => 'required|string|max:255|unique:danh_muc,Ten_danh_muc,' . $id,
                 'Mo_ta' => 'nullable|string'
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -191,12 +191,12 @@ class ProductController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             $category->update([
                 'Ten_danh_muc' => $request->Ten_danh_muc,
                 'Mo_ta' => $request->Mo_ta ?? $category->Mo_ta
             ]);
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã cập nhật danh mục thành công',
@@ -217,19 +217,19 @@ class ProductController extends Controller
     {
         try {
             $category = DanhMuc::findOrFail($id);
-            
+
             // Check if there are products using this category
-            $productsCount = SanPham::where('ID_Danhmuc', $id)->count();
-            
+            $productsCount = SanP::where('ID_Danhmuc', $id)->count();
+
             if ($productsCount > 0) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Không thể xóa danh mục này vì có ' . $productsCount . ' sản phẩm đang sử dụng'
                 ], 400);
             }
-            
+
             $category->delete();
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã xóa danh mục thành công'
@@ -261,7 +261,7 @@ class ProductController extends Controller
                 'mau_size.*.size_id' => 'required|exists:size,id',
                 'mau_size.*.so_luong' => 'required|integer|min:0',
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -269,12 +269,12 @@ class ProductController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             // Upload image
             $imagePath = $request->file('Hinh_anh')->store('products', 'public');
-            
+
             // Create product
-            $product = SanPham::create([
+            $product = SanP::create([
                 'Ten_san_pham' => $request->Ten_san_pham,
                 'Gia' => $request->Gia,
                 'Mo_ta' => $request->Mo_ta,
@@ -285,7 +285,7 @@ class ProductController extends Controller
                 'bestseller' => $request->bestseller ?? 0,
                 'view' => 0
             ]);
-            
+
             // Create color-size combinations
             foreach ($request->mau_size as $mauSize) {
                 SanPhamMauSize::create([
@@ -295,7 +295,7 @@ class ProductController extends Controller
                     'So_luong' => $mauSize['so_luong']
                 ]);
             }
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã tạo sản phẩm thành công',
@@ -315,14 +315,14 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $product = SanPham::with([
+            $product = SanP::with([
                 'danhMuc',
                 'thuongHieu',
                 'san_pham_mau_size',
                 'san_pham_mau_size.mau',
                 'san_pham_mau_size.size'
             ])->findOrFail($id);
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $product
@@ -341,8 +341,8 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $product = SanPham::findOrFail($id);
-            
+            $product = SanP::findOrFail($id);
+
             $validator = Validator::make($request->all(), [
                 'Ten_san_pham' => 'sometimes|required|string|max:255',
                 'Gia' => 'sometimes|required|numeric|min:0',
@@ -358,7 +358,7 @@ class ProductController extends Controller
                 'mau_size.*.so_luong' => 'sometimes|required|integer|min:0',
                 'bestseller' => 'sometimes|integer|min:0'
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -366,7 +366,7 @@ class ProductController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
+
             // Upload new image if provided
             if ($request->hasFile('Hinh_anh')) {
                 // Delete old image
@@ -374,43 +374,43 @@ class ProductController extends Controller
                 if (Storage::disk('public')->exists($oldImagePath)) {
                     Storage::disk('public')->delete($oldImagePath);
                 }
-                
+
                 // Upload new image
                 $imagePath = $request->file('Hinh_anh')->store('products', 'public');
                 $product->Hinh_anh = '/storage/' . $imagePath;
             }
-            
+
             // Update product fields
             if ($request->has('Ten_san_pham')) {
                 $product->Ten_san_pham = $request->Ten_san_pham;
             }
-            
+
             if ($request->has('Gia')) {
                 $product->Gia = $request->Gia;
             }
-            
+
             if ($request->has('Mo_ta')) {
                 $product->Mo_ta = $request->Mo_ta;
             }
-            
+
             if ($request->has('ID_Danhmuc')) {
                 $product->ID_Danhmuc = $request->ID_Danhmuc;
             }
-            
+
             if ($request->has('ID_Thuonghieu')) {
                 $product->ID_Thuonghieu = $request->ID_Thuonghieu;
             }
-            
+
             if ($request->has('So_luong')) {
                 $product->So_luong = $request->So_luong;
             }
-            
+
             if ($request->has('bestseller')) {
                 $product->bestseller = $request->bestseller;
             }
-            
+
             $product->save();
-            
+
             // Update color-size combinations if provided
             if ($request->has('mau_size')) {
                 foreach ($request->mau_size as $mauSize) {
@@ -433,7 +433,7 @@ class ProductController extends Controller
                     }
                 }
             }
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã cập nhật sản phẩm thành công',
@@ -453,20 +453,20 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try {
-            $product = SanPham::findOrFail($id);
-            
+            $product = SanP::findOrFail($id);
+
             // Delete associated color-size combinations
             SanPhamMauSize::where('ID_SP', $id)->delete();
-            
+
             // Delete product image
             $imagePath = str_replace('/storage/', '', $product->Hinh_anh);
             if (Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
             }
-            
+
             // Delete product
             $product->delete();
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Đã xóa sản phẩm thành công'
@@ -502,25 +502,25 @@ class ProductController extends Controller
             ]);
 
             // Truy vấn chính
-            $query = SanPham::select(
-                    'san_pham.*', 
+            $query = SanP::select(
+                    'san_pham.*',
                     'thuong_hieu.Ten_thuong_hieu as Thuong_hieu',
                     'danh_muc.Ten_danh_muc as Danh_muc'
                 )
                 ->leftJoin('danh_muc', 'san_pham.ID_Danhmuc', '=', 'danh_muc.id')
                 ->leftJoin('thuong_hieu', 'san_pham.ID_Thuonghieu', '=', 'thuong_hieu.id');
-            
+
             // Lọc theo khoảng giá
             if (!empty($minPrice)) {
                 $minPrice = (float) $minPrice;
                 $query->where('san_pham.Gia', '>=', $minPrice);
             }
-            
+
             if (!empty($maxPrice)) {
                 $maxPrice = (float) $maxPrice;
                 $query->where('san_pham.Gia', '<=', $maxPrice);
             }
-            
+
             // Lọc theo danh mục
             if (!empty($category)) {
                 $query->where('san_pham.ID_Danhmuc', $category);
@@ -530,7 +530,7 @@ class ProductController extends Controller
             if (!empty($brand)) {
                 $query->where('san_pham.ID_Thuonghieu', $brand);
             }
-            
+
             // Sắp xếp theo giá - ƯU TIÊN NHẤT
             if (!empty($price)) {
                 if ($price === 'Thấp - Cao') {
@@ -559,10 +559,10 @@ class ProductController extends Controller
             // Thực hiện truy vấn và kết xuất log cho debug
             \Log::info('SQL Query: ' . $query->toSql());
             \Log::info('SQL Bindings: ', $query->getBindings());
-            
+
             // Truy vấn sản phẩm
             $products = $query->paginate(9);
-            
+
             // Nếu không có kết quả, log để debug
             if ($products->isEmpty()) {
                 \Log::warning('Không tìm thấy sản phẩm nào phù hợp với bộ lọc');
@@ -570,18 +570,18 @@ class ProductController extends Controller
 
             // Tính rating cho mỗi sản phẩm và lọc theo rating nếu cần
             $filteredProducts = collect();
-            
+
             foreach ($products as $product) {
                 // Tính rating từ bảng danh_gia
                 $danhGiaRating = \DB::table('danh_gia')
                     ->where('ID_SP', $product->id)
                     ->avg('So_sao');
-                
+
                 // Tính rating từ bảng ratings
                 $ratingsRating = \DB::table('ratings')
                     ->where('ID_SP', $product->id)
                     ->avg('So_sao');
-                
+
                 // Tính điểm trung bình tổng hợp
                 if ($danhGiaRating && $ratingsRating) {
                     $avgRating = ($danhGiaRating + $ratingsRating) / 2;
@@ -592,21 +592,21 @@ class ProductController extends Controller
                 } else {
                     $avgRating = 0;
                 }
-                
+
                 // Gán giá trị rating cho sản phẩm
                 $product->diem_trung_binh = $avgRating;
-                
+
                 // Lọc theo rating nếu có
                 if (!empty($rating)) {
                     $ratingFilter = (float) $rating;
                     $minRating = $ratingFilter;
                     $maxRating = $ratingFilter + 1;
-                    
+
                     // Nếu đã chọn 5 sao, thì maxRating = 5
                     if ($ratingFilter == 5) {
                         $maxRating = 5.01; // Để bao gồm cả 5.0
                     }
-                    
+
                     if ($avgRating >= $minRating && $avgRating < $maxRating) {
                         $filteredProducts->push($product);
                     }
@@ -614,21 +614,21 @@ class ProductController extends Controller
                     $filteredProducts->push($product);
                 }
             }
-            
+
             // Nếu đang lọc theo rating, cập nhật lại thông tin phân trang
             if (!empty($rating)) {
                 $currentPage = $products->currentPage();
                 $perPage = $products->perPage();
                 $total = $filteredProducts->count();
                 $lastPage = ceil($total / $perPage);
-                
+
                 $paginationInfo = [
                     'current_page' => $currentPage,
                     'last_page' => $lastPage,
                     'per_page' => $perPage,
                     'total' => $total
                 ];
-                
+
                 return response()->json([
                     'status' => 'success',
                     'data' => $filteredProducts->slice(($currentPage - 1) * $perPage, $perPage)->values(),
@@ -654,26 +654,26 @@ class ProductController extends Controller
             ], 500);
         }
     }
-    
-    
+
+
     public function showdetail($id)
     {
         try {
-            $productdetail = SanPham::with([
-                'danhMuc', 
+            $productdetail = SanP::with([
+                'danhMuc',
                 'thuongHieu',
                 'san_pham_mau_size',
                 'san_pham_mau_size.mau',
                 'san_pham_mau_size.size'
             ])->find($id);
-            
+
             if (!$productdetail) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Sản phẩm không tồn tại'
                 ], 404);
             }
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $productdetail
@@ -688,7 +688,7 @@ class ProductController extends Controller
 
     public function bestseller(){
         try {
-            $bestseller = SanPham::where('bestseller', '>', 0)->orderBy('bestseller', 'desc')->get();
+            $bestseller = SanP::where('bestseller', '>', 0)->orderBy('bestseller', 'desc')->get();
             return response()->json([
                 'status' => 'success',
                 'data' => $bestseller
@@ -710,7 +710,7 @@ class ProductController extends Controller
             $validator = Validator::make($request->all(), [
                 'bestseller' => 'required|boolean'
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -718,19 +718,19 @@ class ProductController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            
-            $product = SanPham::find($id);
-            
+
+            $product = SanP::find($id);
+
             if (!$product) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Sản phẩm không tồn tại'
                 ], 404);
             }
-            
+
             $product->bestseller = $request->bestseller ? 1 : 0;
             $product->save();
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cập nhật trạng thái bestseller thành công',
@@ -751,7 +751,7 @@ class ProductController extends Controller
     {
         try {
             // Get top 10 products by view count
-            $products = SanPham::select(
+            $products = SanP::select(
                     'san_pham.*',
                     'danh_muc.Ten_danh_muc as Ten_LSP'
                 )
@@ -759,25 +759,25 @@ class ProductController extends Controller
                 ->orderBy('san_pham.view', 'desc')
                 ->limit(10)
                 ->get();
-                
+
             // Add rating and sales information
             $products = $products->map(function($product) {
                 // Get average rating
                 $rating = DB::table('danh_gia')
                         ->where('ID_SP', $product->id)
                         ->avg('So_sao') ?? 0;
-                        
+
                 // Get sales count from don_hang_chi_tiet table
                 $soldCount = DB::table('don_hang_chi_tiet')
                         ->where('ID_SP', $product->id)
                         ->sum('So_luong') ?? 0;
-                        
+
                 $product->So_sao = round($rating, 1);
                 $product->sold_count = (int)$soldCount;
-                
+
                 return $product;
             });
-            
+
             return response()->json([
                 'status' => 'success',
                 'data' => $products
@@ -790,4 +790,4 @@ class ProductController extends Controller
             ], 500);
         }
     }
-} 
+}

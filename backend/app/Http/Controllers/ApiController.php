@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\San;
-use App\Models\Sanpham;
+use App\Models\SanP;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -18,7 +18,7 @@ class ApiController extends Controller
 
     public function productView(){
         try {
-            $product = Sanpham::where('view', '>', 0)->orderBy('view', 'desc')->limit(4)->get();
+            $product = SanP::where('view', '>', 0)->orderBy('view', 'desc')->limit(4)->get();
             return response()->json([
                 'status' => 'success',
                 'data' => $product

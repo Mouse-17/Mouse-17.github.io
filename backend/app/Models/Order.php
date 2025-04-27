@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'don_hang';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
         'ID_KH',
         'ho_ten',
@@ -31,7 +31,7 @@ class Order extends Model
         'ten_san_pham',
         'ID_Khuyenmai'
     ];
-    
+
     /**
      * Get the user who placed the order
      */
@@ -39,7 +39,7 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'ID_KH');
     }
-    
+
     /**
      * Get the order items for this order
      */
@@ -47,15 +47,15 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class, 'ID_DH');
     }
-    
+
     /**
      * Get the primary product for this order
      */
     public function primaryProduct()
     {
-        return $this->belongsTo(SanPham::class, 'id_san_pham');
+        return $this->belongsTo(SanP::class, 'id_san_pham');
     }
-    
+
     /**
      * Get the promotion for this order
      */
@@ -63,7 +63,7 @@ class Order extends Model
     {
         return $this->belongsTo(KhuyenMai::class, 'ID_Khuyenmai');
     }
-    
+
     /**
      * Check if order is pending
      */
@@ -71,7 +71,7 @@ class Order extends Model
     {
         return $this->Trang_thai == 1;
     }
-    
+
     /**
      * Check if order is processing
      */
@@ -79,7 +79,7 @@ class Order extends Model
     {
         return $this->Trang_thai == 2;
     }
-    
+
     /**
      * Check if order is shipped
      */
@@ -87,7 +87,7 @@ class Order extends Model
     {
         return $this->Trang_thai == 3;
     }
-    
+
     /**
      * Check if order is delivered
      */
@@ -95,7 +95,7 @@ class Order extends Model
     {
         return $this->Trang_thai == 4;
     }
-    
+
     /**
      * Check if order is cancelled
      */

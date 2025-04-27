@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Rating extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'danh_gia';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
         'id_kh',
         'id_sp',
@@ -20,7 +20,7 @@ class Rating extends Model
         'Noi_dung',
         'Trang_thai'
     ];
-    
+
     /**
      * Get the user who created the rating
      */
@@ -28,15 +28,15 @@ class Rating extends Model
     {
         return $this->belongsTo(User::class, 'id_kh');
     }
-    
+
     /**
      * Get the product being rated
      */
     public function product()
     {
-        return $this->belongsTo(SanPham::class, 'id_sp');
+        return $this->belongsTo(SanP::class, 'id_sp');
     }
-    
+
     /**
      * Get the field being rated
      */
@@ -44,7 +44,7 @@ class Rating extends Model
     {
         return $this->belongsTo(San::class, 'san_id');
     }
-    
+
     /**
      * Scope để lấy chỉ các đánh giá đã được phê duyệt
      */
