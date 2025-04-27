@@ -1,8 +1,7 @@
 <template>
   <main>
     <section class="admin">
-      <AdminSidebar/>
-
+      <AdminSidebar />
       <div class="admin-right">
         <div class="header-container">
           <div class="title-section">
@@ -17,124 +16,83 @@
           </div>
         </div>
 
-        <div class="filter-toolbar">
-          <select class="filter-select">
-            <option>Tác vụ</option>
-            <option>Xóa</option>
-            <option>Cập nhật</option>
-          </select>
-          <button class="btn-apply">Áp dụng</button>
-          <select class="filter-select">
-            <option>Tất cả các ngày</option>
-            <option>Tuần này</option>
-            <option>Tháng này</option>
-          </select>
-          <select class="filter-select">
-            <option>Chọn danh mục</option>
-            <option>Quần áo</option>
-            <option>Giày dép</option>
-            <option>Phụ kiện</option>
-            <option>Mũ</option>
-            <option>Gậy golf</option>
-            <option>Vợt</option>
-          </select>
-          <select class="filter-select">
-            <option>Toàn bộ sản phẩm</option>
-            <option>Đang hoạt động</option>
-            <option>Ngưng hoạt động</option>
-            <option>Đang cập nhật</option>
-          </select>
-          <div class="search-box">
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              class="search-input"
-            />
-            <button class="search-btn"><i class="bi bi-search"></i></button>
-          </div>
+        <div v-if="loading" class="text-center py-5">
+          <span>Đang tải dữ liệu...</span>
         </div>
 
-        <div class="table-container bg-white rounded-3 shadow-sm">
+        <div v-else-if="error" class="text-center py-5 text-danger">
+          <span>{{ error }}</span>
+        </div>
+
+        <div v-else class="table-container bg-white rounded-3 shadow-sm">
           <table class="category-table">
             <thead>
-              <tr>
-                <th width="40px">
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" />
-                  </div>
-                </th>
-                <th>Tên danh mục</th>
-                <th>Mô tả</th>
-                <th width="120px">Hình ảnh</th>
-                <th>Trạng thái</th>
-                <th class="text-center" width="120px">Hành động</th>
-              </tr>
+            <tr>
+              <th width="40px">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" />
+                </div>
+              </th>
+              <th>Tên danh mục</th>
+              <th>Mô tả</th>
+              <th>Trạng thái</th>
+              <th class="text-center" width="120px">Hành động</th>
+            </tr>
             </thead>
             <tbody>
-              <tr v-for="(category, index) in categories" :key="index">
-                <td>
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" />
+            <tr v-for="category in categories" :key="category.id">
+              <td>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" />
+                </div>
+              </td>
+              <td class="category-name">{{ category.name }}</td>
+              <td class="category-desc">{{ category.description }}</td>
+              <td>
+                <div class="status-select-wrapper">
+                  <div
+                      :class="['status-select', category.status === 1 ? 'available' : 'unavailable']"
+                      @click="toggleStatus(category)"
+                  >
+                    <div class="status-border"></div>
+                    <span class="status-text">
+                        {{ getStatusText(category.status) }}
+                      </span>
                   </div>
-                </td>
-                <td class="category-name">{{ category.name }}</td>
-                <td class="category-desc">{{ category.description }}</td>
-                <td class="category-img">
-                  <img
-                    :src="
-                      category.image || '../../../public/img/placeholder.png'
-                    "
-                    :alt="category.name"
-                    class="category-thumbnail"
-                  />
-                </td>
-                <td>
-                  <div class="status-select-wrapper">
-                    <div
-                      :class="['status-select', category.status]"
-                      @click="toggleStatus($event, category)"
-                    >
-                      <div class="status-border"></div>
-                      <span class="status-text">{{
-                        getStatusText(category.status)
-                      }}</span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button
+                </div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
                       class="action-btn view-btn"
                       title="Xem"
                       @click="viewCategory(category)"
-                    >
-                      <i class="bi bi-eye-fill"></i>
-                    </button>
-                    <button
+                  >
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+                  <button
                       class="action-btn edit-btn"
                       title="Sửa"
                       @click="editCategory(category)"
-                    >
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button
                       class="action-btn delete-btn"
                       title="Xóa"
                       @click="deleteCategory(category)"
-                    >
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+                  >
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
             </tbody>
           </table>
 
-          <div
-            class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top"
-          >
+          <div class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top">
             <div class="text-muted">
-              Hiển thị 1-10 trong tổng số 50 danh mục
+              Hiển thị 1-{{ categories.length }} danh mục
             </div>
             <nav>
               <ul class="pagination mb-0">
@@ -151,598 +109,66 @@
         </div>
       </div>
     </section>
-
-    <!-- Modal thêm danh mục -->
-    <div
-      class="modal-backdrop"
-      v-if="showAddCategoryModal"
-      @click="closeAddCategoryModal"
-    ></div>
-    <div class="modal-container" v-if="showAddCategoryModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>Thêm danh mục mới</h5>
-          <button class="close-btn" @click="closeAddCategoryModal">
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="addNewCategory" class="add-category-form">
-            <div class="form-group">
-              <label for="category-name" class="form-label">Tên danh mục</label>
-              <input
-                type="text"
-                id="category-name"
-                class="form-control"
-                v-model="newCategory.name"
-                required
-                placeholder="Nhập tên danh mục"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="category-desc" class="form-label">Mô tả</label>
-              <textarea
-                id="category-desc"
-                class="form-control description-field"
-                v-model="newCategory.description"
-                rows="4"
-                placeholder="Nhập mô tả (không bắt buộc)"
-              ></textarea>
-            </div>
-
-            <!-- Image upload section -->
-            <div class="form-group">
-              <label class="form-label">Hình ảnh</label>
-              <div class="upload-container">
-                <input
-                  type="file"
-                  id="category-image"
-                  class="d-none"
-                  accept="image/*"
-                  @change="handleImageUpload"
-                />
-
-                <div v-if="!imagePreview" class="image-upload-area">
-                  <label for="category-image" class="upload-btn">
-                    <div class="upload-inner">
-                      <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                      <span>Tải hình ảnh lên</span>
-                    </div>
-                  </label>
-                </div>
-
-                <div v-else class="image-preview-container">
-                  <img
-                    :src="imagePreview"
-                    alt="Preview"
-                    class="image-preview"
-                  />
-                  <button
-                    type="button"
-                    class="remove-image-btn"
-                    @click="removeImage"
-                  >
-                    <i class="bi bi-x-circle-fill"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Status selection -->
-            <div class="form-group">
-              <label class="form-label">Trạng thái</label>
-              <div class="status-radio-group">
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="available"
-                    v-model="newCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle available"></span>
-                  <span class="status-radio-text">Đang hoạt động</span>
-                </label>
-
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="maintenance"
-                    v-model="newCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle maintenance"></span>
-                  <span class="status-radio-text">Đang bảo trì</span>
-                </label>
-
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="unavailable"
-                    v-model="newCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle unavailable"></span>
-                  <span class="status-radio-text">Ngưng hoạt động</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button
-                type="button"
-                class="btn btn-cancel"
-                @click="closeAddCategoryModal"
-              >
-                Hủy
-              </button>
-              <button type="submit" class="btn btn-save">Lưu</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal xem chi tiết danh mục -->
-    <div
-      class="modal-backdrop"
-      v-if="showViewCategoryModal"
-      @click="closeViewModal"
-    ></div>
-    <div class="modal-container" v-if="showViewCategoryModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>Chi tiết danh mục</h5>
-          <button class="close-btn" @click="closeViewModal">
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="category-detail-view">
-            <div class="category-image-container">
-              <img
-                :src="
-                  selectedCategory?.image ||
-                  '../../../public/img/placeholder.png'
-                "
-                :alt="selectedCategory?.name"
-                class="category-detail-image"
-              />
-            </div>
-            <div class="category-info">
-              <h3 class="category-detail-name">{{ selectedCategory?.name }}</h3>
-              <div class="status-badge" :class="selectedCategory?.status">
-                {{ getStatusText(selectedCategory?.status) }}
-              </div>
-              <p class="category-detail-desc">
-                {{ selectedCategory?.description || "Không có mô tả" }}
-              </p>
-            </div>
-            <div class="action-row">
-              <button
-                type="button"
-                class="btn btn-cancel"
-                @click="closeViewModal"
-              >
-                Đóng
-              </button>
-              <button
-                type="button"
-                class="btn btn-save"
-                @click="editCategory(selectedCategory)"
-              >
-                Chỉnh sửa
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal chỉnh sửa danh mục -->
-    <div
-      class="modal-backdrop"
-      v-if="showEditCategoryModal"
-      @click="closeEditModal"
-    ></div>
-    <div class="modal-container" v-if="showEditCategoryModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>Chỉnh sửa danh mục</h5>
-          <button class="close-btn" @click="closeEditModal">
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="saveEditCategory" class="edit-category-form">
-            <div class="form-row">
-              <input
-                type="text"
-                id="category-name"
-                class="form-control"
-                v-model="selectedCategory.name"
-                required
-                placeholder="Nhập tên danh mục"
-              />
-            </div>
-
-            <div class="form-row">
-              <textarea
-                id="category-desc"
-                class="form-control description-field"
-                v-model="selectedCategory.description"
-                rows="4"
-                placeholder="Nhập mô tả (không bắt buộc)"
-              ></textarea>
-            </div>
-
-            <!-- Image upload section -->
-            <div class="form-row upload-row">
-              <input
-                type="file"
-                id="category-image"
-                class="d-none"
-                accept="image/*"
-                @change="handleImageUpload"
-              />
-
-              <div class="upload-container">
-                <div v-if="!imagePreview" class="image-upload-area">
-                  <label for="category-image" class="upload-btn">
-                    <div class="upload-inner">
-                      <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                      <span>Tải hình ảnh lên</span>
-                    </div>
-                  </label>
-                </div>
-
-                <div v-else class="image-preview-container">
-                  <img
-                    :src="imagePreview"
-                    alt="Preview"
-                    class="image-preview"
-                  />
-                  <button
-                    type="button"
-                    class="remove-image-btn"
-                    @click="removeImage"
-                  >
-                    <i class="bi bi-x-circle-fill"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Status selection -->
-            <div class="form-row status-row">
-              <div class="status-radio-group">
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="available"
-                    v-model="selectedCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle available"></span>
-                </label>
-
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="maintenance"
-                    v-model="selectedCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle maintenance"></span>
-                </label>
-
-                <label class="status-radio">
-                  <input
-                    type="radio"
-                    name="status"
-                    value="unavailable"
-                    v-model="selectedCategory.status"
-                    class="status-radio-input"
-                  />
-                  <span class="status-radio-circle unavailable"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="form-row action-row">
-              <button
-                type="button"
-                class="btn btn-cancel"
-                @click="closeEditModal"
-              >
-                Hủy
-              </button>
-              <button type="submit" class="btn btn-save">Lưu</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal xác nhận xóa danh mục -->
-    <div
-      class="modal-backdrop"
-      v-if="showDeleteConfirmModal"
-      @click="closeDeleteModal"
-    ></div>
-    <div class="modal-container" v-if="showDeleteConfirmModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>Xác nhận xóa danh mục</h5>
-          <button class="close-btn" @click="closeDeleteModal">
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>
-            Bạn có chắc chắn muốn xóa danh mục "{{ selectedCategory.name }}"?
-          </p>
-          <div class="action-row">
-            <button
-              type="button"
-              class="btn btn-cancel"
-              @click="closeDeleteModal"
-            >
-              Hủy
-            </button>
-            <button
-              type="button"
-              class="btn btn-save"
-              @click="confirmDeleteCategory"
-            >
-              Xóa
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </main>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import AdminSidebar from '@/views/admin/partials/AdminSidebar.vue';
+import { ref, onMounted } from "vue";
+import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
+import axios from "axios";
 
-// Thêm biến để kiểm soát hiển thị modal
-const showAddCategoryModal = ref(false);
+// Trạng thái danh mục
+const STATUS_TYPES = {
+  1: "Đang hoạt động",
+  0: "Ngừng hoạt động",
+};
 
-// Thêm biến cho form thêm danh mục
-const newCategory = ref({
-  name: "",
-  description: "",
-  status: "available",
-  image: null,
-});
+// Dữ liệu danh mục
+const categories = ref([]);
+const loading = ref(false);
+const error = ref(null);
 
-// Biến lưu URL hình ảnh preview
-const imagePreview = ref("");
+// Hàm tải danh sách danh mục từ API
+async function fetchCategories() {
+  loading.value = true;
 
-// Thêm biến để lưu danh mục được chọn
-const selectedCategory = ref(null);
-const showViewCategoryModal = ref(false);
-const showEditCategoryModal = ref(false);
-const showDeleteConfirmModal = ref(false);
+  try {
+    const response = await axios.get("/api/admin/categories", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
 
-// Data for categories
-const categories = ref([
-  {
-    id: 1,
-    name: "Áo",
-    description: "Các loại áo thể thao",
-    image: "../../../public/img/placeholder.png",
-    status: "unavailable",
-  },
-  {
-    id: 2,
-    name: "Quần",
-    description: "Các loại quần thể thao",
-    image: "../../../public/img/placeholder.png",
-    status: "unavailable",
-  },
-  {
-    id: 3,
-    name: "Giày",
-    description: "Các loại giày thể thao",
-    image: "../../../public/img/placeholder.png",
-    status: "unavailable",
-  },
-  {
-    id: 4,
-    name: "Vợt",
-    description: "Vợt thể thao các loại",
-    image: "../../../public/img/placeholder.png",
-    status: "available",
-  },
-  {
-    id: 5,
-    name: "Gậy golf",
-    description: "Gậy golf các loại",
-    image: "../../../public/img/placeholder.png",
-    status: "available",
-  },
-  {
-    id: 6,
-    name: "Mũ",
-    description: "Mũ thể thao các loại",
-    image: "../../../public/img/placeholder.png",
-    status: "available",
-  },
-  {
-    id: 7,
-    name: "Phụ kiện tennis",
-    description: "Các phụ kiện tennis cao cấp",
-    image: "../../../public/img/placeholder.png",
-    status: "maintenance",
-  },
-]);
-
-// Hàm xử lý khi chọn hình ảnh
-function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    newCategory.value.image = file;
-    imagePreview.value = URL.createObjectURL(file);
+    if (response.data.status === "success") {
+      categories.value = response.data.data.map((category) => ({
+        id: category.id,
+        name: category.Ten_danh_muc,
+        description: category.Mo_ta || "Không có mô tả",
+        status: category.Trang_Thai,
+        created_at: category.created_at,
+        updated_at: category.updated_at,
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách danh mục:", err);
+    error.value = "Không thể tải danh sách danh mục. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
   }
 }
 
-// Hàm xóa hình ảnh đã chọn
-function removeImage() {
-  newCategory.value.image = null;
-  imagePreview.value = "";
-  // Reset input file
-  const fileInput = document.getElementById("category-image");
-  if (fileInput) fileInput.value = "";
+// Hàm chuyển đổi trạng thái danh mục
+function toggleStatus(category) {
+  category.status = category.status === 1 ? 0 : 1;
 }
 
-// Hàm mở modal form thêm danh mục
-function openAddCategoryModal() {
-  showAddCategoryModal.value = true;
-}
-
-// Hàm đóng modal form
-function closeAddCategoryModal() {
-  showAddCategoryModal.value = false;
-  // Reset form khi đóng
-  newCategory.value = {
-    name: "",
-    description: "",
-    status: "available",
-    image: null,
-  };
-  imagePreview.value = "";
-}
-
-// Hàm thêm danh mục mới
-function addNewCategory() {
-  // Xử lý thêm danh mục ở đây
-  console.log("Thêm danh mục mới:", newCategory.value);
-
-  // Đóng modal sau khi thêm
-  closeAddCategoryModal();
-}
-
-// Hàm để lấy text hiển thị theo trạng thái
+// Hàm lấy tên trạng thái từ ID
 function getStatusText(status) {
-  switch (status) {
-    case "available":
-      return "Đang hoạt động";
-    case "unavailable":
-      return "Ngưng hoạt động";
-    case "updating":
-      return "Đang cập nhật";
-    case "maintenance":
-      return "Đang bảo trì";
-    default:
-      return "Không xác định";
-  }
+  return STATUS_TYPES[status] || "Không xác định";
 }
 
-// Cập nhật hàm toggleStatus để nhận category
-function toggleStatus(event, category) {
-  event.stopPropagation();
-
-  if (category.status === "available") {
-    category.status = "updating";
-    console.log("Đã chuyển sang: Đang cập nhật");
-  } else if (category.status === "updating") {
-    category.status = "maintenance";
-    console.log("Đã chuyển sang: Đang bảo trì");
-  } else if (category.status === "maintenance") {
-    category.status = "unavailable";
-    console.log("Đã chuyển sang: Ngưng hoạt động");
-  } else {
-    category.status = "available";
-    console.log("Đã chuyển sang: Đang hoạt động");
-  }
-}
-
-// Hàm xem chi tiết danh mục
-function viewCategory(category) {
-  selectedCategory.value = category;
-  showViewCategoryModal.value = true;
-  console.log("Xem chi tiết danh mục:", category);
-}
-
-// Hàm mở modal chỉnh sửa danh mục
-function editCategory(category) {
-  selectedCategory.value = category;
-  // Đặt giá trị ban đầu cho form chỉnh sửa
-  newCategory.value = {
-    name: category.name,
-    description: category.description,
-    status: category.status,
-    image: category.image,
-  };
-  imagePreview.value = category.image; // Hiển thị ảnh hiện tại nếu có
-  showEditCategoryModal.value = true;
-  console.log("Mở form chỉnh sửa danh mục:", category);
-}
-
-// Hàm lưu chỉnh sửa danh mục
-function saveEditCategory() {
-  // Xử lý lưu chỉnh sửa ở đây
-  console.log("Lưu chỉnh sửa danh mục:", newCategory.value);
-
-  // Đóng modal sau khi lưu
-  showEditCategoryModal.value = false;
-}
-
-// Hàm mở xác nhận xóa danh mục
-function deleteCategory(category) {
-  selectedCategory.value = category;
-  showDeleteConfirmModal.value = true;
-  console.log("Mở xác nhận xóa danh mục:", category);
-}
-
-// Hàm xóa danh mục
-function confirmDeleteCategory() {
-  // Xử lý xóa danh mục ở đây
-  console.log("Xóa danh mục:", selectedCategory.value);
-
-  // Đóng modal xác nhận sau khi xóa
-  showDeleteConfirmModal.value = false;
-}
-
-// Hàm đóng các modal
-function closeViewModal() {
-  showViewCategoryModal.value = false;
-}
-
-function closeEditModal() {
-  showEditCategoryModal.value = false;
-}
-
-function closeDeleteModal() {
-  showDeleteConfirmModal.value = false;
-}
-
-// Vẫn giữ onMounted nhưng không cần gọi setupClickOutside
-onMounted(() => {
-  // Không cần làm gì khi component được mount
-});
-
-// Hàm đăng xuất
-function logout() {
-  // Xóa thông tin đăng nhập từ localStorage
-  localStorage.removeItem("adminUser");
-  localStorage.removeItem("adminToken");
-
-  // Hiển thị thông báo đăng xuất thành công
-  alert("Đăng xuất thành công!");
-
-  // Chuyển hướng về trang đăng nhập
-  window.location.href = "/admin/login";
-}
+// Tải dữ liệu khi component được mount
+onMounted(fetchCategories);
 </script>
 
 <style scoped>
