@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="admin">
-      <AdminSidebar/>
+      <AdminSidebar />
 
       <div class="admin-right">
         <div class="header-container">
@@ -12,186 +12,155 @@
         </div>
 
         <div class="content-wrapper bg-white rounded-3 shadow-sm p-4">
-          <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">Tất cả đánh giá</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Xử lý đánh giá</a>
-            </li>
-          </ul>
-
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <button class="btn btn-outline-secondary">
-              <i class="bi bi-funnel me-2"></i>Thêm điều kiện lọc
-            </button>
-            <div class="search-box">
-              <div class="input-group">
-                <input class="form-control" placeholder="Tìm kiếm đánh giá..." type="text">
-                <button class="btn btn-outline-secondary" type="button">
-                  <i class="bi bi-search"></i>
-                </button>
-              </div>
+          <div v-if="loading" class="text-center py-5">
+            <span>Đang tải dữ liệu...</span>
+          </div>
+          <div v-else-if="error" class="text-center py-5 text-danger">
+            <span>{{ error }}</span>
+          </div>
+          <div v-else>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                <tr>
+                  <th width="40px">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" />
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>Người đánh giá</th>
+                  <th>Sản phẩm</th>
+                  <th>Ngày đánh giá</th>
+                  <th>Thời gian</th>
+                  <th>Số sao</th>
+                  <th width="120px">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="rating in ratings" :key="rating.id">
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" />
+                    </div>
+                  </td>
+                  <td>{{ rating.id }}</td>
+                  <td>{{ rating.user }}</td>
+                  <td>{{ rating.product }}</td>
+                  <td>{{ rating.date }}</td>
+                  <td>{{ rating.time }}</td>
+                  <td class="rating">
+                      <span class="star-rating">
+                        <i v-for="star in renderStars(rating.stars)" :key="star" :class="star"></i>
+                      </span>
+                    <span class="rating-text">{{ rating.stars }} sao</span>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-sm view-btn" title="Xem">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-sm edit-btn" title="Sửa">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button
+                          class="btn btn-sm delete-btn"
+                          title="Xóa"
+                          @click="deleteRating(rating.id)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
 
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th width="40px">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                  </div>
-                </th>
-                <th>ID</th>
-                <th>Người đánh giá</th>
-                <th>Sản phẩm</th>
-                <th>Ngày đánh giá</th>
-                <th>Thời gian</th>
-                <th>Số sao</th>
-                <th width="120px">Hành động</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                  </div>
-                </td>
-                <td>1</td>
-                <td>Nga</td>
-                <td>Cầu lông</td>
-                <td>23/02/2025</td>
-                <td>8:45PM</td>
-                <td class="rating">
-                                        <span class="star-rating">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                        </span>
-                  <span class="rating-text">5 sao</span>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn btn-sm view-btn" title="Xem"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-sm edit-btn" title="Sửa"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm delete-btn" title="Xóa"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                  </div>
-                </td>
-                <td>2</td>
-                <td>Minh</td>
-                <td>Cầu lông</td>
-                <td>23/02/2025</td>
-                <td>8:45PM</td>
-                <td class="rating">
-                                        <span class="star-rating">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star"></i>
-                                        </span>
-                  <span class="rating-text">4 sao</span>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn btn-sm view-btn" title="Xem"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-sm edit-btn" title="Sửa"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm delete-btn" title="Xóa"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                  </div>
-                </td>
-                <td>3</td>
-                <td>Hân</td>
-                <td>Cầu lông</td>
-                <td>23/02/2025</td>
-                <td>8:45PM</td>
-                <td class="rating">
-                                        <span class="star-rating">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-half"></i>
-                                        </span>
-                  <span class="rating-text">4.5 sao</span>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn btn-sm view-btn" title="Xem"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-sm edit-btn" title="Sửa"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm delete-btn" title="Xóa"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox">
-                  </div>
-                </td>
-                <td>4</td>
-                <td>Tuấn</td>
-                <td>Cầu lông</td>
-                <td>23/02/2025</td>
-                <td>8:45PM</td>
-                <td class="rating">
-                                        <span class="star-rating">
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </span>
-                  <span class="rating-text">3 sao</span>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="btn btn-sm view-btn" title="Xem"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-sm edit-btn" title="Sửa"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm delete-btn" title="Xóa"><i class="bi bi-trash"></i></button>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">Hiển thị 1-10 trong tổng số 50 đánh giá</div>
-            <nav>
-              <ul class="pagination mb-0">
-                <li class="page-item"><a class="page-link" href="#">«</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">»</a></li>
-              </ul>
-            </nav>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <div class="text-muted">Hiển thị {{ ratings.length }} đánh giá</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
 </template>
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
 
+// Dữ liệu đánh giá
+const ratings = ref([]);
+const loading = ref(false);
+const error = ref(null);
+
+// Hàm tải danh sách đánh giá
+async function fetchRatings() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get('/api/ratings', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      ratings.value = response.data.data.map(rating => ({
+        id: rating.id,
+        user: rating.user.name,
+        product: rating.product?.name || 'Không xác định',
+        date: new Date(rating.created_at).toLocaleDateString(),
+        time: new Date(rating.created_at).toLocaleTimeString(),
+        stars: rating.So_sao,
+        content: rating.Noi_dung || '',
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách đánh giá:", err);
+    error.value = "Không thể tải danh sách đánh giá. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Hàm xóa đánh giá
+async function deleteRating(id) {
+  try {
+    const response = await axios.delete(`/api/ratings/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      ratings.value = ratings.value.filter(rating => rating.id !== id);
+      alert('Đã xóa đánh giá thành công.');
+    }
+  } catch (err) {
+    console.error("Lỗi khi xóa đánh giá:", err);
+    alert('Không thể xóa đánh giá. Vui lòng thử lại sau.');
+  }
+}
+
+// Hàm hiển thị sao
+function renderStars(stars) {
+  const fullStars = Math.floor(stars);
+  const halfStar = stars % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStar;
+
+  return [
+    ...Array(fullStars).fill('bi bi-star-fill'),
+    ...Array(halfStar).fill('bi bi-star-half'),
+    ...Array(emptyStars).fill('bi bi-star'),
+  ];
+}
+
+// Tải dữ liệu khi component được mount
+onMounted(fetchRatings);
+</script>
 <style scoped>
 .admin {
   min-height: 100vh;
@@ -645,6 +614,3 @@
   }
 }
 </style>
-<script lang="ts" setup>
-import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
-</script>

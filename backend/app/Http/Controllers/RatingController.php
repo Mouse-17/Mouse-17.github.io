@@ -16,9 +16,21 @@ class RatingController extends Controller
     public function index()
     {
         try {
-            $ratings = Rating::with(['user', 'product', 'field'])
+            $ratings = Rating::with([
+                'user:id,name',         // Chỉ lấy cột cần thiết từ bảng users
+                'product:id,name',      // Chỉ lấy cột cần thiết từ bảng sản phẩm
+                'field:id,name'         // Chỉ lấy cột cần thiết từ bảng sân
+            ])
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
+
+            if ($ratings->isEmpty()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Không có đánh giá nào',
+                    'data' => []
+                ]);
+            }
 
             return response()->json([
                 'status' => 'success',
