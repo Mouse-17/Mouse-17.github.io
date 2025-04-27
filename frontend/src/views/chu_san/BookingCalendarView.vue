@@ -301,7 +301,7 @@ onMounted(() => {
 
               <!-- Các sân -->
               <div v-for="field in fields" :key="field.id" class="field-col">
-                <div class="header-cell">Sân {{ field.id }}</div>
+                <div class="header-cell"><h5>{{ field.Ten_san }}</h5></div>
                 <div
                     v-for="slot in timeSlots"
                     :key="slot"
