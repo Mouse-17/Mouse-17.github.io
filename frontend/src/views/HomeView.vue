@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue';
 import type {Product} from '../stores/product';
 import type {Yard} from '../stores/yard';
+const apiURL = import.meta.env.VITE_API_URL as string;
 
 const product_store = ref<Product[]>([]);
 const yard_store = ref<Yard[]>([]);
@@ -290,7 +291,7 @@ onMounted(() => {
             <div v-for="product in product_store" :key="product.id" class="col-12 col-lg-3 col-md-6 p-0">
               <div class="product my-3">
                 <a :href="`/sanpham/${product.id}`" class="link-img-p">
-                  <img :alt="product.Ten_san_pham" :src="product.Anh_dai_dien" class="img-fluid">
+                  <img :alt="product.Ten_san_pham" :src="apiURL + '/' + product.Anh_dai_dien" class="img-fluid">
                 </a>
                 <div class="product-infor">
                   <a :href="`/sanpham/${product.id}`" class="m-0 title-product fs-3">{{ product.Ten_san_pham }}</a>
