@@ -8,7 +8,6 @@ const selectedItem = ref(0);
 const isEditing = ref(false);
 const userInfo = ref({
   name: "",
-  email: "",
   phone: "",
   address: "",
   city: "",
@@ -31,7 +30,11 @@ const menuItems = ref([
 const fetchUserInfo = async () => {
   try {
     const response = await axios.get("/api/user"); // Đổi URL phù hợp với API của bạn
-    userInfo.value = response.data;
+    if (response.data) {
+      userInfo.value = { ...userInfo.value, ...response.data }; // Gộp dữ liệu trả về vào userInfo
+    } else {
+      alert("Không có dữ liệu người dùng.");
+    }
   } catch (error) {
     alert("Không thể lấy thông tin người dùng.");
     console.error(error);
@@ -40,16 +43,20 @@ const fetchUserInfo = async () => {
 
 // Hàm toggle chỉnh sửa thông tin
 const toggleEdit = async () => {
-  if (!isEditing.value) {
+  if (isEditing.value == true) {
     try {
       const formData = new FormData();
-      Object.keys(userInfo.value).forEach((key) => {
-        if (key === "avatar" && userInfo.value.avatar instanceof File) {
-          formData.append(key, userInfo.value.avatar);
-        } else {
-          formData.append(key, userInfo.value[key]);
-        }
-      });
+      if (userInfo.value.avatar instanceof File) {
+        formData.append("avatar", userInfo.value.avatar);
+      }
+      formData.append("name", userInfo.value.name);
+      formData.append("phone", userInfo.value.phone);
+      formData.append("address", userInfo.value.address);
+      formData.append("city", userInfo.value.city);
+      formData.append("district", userInfo.value.district);
+      formData.append("ward", userInfo.value.ward);
+      formData.append("shipping_address", userInfo.value.shipping_address);
+      formData.append("shipping_phone", userInfo.value.shipping_phone);
 
       await axios.post("/api/update-profile", formData, {
         headers: {
@@ -72,22 +79,6 @@ const toggleEdit = async () => {
 
 // Gọi API để lấy thông tin người dùng khi component được mount
 onMounted(fetchUserInfo);
-
-// Hàm để chuyển đổi key thành nhãn tiếng Việt
-const getLabel = (key: string): string => {
-  const labels: Record<string, string> = {
-    name: "Họ và tên",
-    email: "Email",
-    phone: "Số điện thoại",
-    address: "Địa chỉ",
-    city: "Thành phố",
-    district: "Quận/Huyện",
-    ward: "Phường/Xã",
-    shipping_address: "Địa chỉ giao hàng",
-    shipping_phone: "Số điện thoại giao hàng",
-  };
-  return labels[key] || key;
-};
 </script>
 
 <template>
@@ -121,49 +112,109 @@ const getLabel = (key: string): string => {
                     </div>
                     <h4 class="fw-bold text-dark">{{ userInfo.name }}</h4>
                     <p class="text-muted">Chủ sân bóng đá</p>
-                    <RouterLink class="btn btn-primary btn-sm mt-3" to="/suasan">
-                      Chỉnh sửa thông tin sân
-                    </RouterLink>
                   </div>
                 </div>
               </div>
               <div class="col-md-8">
                 <div class="form-profile bg-white p-4 border rounded">
                   <form>
-                    <div class="row">
-                      <div class="col-md-6 mb-3" v-for="(value, key) in userInfo" :key="key" v-if="key !== 'avatar'">
-                        <label
-                            class="form-label fw-bold"
-                            :for="key"
-                            style="color: var(--colortext1);"
-                        >
-                          {{ getLabel(key) }}
-                        </label>
-                        <input
-                            :id="key"
-                            v-model="userInfo[key]"
-                            :disabled="!isEditing"
-                            class="form-control"
-                            :placeholder="getLabel(key)"
-                            type="text"
-                        />
-                      </div>
-                      <div class="col-md-12 mb-3">
-                        <label
-                            class="form-label fw-bold"
-                            for="avatar"
-                            style="color: var(--colortext1);"
-                        >
-                          Ảnh đại diện
-                        </label>
-                        <input
-                            id="avatar"
-                            :disabled="!isEditing"
-                            class="form-control"
-                            type="file"
-                            @change="(e) => (userInfo.avatar = e.target.files[0])"
-                        />
-                      </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="name">Họ và tên</label>
+                      <input
+                          id="name"
+                          v-model="userInfo.name"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập họ và tên"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="phone">Số điện thoại</label>
+                      <input
+                          id="phone"
+                          v-model="userInfo.phone"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập số điện thoại"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="address">Địa chỉ</label>
+                      <input
+                          id="address"
+                          v-model="userInfo.address"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập địa chỉ"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="city">Thành phố</label>
+                      <input
+                          id="city"
+                          v-model="userInfo.city"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập thành phố"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="district">Quận/Huyện</label>
+                      <input
+                          id="district"
+                          v-model="userInfo.district"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập quận/huyện"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="ward">Phường/Xã</label>
+                      <input
+                          id="ward"
+                          v-model="userInfo.ward"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập phường/xã"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="shipping_address">Địa chỉ giao hàng</label>
+                      <input
+                          id="shipping_address"
+                          v-model="userInfo.shipping_address"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập địa chỉ giao hàng"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="shipping_phone">Số điện thoại giao hàng</label>
+                      <input
+                          id="shipping_phone"
+                          v-model="userInfo.shipping_phone"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          placeholder="Nhập số điện thoại giao hàng"
+                          type="text"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold" for="avatar">Ảnh đại diện</label>
+                      <input
+                          id="avatar"
+                          :disabled="!isEditing"
+                          class="form-control"
+                          type="file"
+                          @change="(e) => (userInfo.avatar = e.target.files[0])"
+                      />
                     </div>
                     <div class="d-flex justify-content-end">
                       <button
