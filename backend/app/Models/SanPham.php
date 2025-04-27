@@ -37,6 +37,7 @@ class SanPham extends Model
         'diem_danh_gia' => 'float',
         'tong_danh_gia' => 'integer'
     ];
+
     public function danhMuc()
     {
         return $this->belongsTo(DanhMuc::class, 'id_danhmuc');
