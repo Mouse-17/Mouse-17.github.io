@@ -246,20 +246,20 @@ const routeuser = [
   {
     path: "/chusan/login",
     name: "Đăng nhập chủ sân",
-    component: () => import("../views/chusan-auth/ChusanLoginView.vue"),
+    component: () => import("@/views/chu_san-auth/ChusanLoginView.vue"),
     meta: { hideHeaderFooter: true, guestOnly: true },
   },
   {
     path: "/chusan/dangky",
     name: "Đăng ký chủ sân",
-    component: () => import("../views/chusan-auth/ChusanRegisterView.vue"),
+    component: () => import("@/views/chu_san-auth/ChusanRegisterView.vue"),
     meta: { hideHeaderFooter: true, guestOnly: true },
   },
   {
     path: "/chusan/quenmatkhau",
     name: "Quên mật khẩu chủ sân",
     component: () =>
-      import("../views/chusan-auth/ChusanForgotPasswordView.vue"),
+      import("@/views/chu_san-auth/ChusanForgotPasswordView.vue"),
     meta: { hideHeaderFooter: true, guestOnly: true },
   },
   // Error routes
