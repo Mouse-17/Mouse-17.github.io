@@ -874,7 +874,7 @@ watch(selectedProduct, (newProduct) => {
                         ></i>
                       </template>
                       <p class="text-rating m-0 ms-3 fs-4">
-                        ({{ product.diem_trung_binh || 0 }}/5)
+                        ({{ Number(product.diem_trung_binh) ? Number(product.diem_trung_binh).toFixed(Number.isInteger(Number(product.diem_trung_binh)) ? 0 : 1) : 0 }}/5)
                       </p>
                     </div>
                     <div class="text-location py-2">
