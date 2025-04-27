@@ -24,5 +24,10 @@ export default defineConfig({
         '/img/Banner-ChuSan.png'
       ]
     }
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 5174,
+    strictPort: false
   }
 })
