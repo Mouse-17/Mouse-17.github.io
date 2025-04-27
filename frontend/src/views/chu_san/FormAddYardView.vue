@@ -2,8 +2,9 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import Editor from '@tinymce/tinymce-vue';
-import { useRoute } from 'vue-router';
 import Sidebar from "@/views/chu_san/partials/Sidebar.vue";
+import Swal from 'sweetalert2';
+
 
 // Biến lưu nội dung từ TinyMCE và thông tin sân
 const content = ref('');
@@ -62,7 +63,20 @@ const addField = async () => {
 
     // Xử lý kết quả
     successMessage.value = 'Thêm sân thành công!';
-    console.log('Field added:', response.data);
+    fieldName.value = '';
+    address.value = '';
+    content.value = '';
+    fieldCategory.value = '';
+    price.value = 0;
+    quantity.value = 1;
+    mainImage.value = null;
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Thành công',
+      text: 'Sân của bạn đã được thêm!',
+      confirmButtonText: 'OK'
+    });
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || 'Có lỗi xảy ra!';
     console.error('Lỗi khi thêm sân:', error);
