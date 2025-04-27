@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import YardOwnerView from "@/views/chủ sân/FormAddYardView.vue";
+import YardOwnerView from "@/views/chu_san/FormAddYardView.vue";
 import { useAuthStore } from "../stores/auth";
 
 const routesadmin = [
@@ -169,7 +169,7 @@ const routeuser = [
   {
     path: "/chusan",
     name: "Chủ sân",
-    component: () => import("../views/chủ sân/AnalyticsView.vue"),
+    component: () => import("@/views/chu_san/AnalyticsView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -179,7 +179,7 @@ const routeuser = [
   {
     path: "/themsanmoi",
     name: "Thêm sân",
-    component: () => import("../views/chủ sân/FormAddYardView.vue"),
+    component: () => import("@/views/chu_san/FormAddYardView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -189,7 +189,7 @@ const routeuser = [
   {
     path: "/lichsan",
     name: "Lịch sân",
-    component: () => import("../views/chủ sân/BookingCalendarView.vue"),
+    component: () => import("@/views/chu_san/BookingCalendarView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -199,7 +199,7 @@ const routeuser = [
   {
     path: "/pheduyet",
     name: "Chờ phê duyệt",
-    component: () => import("../views/chủ sân/AcceptView.vue"),
+    component: () => import("@/views/chu_san/AcceptView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -209,7 +209,7 @@ const routeuser = [
   {
     path: "/khyeuthich",
     name: "Khách hàng",
-    component: () => import("../views/chủ sân/CustomerLoveView.vue"),
+    component: () => import("@/views/chu_san/CustomerLoveView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -219,7 +219,7 @@ const routeuser = [
   {
     path: "/suasan",
     name: "Chỉnh sửa thông tin sân",
-    component: () => import("../views/chủ sân/FormEditYardView.vue"),
+    component: () => import("@/views/chu_san/FormEditYardView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
@@ -229,7 +229,7 @@ const routeuser = [
   {
     path: "/caidat",
     name: "Cài đặt",
-    component: () => import("../views/chủ sân/SettingView.vue"),
+    component: () => import("@/views/chu_san/SettingView.vue"),
     meta: {
       hideHeaderFooter: true,
       requiresAuth: true,
