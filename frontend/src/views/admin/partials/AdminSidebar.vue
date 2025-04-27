@@ -2,7 +2,7 @@
   <div class="admin-left">
     <img src="/public/img/user.webp" alt="" class="admin-avatar">
     <h5>Admin</h5>
-    <RouterLink to="/admin" class="admin-menu-item active">
+    <RouterLink to="/admin" class="admin-menu-item">
       <i class="bi bi-palette2"></i>
       <span>Bảng điều khiển</span>
     </RouterLink>
