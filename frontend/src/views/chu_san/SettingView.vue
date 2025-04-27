@@ -97,7 +97,7 @@ onMounted(fetchUserInfo);
               </h3>
             </div>
             <div class="row gx-4">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="profile-card p-3 bg-light border rounded">
                   <div class="text-center">
                     <div
@@ -107,7 +107,7 @@ onMounted(fetchUserInfo);
                       <img
                           alt="Ảnh đại diện"
                           class="img-fluid w-100 h-100 object-fit-cover"
-                          :src="userInfo.avatar || '../../../public/img/default-avatar.webp'"
+                          :src="userInfo.avatar || '../../../public/img/user.webp'"
                       />
                     </div>
                     <h4 class="fw-bold text-dark">{{ userInfo.name }}</h4>
