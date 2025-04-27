@@ -474,18 +474,11 @@ class AuthController extends Controller
             $file = $request->file('avatar');
             $destinationPath = public_path('uploads/avatars');
 
-            // Check if the directory exists, create it if not
-            if (!is_dir($destinationPath)) {
-                if (!mkdir($destinationPath, 0755, true) && !is_dir($destinationPath)) {
-                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $destinationPath));
-                }
-            }
-
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move($destinationPath, $filename);
             $user->avatar = '/uploads/avatars/' . $filename;
         }
-        
+
         if ($request->has('name')) {
             $user->name = $request->name;
         }
