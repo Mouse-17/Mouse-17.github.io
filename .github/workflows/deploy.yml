@@ -44,7 +44,7 @@ jobs:
         run: zip -r backend.zip backend -x "vendor/*"
 
       - name: Zip Vendor Directory
-        run: zip -r vendor.zip vendor
+        run: zip -r vendor.zip backend/vendor
 
       - name: Deploy Backend via SSH
         env:
