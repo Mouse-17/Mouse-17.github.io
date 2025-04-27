@@ -357,7 +357,7 @@ const loadCart = async () => {
               to="/"
               class="d-inline-flex link-body-emphasis text-decoration-none"
             >
-              <img src="../img/logo.jpg" alt="" class="img-fluid" />
+              <img src="img/logo.jpg" alt="" class="img-fluid" />
             </RouterLink>
           </div>
 
@@ -597,7 +597,7 @@ const loadCart = async () => {
         <div class="row gx-0">
           <div class="col-12 col-lg-3 col-md-6 p-0">
             <div class="footer-box px-3">
-              <img src="../img/logo.jpg" alt="Logo" class="footer-logo mb-3" />
+              <img src="img/logo.jpg" alt="Logo" class="footer-logo mb-3" />
               <p class="fs-4 footer-infor">
                 <i class="bi bi-telephone fs-3"></i> 1900.5678
               </p>
