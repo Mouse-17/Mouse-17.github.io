@@ -2,55 +2,7 @@
   <main>
     <section class="admin">
       <!-- Thanh điều hướng bên trái -->
-      <div class="admin-left">
-        <img src="../../../public/img/user.webp" alt="" class="admin-avatar">
-        <h5>Admin</h5>
-        <RouterLink to="/admin" class="admin-menu-item active">
-          <i class="bi bi-palette2"></i>
-          <span>Bảng điều khiển</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlidanhmuc" class="admin-menu-item">
-          <i class="bi bi-inboxes-fill"></i>
-          <span>Quản lý danh mục</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlisanpham" class="admin-menu-item">
-          <i class="bi bi-box2-fill"></i>
-          <span>Quản lý sản phẩm</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlinguoidung" class="admin-menu-item">
-          <i class="bi bi-people-fill"></i>
-          <span>Quản lý người dùng</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlidonhang" class="admin-menu-item">
-          <i class="bi bi-receipt-cutoff"></i>
-          <span>Quản lý đơn hàng</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlibinhluan" class="admin-menu-item">
-          <i class="bi bi-chat-fill"></i>
-          <span>Quản lý bình luận</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlibaiviet" class="admin-menu-item">
-          <i class="bi bi-book-fill"></i>
-          <span>Quản lý bài viết</span>
-        </RouterLink>
-        <RouterLink to="/admin/quanlidanhgia" class="admin-menu-item">
-          <i class="bi bi-star-fill"></i>
-          <span>Quản lý đánh giá</span>
-        </RouterLink>
-        <div class="admin-menu-separator"></div>
-        <div class="admin-menu-item" @click="exportData">
-          <i class="bi bi-download"></i>
-          <span>Xuất dữ liệu</span>
-        </div>
-        <div class="admin-menu-item" @click="showHelp">
-          <i class="bi bi-question-circle"></i>
-          <span>Trợ giúp</span>
-        </div>
-        <div class="admin-menu-item" @click="logout">
-          <i class="bi bi-box-arrow-right"></i>
-          <span>Đăng xuất</span>
-        </div>
-      </div>
+      <AdminSidebar/>
 
       <!-- Phần nội dung chính -->
       <div class="admin-right">
@@ -510,6 +462,8 @@ import { useToast } from "vue-toastification";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import AdminSidebar from '@/views/admin/partials/AdminSidebar.vue';
+
 
 // Định nghĩa store và router
 const router = useRouter();

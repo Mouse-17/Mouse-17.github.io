@@ -73,23 +73,7 @@
 <template>
     <main>
         <section class="admin">
-            <div class="admin-left">
-                <img src="../../../public/img/user.webp" alt="" class="admin-avatar">
-                <h5>Admin</h5>
-                <RouterLink to="/admin" class="active"><i class="bi bi-palette2"></i><span>Bảng điều khiển</span></RouterLink>
-                <RouterLink to="/admin/quanlidanhmuc"><i class="bi bi-inboxes-fill"></i><span>Quản lý danh mục</span></RouterLink>
-                <RouterLink to="/admin/quanlisanpham"><i class="bi bi-box2-fill"></i><span>Quản lý sản phẩm</span></RouterLink>
-                <RouterLink to="/admin/quanlinguoidung"><i class="bi bi-people-fill"></i><span>Quản lý người dùng</span></RouterLink>
-                <RouterLink to="/admin/quanlidonhang"><i class="bi bi-receipt-cutoff"></i><span>Quản lý đơn hàng</span></RouterLink>
-                <RouterLink to="/admin/quanlibinhluan"><i class="bi bi-chat-fill"></i><span>Quản lý bình luận</span></RouterLink>
-                <RouterLink to="/admin/quanlibaiviet"><i class="bi bi-book-fill"></i><span>Quản lý bài viết</span></RouterLink>
-                <RouterLink to="/admin/quanlidanhgia"><i class="bi bi-star-fill"></i><span>Quản lý đánh giá</span></RouterLink>
-                <div class="tienichadmin-left">
-                    <a href="#"><i class="bi bi-gear"></i><span>CÀI ĐẶT</span></a>
-                    <a href="#"><i class="bi bi-question-circle"></i><span>TRỢ GIÚP</span></a>
-                    <a href="#"><i class="bi bi-info-circle"></i><span>THOÁT</span></a>
-                </div>
-            </div>
+            <AdminSidebar/>
 
             <div class="admin-right">
                 <div class="header-container">
