@@ -46,7 +46,7 @@ const fetchCategories = async () => {
 const fetchBrands = async () => {
   try {
     const response = await axios.get("/api/thuong-hieu");
-    const data = await response.json();
+    const data = response.data;
     if (data.status === "success") {
       brands.value = data.data;
     } else {
@@ -82,10 +82,8 @@ const fetchBrands = async () => {
 const fetchProducts = async () => {
   try {
     isLoading.value = true;
-    const response = await axios.get(
-        `/api/sanpham?trang=${currentPage.value}&tukhoa=${route.query.tukhoa || ""}`
-    );
-    const data = await response.json();
+    const response = await axios.get(`/api/sanpham?trang=${currentPage.value}&tukhoa=${route.query.tukhoa || ""}`);
+    const data = response.data;
 
     if (data.status == "success") {
       products.value = data.data;
@@ -516,13 +514,13 @@ const addToCart = async () => {
     );
 
     // Kiểm tra status code
-    if (!response.ok) {
-      const errorData = await response.json();
+    if (response.status !== 200) {
+      const errorData = response.data;
       console.error("Lỗi " + response.status + " từ server:", errorData);
       throw new Error("Lỗi máy chủ: " + JSON.stringify(errorData));
     }
 
-    const result = await response.json();
+    const result = await response.data;
 
     if (result.status === "success") {
       // Đóng modal

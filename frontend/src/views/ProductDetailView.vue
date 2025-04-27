@@ -3,7 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import type {Product} from "../stores/product";
 import {useCartStore} from "../stores/cart";
-
+import axios from "axios";
 const route = useRoute();
 const product_store = ref<Product | null>(null);
 const quantity = ref(1);
@@ -187,8 +187,8 @@ const uniqueSizes = computed(() => {
 const fetchProduct = async () => {
   try {
     const response = await axios.get(`/api/sanpham/${route.params.id}`);
-    const data = await response.json();
-    if (data.status == "success") {
+    const data = response.data;
+    if (data.status === "success") {
       product_store.value = data.data;
       console.log("Sản phẩm:", product_store.value);
 

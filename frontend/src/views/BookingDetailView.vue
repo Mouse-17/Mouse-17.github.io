@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import type {Yard} from '../stores/yard';
+import axios from "axios";
 
 const route = useRoute();
 const yard_store = ref<Yard | null>(null);
@@ -214,7 +215,7 @@ const submitBooking = async () => {
     });
 
     // Luôn lấy dữ liệu phản hồi để kiểm tra
-    const data = await response.json();
+    const data = await response.data;
     console.log('Phản hồi API:', data);
 
     if (response.status === 401) {
@@ -230,7 +231,7 @@ const submitBooking = async () => {
         errorMessage += data.message || 'Vui lòng kiểm tra lại thông tin.';
       }
       bookingError.value = errorMessage;
-    } else if (response.ok && data.status === 'success') {
+    } else if (data.status === 'success') {
       // Đặt sân thành công
       bookingSuccess.value = true;
 

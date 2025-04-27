@@ -2,6 +2,7 @@
 import {onMounted, ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
 import type {Yard} from '../stores/yard';
+import axios from "axios";
 
 const route = useRoute();
 const yard_store = ref<Yard[]>([]);
@@ -64,10 +65,10 @@ const fetchyard = async () => {
     console.log(apiUrl);
 
     const response = await axios.get(apiUrl);
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const datas = await response.json();
+    const datas = response.data;
     if (datas.status == 'success') {
       yard_store.value = datas.data;
       currentPage.value = datas.pagination.current_page;
@@ -165,10 +166,10 @@ watch(() => route.query.tukhoa, (newValue) => {
 const fetchYardTypes = async () => {
   try {
     const response = await axios.get('/api/loai-san');
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
+    const data = response.data;
     if (data.status === 'success') {
       yardTypes.value = data.data;
     }

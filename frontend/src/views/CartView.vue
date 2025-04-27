@@ -2,6 +2,7 @@
 import {computed, onMounted, ref} from "vue";
 import {useAuthStore} from "../stores/auth";
 import {useCartStore} from "../stores/cart";
+import axios from "axios";
 
 // Hàm tiện ích xử lý đường dẫn hình ảnh từ database
 const getImageUrl = (imagePath: string): string => {
@@ -435,7 +436,7 @@ const processPayment = async () => {
       });
 
       // Kiểm tra response status trước khi parse JSON
-      if (!response.ok) {
+      if (response.status !== 200) {
         const errorText = await response.text();
         console.error(`Lỗi HTTP ${response.status}:`, errorText);
 
@@ -538,8 +539,8 @@ const processPayment = async () => {
                       }
                   );
 
-                  if (directResponse.ok) {
-                    const directResult = await directResponse.json();
+                  if (response.status !== 200) {
+                    const directResult = await directResponse.data;
                     console.log("Kết quả đặt hàng trực tiếp:", directResult);
 
                     if (directResult.status === "success") {
@@ -710,11 +711,11 @@ const validateCartBeforePayment = async () => {
       withCredentials: true
     });
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`Lỗi khi kiểm tra giỏ hàng: ${response.status}`);
     }
 
-    const result = await response.json();
+    const result = await response.data;
     console.log("Kết quả kiểm tra giỏ hàng:", result);
 
     // Kiểm tra xem giỏ hàng có trống không

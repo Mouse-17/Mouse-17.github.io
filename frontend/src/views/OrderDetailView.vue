@@ -2,10 +2,13 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
+import axios from "axios";
+
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+
 
 interface OrderItem {
   id: number;
@@ -105,9 +108,9 @@ const fetchOrderDetail = async () => {
       withCredentials: true,
     });
 
-    const result = await response.json();
+    const result = response.data;
 
-    if (result.status === "success" || response.ok) {
+    if (result.status === "success" && response.status === 200) {
       if (result.data) {
         // Xử lý dữ liệu từ API
         const apiData = result.data;
