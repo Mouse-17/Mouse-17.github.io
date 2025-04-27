@@ -3,6 +3,7 @@ import {onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import type {Yard} from '../stores/yard';
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const yard_store = ref<Yard | null>(null);
@@ -232,15 +233,22 @@ const submitBooking = async () => {
         errorMessage += data.message || 'Vui lòng kiểm tra lại thông tin.';
       }
       bookingError.value = errorMessage;
-    } else if (response.status === 200 && data.status === 'success') {
-      // Đặt sân thành công
+    } else if (response.status === 201 && data.status === 'success') {
       bookingSuccess.value = true;
 
-      // Reset form
+      // Reset form fields
       customerName.value = '';
       customerEmail.value = '';
       customerPhone.value = '';
       bookingNote.value = '';
+
+      // Show SweetAlert2 success message
+      Swal.fire({
+        title: 'Đặt sân thành công!',
+        text: 'Bạn đã đặt sân thành công!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
     } else {
       // Xử lý lỗi khác từ server
       bookingError.value = data.message || 'Có lỗi xảy ra khi đặt sân. Vui lòng thử lại sau.';
