@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import Sidebar from "@/views/chu_san/partials/Sidebar.vue";
-
+import axios from "axios";
 const selectedItem = ref(1);
 const currentDate = ref(new Date().toISOString().slice(0, 10));
 const searchTerm = ref("");
@@ -21,284 +21,81 @@ const newBooking = ref({
 });
 
 // Danh sách các sân
-const fields = ref([
-  {id: 1, name: "Sân 1"},
-  {id: 2, name: "Sân 2"},
-  {id: 3, name: "Sân 3"},
-  {id: 4, name: "Sân 4"},
-  {id: 5, name: "Sân 5"},
-  {id: 7, name: "Sân 7"},
-  {id: 8, name: "Sân 8"},
-  {id: 9, name: "Sân 9"},
-]);
+const fields = ref([]);
+
+// Hàm gọi API để lấy danh sách sân
+const fetchFields = async () => {
+  try {
+    const response = await axios.get("/api/owner/fields"); // Đường dẫn API
+    if (response.data.fields && response.data.fields.length === 0) {
+      console.warn("Không có sân nào được trả về.");
+      fields.value = []; // Gán một mảng rỗng
+    } else {
+      fields.value = response.data.fields || []; // Gán dữ liệu trả về hoặc mảng rỗng nếu không hợp lệ
+    }
+    console.log("Danh sách sân:", fields.value);
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách sân:", error);
+  }
+};
 
 // Danh sách khung giờ
 const timeSlots = ref([
-  {id: 1, time: "6:00", display: "6:00"},
-  {id: 2, time: "8:00", display: "8:00"},
-  {id: 3, time: "10:00", display: "10:00"},
-  {id: 4, time: "12:00", display: "12:00"},
-  {id: 5, time: "14:00", display: "14:00"},
-  {id: 6, time: "16:00", display: "16:00"},
-  {id: 7, time: "18:00", display: "18:00"},
-  {id: 8, time: "20:00", display: "20:00"},
+  "6:00 - 6:30",
+  "6:30 - 7:00",
+  "7:00 - 7:30",
+  "7:30 - 8:00",
+  "8:00 - 8:30",
+  "8:30 - 9:00",
+  "9:00 - 9:30",
+  "9:30 - 10:00",
+  "10:00 - 10:30",
+  "10:30 - 11:00",
+  "11:00 - 11:30",
+  "11:30 - 12:00",
+  "12:00 - 12:30",
+  "12:30 - 1:00",
+  "1:00 - 1:30",
+  "1:30 - 2:00",
+  "2:00 - 2:30",
+  "2:30 - 3:00",
+  "3:00 - 3:30",
+  "3:30 - 4:00",
+  "4:00 - 4:30",
+  "4:30 - 5:00",
+  "5:00 - 5:30",
+  "5:30 - 6:00",
 ]);
 
 // Danh sách đặt sân (mẫu)
 const bookings = ref([
-  {
-    id: "BK001",
-    field: 1,
-    time: "6:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK002",
-    field: 2,
-    time: "6:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK003",
-    field: 3,
-    time: "6:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK004",
-    field: 4,
-    time: "8:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK005",
-    field: 9,
-    time: "8:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK007",
-    field: 1,
-    time: "10:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK008",
-    field: 2,
-    time: "10:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK009",
-    field: 4,
-    time: "10:00",
-    customer: "Đạt",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK010",
-    field: 5,
-    time: "10:00",
-    customer: "Đạt",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK011",
-    field: 8,
-    time: "12:00",
-    customer: "Đạt",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK012",
-    field: 9,
-    time: "12:00",
-    customer: "Đạt",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK013",
-    field: 1,
-    time: "14:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK014",
-    field: 2,
-    time: "14:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK015",
-    field: 3,
-    time: "14:00",
-    customer: "Thủy Nga",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK016",
-    field: 4,
-    time: "14:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK017",
-    field: 5,
-    time: "14:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK018",
-    field: 9,
-    time: "14:00",
-    customer: "Đạt",
-    phone: "0123456789",
-    price: 140000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK020",
-    field: 1,
-    time: "16:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK021",
-    field: 2,
-    time: "16:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK022",
-    field: 5,
-    time: "16:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK023",
-    field: 7,
-    time: "16:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK020",
-    field: 3,
-    time: "18:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK021",
-    field: 4,
-    time: "18:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK022",
-    field: 9,
-    time: "18:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK020",
-    field: 1,
-    time: "20:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK021",
-    field: 2,
-    time: "20:00",
-    customer: "Hòa",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK022",
-    field: 5,
-    time: "20:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
-  {
-    id: "BK023",
-    field: 7,
-    time: "20:00",
-    customer: "Tuấn",
-    phone: "0123456789",
-    price: 240000,
-    date: "2025-04-19",
-  },
+  { id: "BK001", field: 1, time: "6:00 - 6:30", customer: "Thủy Nga", price: 140000 },
+  { id: "BK002", field: 2, time: "8:00 - 8:30", customer: "Tuấn", price: 140000 },
+  { id: "BK003", field: 3, time: "10:00 - 10:30", customer: "Đạt", price: 140000 },
 ]);
+
+// Lấy thông tin đặt sân
+const getBooking = (fieldId, time) => {
+  return bookings.value.find((b) => b.field === fieldId && b.time === time);
+};
+
+// Định dạng giá tiền
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("vi-VN").format(price);
+};
+
+// Xử lý mở modal đặt sân
+const openBookingModal = (fieldId, time) => {
+  newBooking.value = {
+    field: fieldId,
+    time: time,
+    customer: "",
+    phone: "",
+    price: time.startsWith("1") ? 140000 : 240000, // Giá theo giờ
+    date: currentDate.value,
+  };
+  showBookingModal.value = true;
+};
 
 const menuItems = ref([
   {text: "Thống kê", icon: "bi bi-bar-chart", link: "/chusan"},
@@ -319,25 +116,6 @@ const filteredBookings = computed(() => {
   });
 });
 
-// Lấy đặt sân theo sân và giờ
-const getBooking = (fieldId, time) => {
-  return filteredBookings.value.find(
-      (b) => b.field === fieldId && b.time === time
-  );
-};
-
-// Mở modal đặt sân mới
-const openBookingModal = (fieldId, time) => {
-  newBooking.value = {
-    field: fieldId,
-    time: time,
-    customer: "",
-    phone: "",
-    price: time.startsWith("1") ? 140000 : 240000, // Giá theo giờ
-    date: currentDate.value,
-  };
-  showBookingModal.value = true;
-};
 
 // Đóng modal đặt sân
 const closeBookingModal = () => {
@@ -393,14 +171,10 @@ const getFieldName = (fieldId) => {
   return field ? field.name : "";
 };
 
-// Định dạng giá tiền
-const formatPrice = (price) => {
-  return new Intl.NumberFormat("vi-VN").format(price);
-};
-
 onMounted(() => {
   // Khởi tạo ngày hiện tại
   currentDate.value = new Date().toISOString().slice(0, 10);
+  fetchFields();
 });
 </script>
 
@@ -520,178 +294,35 @@ onMounted(() => {
               <!-- Mốc thời gian bên trái -->
               <div class="time-col">
                 <div class="header-cell"></div>
-                <div class="time-cell">
-                  <h5>6:00 - 6:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>6:30 - 7:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>7:00 - 7:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>7:30 - 8:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>8:00 - 8:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>8:30 - 9:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>9:00 - 9:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>9:30 - 10:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>10:00 - 10:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>10:30 - 11:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>11:00 - 11:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>11:30 - 12:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>12:00 - 12:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>12:30 - 1:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>1:00 - 1:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>1:30 - 2:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>2:00 - 2:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>2:30 - 3:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>3:00 - 3:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>3:30 - 4:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>4:00 - 4:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>4:30 - 5:00</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>5:00 - 5:30</h5>
-                </div>
-                <div class="time-cell">
-                  <h5>5:30 - 6:00</h5>
+                <div v-for="slot in timeSlots" :key="slot" class="time-cell">
+                  <h5>{{ slot }}</h5>
                 </div>
               </div>
 
               <!-- Các sân -->
               <div v-for="field in fields" :key="field.id" class="field-col">
                 <div class="header-cell">Sân {{ field.id }}</div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '6:00')">
-                  <div v-if="getBooking(field.id, '6:00')" class="booking-card">
+                <div
+                    v-for="slot in timeSlots"
+                    :key="slot"
+                    class="booking-cell"
+                    @click="openBookingModal(field.id, slot)"
+                >
+                  <!-- Nếu có đặt sân -->
+                  <div v-if="getBooking(field.id, slot)" class="booking-card">
                     <div class="booking-id">
-                      {{ getBooking(field.id, '6:00').id }} -
-                      {{ getBooking(field.id, '6:00').customer }}
+                      {{ getBooking(field.id, slot).id }} -
+                      {{ getBooking(field.id, slot).customer }}
                     </div>
                     <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '6:00').price) }}đ
+                      {{ formatPrice(getBooking(field.id, slot).price) }}đ
                     </div>
                   </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '8:00')">
-                  <div v-if="getBooking(field.id, '8:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '8:00').id }} -
-                      {{ getBooking(field.id, '8:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '8:00').price) }}đ
-                    </div>
+
+                  <!-- Nếu không có đặt sân -->
+                  <div v-else class="empty-slot">
+                    <i class="bi bi-plus-circle"></i>
                   </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '10:00')">
-                  <div v-if="getBooking(field.id, '10:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '10:00').id }} -
-                      {{ getBooking(field.id, '10:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '10:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '12:00')">
-                  <div v-if="getBooking(field.id, '12:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '12:00').id }} -
-                      {{ getBooking(field.id, '12:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '12:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '14:00')">
-                  <div v-if="getBooking(field.id, '14:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '14:00').id }} -
-                      {{ getBooking(field.id, '14:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '14:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '16:00')">
-                  <div v-if="getBooking(field.id, '16:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '16:00').id }} -
-                      {{ getBooking(field.id, '16:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '16:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '18:00')">
-                  <div v-if="getBooking(field.id, '18:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '18:00').id }} -
-                      {{ getBooking(field.id, '18:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '18:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
-                </div>
-                <div class="booking-cell" @click="openBookingModal(field.id, '20:00')">
-                  <div v-if="getBooking(field.id, '20:00')" class="booking-card">
-                    <div class="booking-id">
-                      {{ getBooking(field.id, '20:00').id }} -
-                      {{ getBooking(field.id, '20:00').customer }}
-                    </div>
-                    <div class="booking-price">
-                      {{ formatPrice(getBooking(field.id, '20:00').price) }}đ
-                    </div>
-                  </div>
-                  <div v-else class="empty-slot"><i class="bi bi-plus-circle"></i></div>
                 </div>
               </div>
             </div>
@@ -762,7 +393,7 @@ onMounted(() => {
 }
 
 .booking-card {
-  height: 100%;
+  height: 80%;
   background-color: #ca8a04;
   border-radius: 6px;
   padding: 10px;

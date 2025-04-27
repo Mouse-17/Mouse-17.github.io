@@ -1,117 +1,118 @@
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
-import Editor from '@tinymce/tinymce-vue'
-import {useRoute} from 'vue-router'
+import { ref } from 'vue';
+import axios from 'axios';
+import Editor from '@tinymce/tinymce-vue';
+import { useRoute } from 'vue-router';
 import Sidebar from "@/views/chu_san/partials/Sidebar.vue";
 
-const content = ref('') // Biến lưu nội dung từ TinyMCE
+// Biến lưu nội dung từ TinyMCE và thông tin sân
+const content = ref('');
+const fieldName = ref('');
+const address = ref('');
+const fieldCategory = ref('');
+const price = ref(0); // Biến lưu giá
+const quantity = ref(1);
+const mainImage = ref<File | null>(null);
 
-// Hàm xử lý khi thay đổi nội dung
+// Trạng thái
+const successMessage = ref('');
+const errorMessage = ref('');
+const isLoading = ref(false);
+
+// Hàm xử lý khi thay đổi nội dung TinyMCE
 const handleEditorChange = (newContent: string) => {
-  content.value = newContent
-}
+  content.value = newContent;
+};
 
-// Hàm lưu dữ liệu vào database (có thể gọi API backend)
-const saveToDatabase = async () => {
-  try {
-    const response = await fetch('https://ov7q7a587gh1evvwf2jarxnmfk8ycc7wfv69v5jsdvh0huew.com/save', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({content: content.value})
-    })
-    const result = await response.json()
-    console.log('Lưu thành công:', result)
-  } catch (error) {
-    console.error('Lỗi khi lưu:', error)
+// Hàm xử lý khi thay đổi file
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    mainImage.value = target.files[0];
   }
-}
+};
 
-const route = useRoute()
-// Xác định đường dẫn hiện tại
-const currentPath = computed(() => route.path)
+// Hàm gửi dữ liệu đến API khi nhấn nút "Thêm"
+const addField = async () => {
+  try {
+    isLoading.value = true;
 
-// Danh sách các mục menu
-const menuItems = [
-  {name: 'Thống kê', icon: 'bi-bar-chart', path: '/chusan'},
-  {name: 'Lịch sân', icon: 'bi-list-check', path: '/lichsan'},
-  {name: 'Chờ phê duyệt', icon: 'bi-hourglass-split', path: '/pheduyet'},
-  {name: 'Khách hàng thân thiết', icon: 'bi-hearts', path: '/khyeuthich'},
-  {name: 'Cài đặt', icon: 'bi-gear', path: '/caidat'}
-]
+    // Kiểm tra dữ liệu nhập vào
+    if (!fieldName.value || !address.value || !content.value || !fieldCategory.value || !mainImage.value || price.value <= 0) {
+      errorMessage.value = 'Vui lòng nhập đầy đủ thông tin và đảm bảo giá lớn hơn 0!';
+      return;
+    }
+
+    // Chuẩn bị dữ liệu form
+    const formData = new FormData();
+    formData.append('Ten_san', fieldName.value);
+    formData.append('Dia_chi', address.value);
+    formData.append('Mo_ta', content.value);
+    formData.append('ID_Loai', fieldCategory.value);
+    formData.append('Gia', price.value.toString()); // Thêm giá vào form
+    formData.append('So_luong', quantity.value.toString());
+    formData.append('Hinh_anh', mainImage.value);
+
+    // Gửi API
+    const response = await axios.post('/api/fields', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // Xử lý kết quả
+    successMessage.value = 'Thêm sân thành công!';
+    console.log('Field added:', response.data);
+  } catch (error: any) {
+    errorMessage.value = error.response?.data?.message || 'Có lỗi xảy ra!';
+    console.error('Lỗi khi thêm sân:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 </script>
+
 <template>
   <main>
     <section class="accept">
       <div class="row gx-0">
-        <Sidebar/>
+        <Sidebar />
         <div class="col-10">
           <div class="bg-white p-5"
                style="box-shadow: 0 0 18px var(--shadow2); height: 667px; border-radius: 20px 0 0 20px;">
             <h3 class="px-3 m-0 fs-1 fw-bold text-start" style="color: var(--colortext1);">Thêm sân mới</h3>
-            <form action="" enctype="multipart/form-data" method="post">
+            <form @submit.prevent="addField">
               <div class="row gx-0">
                 <div class="col-5 p-0">
                   <div class="px-3">
                     <div class="px-2">
                       <label class="mt-5 mb-3" for="inputNameYard" style="font-size: 1.6rem;">Tên sân</label>
-                      <input id="inputNameYard" class="d-block w-100 form-date inputBorder" placeholder="VD: Tada D2"
-                             type="text">
+                      <input id="inputNameYard" v-model="fieldName" class="d-block w-100 form-date inputBorder" placeholder="VD: Tada D2" type="text">
                     </div>
                     <div class="px-2">
                       <label class="mt-5 mb-3" for="inputAddress" style="font-size: 1.6rem;">Địa chỉ</label>
-                      <input id="inputAddress" class="d-block w-100 form-date inputBorder" placeholder="VD: 57 Ung Văn Khiêm, Bình Thạnh,..."
-                             type="text">
+                      <input id="inputAddress" v-model="address" class="d-block w-100 form-date inputBorder" placeholder="VD: 57 Ung Văn Khiêm, Bình Thạnh,..." type="text">
+                    </div>
+                    <div class="px-2">
+                      <label class="mt-5 mb-3" for="inputPrice" style="font-size: 1.6rem;">Giá</label>
+                      <input id="inputPrice" v-model="price" class="d-block w-100 form-date inputBorder" placeholder="VD: 500000" type="number" min="0" />
                     </div>
                     <div class="row justify-content-between align-items-center gx-0">
                       <div class="col-6">
                         <div class="px-2">
-                          <label class="d-block mt-5 mb-3" for="inputEmail" style="font-size: 1.6rem;">Sân</label>
-                          <select id="" class="form-date inputBorder d-block w-100" name="">
-                            <option selected value="">Bóng đá</option>
-                            <option value="">Bóng rổ</option>
-                            <option value="">Tennis</option>
-                            <option value="">Cầu lông</option>
-                            <option value="">Pickkleball</option>
-                            <option value="">Bóng chuyền</option>
-                            <option value="">Golf</option>
-                            <option value="">Hồ bơi</option>
+                          <label class="d-block mt-5 mb-3" for="inputCategory" style="font-size: 1.6rem;">Loại sân</label>
+                          <select id="inputCategory" v-model="fieldCategory" class="form-date inputBorder d-block w-100">
+                            <option value="1">Sân 5</option>
+                            <option value="2">Sân 7</option>
+                            <option value="3">Sân 11</option>
                           </select>
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="px-2">
-                          <label class="d-block mt-5 mb-3" for="inputEmail" style="font-size: 1.6rem;">Loại sân</label>
-                          <select id="" class="form-date inputBorder d-block w-100" name="">
-                            <option selected value="">Sân 5</option>
-                            <option value="">Sân 7</option>
-                            <option value="">Sân 11</option>
-                            <option value="">Sân ngoài trời</option>
-                            <option value="">Sân trong nhà</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="px-2">
-                          <label class="d-block mt-5 mb-3" for="inputEmail" style="font-size: 1.6rem;">Mở cửa</label>
-                          <select id="" class="form-date inputBorder d-block w-100" name="">
-                            <option selected value="">24/24</option>
-                            <option value="">05:00 - 22:00</option>
-                            <option value="">05:00 - 23:00</option>
-                            <option value="">05:00 - 00:00</option>
-                            <option value="">06:00 - 22:00</option>
-                            <option value="">06:00 - 23:00</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="px-2">
-                          <label class="d-block mt-5 mb-3" for="inputEmail" style="font-size: 1.6rem;">Tổng số
-                            sân</label>
-                          <input id="" class="form-date inputBorder d-block w-100" max="11" min="1" name="" style="padding: 13px 8px;" type="number"
-                                 value="1">
+                          <label class="d-block mt-5 mb-3" for="inputQuantity" style="font-size: 1.6rem;">Tổng số sân</label>
+                          <input id="inputQuantity" v-model="quantity" class="form-date inputBorder d-block w-100" type="number" min="1" />
                         </div>
                       </div>
                     </div>
@@ -119,17 +120,7 @@ const menuItems = [
                       <div class="col-6 px-0">
                         <div class="px-2">
                           <label class="mt-5 mb-3" for="inputUpMain" style="font-size: 1.6rem;">Ảnh đại diện</label>
-                          <input id="inputUpMain" class="d-block w-100 form-date inputBorder" type="file">
-                          <p class="mt-3 fs-4 fw-light text-center fst-italic" style="color: var(--colortext3);">Chọn 1
-                            ảnh</p>
-                        </div>
-                      </div>
-                      <div class="col-6 px-0">
-                        <div class="px-2">
-                          <label class="mt-5 mb-3" for="inputUpThumnail" style="font-size: 1.6rem;">Ảnh phụ</label>
-                          <input id="inputUpThumnail" class="d-block w-100 form-date inputBorder" multiple type="file">
-                          <p class="mt-3 fs-4 fw-light text-center fst-italic" style="color: var(--colortext3);">Chọn
-                            nhiều ảnh</p>
+                          <input id="inputUpMain" type="file" @change="handleFileChange" class="d-block w-100 form-date inputBorder" />
                         </div>
                       </div>
                     </div>
@@ -138,25 +129,15 @@ const menuItems = [
                 <div class="col-7 p-0">
                   <div class="ps-3">
                     <label class="mt-5 mb-3" for="textareaDesc" style="font-size: 1.6rem;">Mô tả</label>
-                    <div>
-                      <Editor
-                          v-model="content"
-                          :init="{
-                                                    display: 'block',
-                                                    width: '100%',
-                                                    height: '460px',
-                                                    plugins: 'lists link image table code help wordcount',
-                                                    toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-                                                }"
-                          api-key="ov7q7a587gh1evvwf2jarxnmfk8ycc7wfv69v5jsdvh0huew"
-                          @input="handleEditorChange"
-                      />
-                    </div>
+                    <Editor v-model="content" :init="{ height: 460, plugins: 'lists link image table code', toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code' }" api-key="ov7q7a587gh1evvwf2jarxnmfk8ycc7wfv69v5jsdvh0huew" @input="handleEditorChange" />
                   </div>
                 </div>
               </div>
               <div class="d-flex justify-content-end">
-                <button class="btn-booknow" type="button">Thêm</button>
+                <button class="btn-booknow" :disabled="isLoading">
+                  <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Thêm
+                </button>
               </div>
             </form>
           </div>
