@@ -87,8 +87,11 @@ jobs:
           npm install
           npm run build
 
-      - name: Deploy Frontend to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.PERSONAL_TOKEN }}
-          publish_dir: frontend/dist
+      - name: Deploy Built Frontend to Server
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          cd frontend
+          zip -r build.zip dist -x "node_modules/*"
+          sshpass -e scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} build.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/frontend
+          sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /frontend && unzip -o build.zip && rm build.zip"
