@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 import Sidebar from "@/views/chu_san/partials/Sidebar.vue";
 import axios from "axios";
+const apiURL = import.meta.env.VITE_API_URL as string;
+
 
 const selectedItem = ref(0);
 const isEditing = ref(false);
@@ -107,7 +109,7 @@ onMounted(fetchUserInfo);
                       <img
                           alt="Ảnh đại diện"
                           class="img-fluid w-100 h-100 object-fit-cover"
-                          :src="userInfo.avatar || '../../../public/img/user.webp'"
+                          :src="userInfo.avatar ? apiURL + userInfo.avatar : apiURL + '/public/img/user.webp'"
                       />
                     </div>
                     <h4 class="fw-bold text-dark">{{ userInfo.name }}</h4>
