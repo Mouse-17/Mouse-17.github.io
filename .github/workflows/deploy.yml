@@ -79,7 +79,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Install npm dependencies and build Vue  app
         run: |
