@@ -2,7 +2,7 @@
   <main class="profile-page py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
           <div class="card profile-sidebar">
             <div class="card-body text-center">
               <div class="avatar-container mb-4">
