@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -18,10 +17,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  
   build: {
     rollupOptions: {
       external: [
-        '/img/Banner-ChuSan.png' // Thêm file vào danh sách ngoại lệ
+        '/img/Banner-ChuSan.png'
       ]
     }
   }
