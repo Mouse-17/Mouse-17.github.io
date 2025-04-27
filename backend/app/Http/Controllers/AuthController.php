@@ -574,7 +574,7 @@ class AuthController extends Controller
         return response()->json($users);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         if (!$request->user()->isAdmin()) {
             return response()->json([
