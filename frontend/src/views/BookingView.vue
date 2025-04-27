@@ -425,7 +425,7 @@ onMounted(() => {
             <div v-if="searchKeyword" class="alert alert-info fs-4 m-3">
               Kết quả tìm kiếm cho: <strong>{{ searchKeyword }}</strong>
             </div>
-            <p class="fs-4 m-3" style="color: var(--colortext2)">Có {{ totalItems }} kết quả được hiển thị</p>
+            <p class="fs-4 m-3" style="color: var(--colortext2)">Hiển thị {{ yard_store.length }} trong tổng số {{ totalItems }} sản phẩm</p>
             <div class="row gx-0">
               <template v-if="yard_store.length > 0">
                 <div v-for="yard in yard_store" :key="yard.id" class="col-12 col-lg-4 col-md-6 p-0">
