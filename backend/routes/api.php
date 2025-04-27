@@ -207,6 +207,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/products', [ProductController::class, 'store']);
         Route::put('/admin/products/{id}', [ProductController::class, 'update']);
         Route::delete('/admin/products/{id}', [ProductController::class, 'destroy']);
+        Route::get('/admin/categories', [ProductController::class, 'getCategory']);
         Route::post('/admin/categories', [ProductController::class, 'storeCategory']);
         Route::put('/admin/categories/{id}', [ProductController::class, 'updateCategory']);
         Route::delete('/admin/categories/{id}', [ProductController::class, 'destroyCategory']);

@@ -134,6 +134,22 @@ class ProductController extends Controller
         }
     }
 
+    public function getCategory(){
+        try {
+            $categories = DanhMuc::all();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $categories
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Lỗi khi lấy danh sách danh mục: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Create a new product category
      */
