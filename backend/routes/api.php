@@ -195,6 +195,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/admin/users/{id}', [AuthController::class, 'destroy']);
 
         // Posts management
+        Route::get('/admin/posts', [PostController::class, 'index']);
         Route::post('/admin/posts', [PostController::class, 'store']);
         Route::put('/admin/posts/{id}', [PostController::class, 'update']);
         Route::delete('/admin/posts/{id}', [PostController::class, 'destroy']);

@@ -134,7 +134,8 @@ class ProductController extends Controller
         }
     }
 
-    public function getCategory(){
+    public function getCategory(): \Illuminate\Http\JsonResponse
+    {
         try {
             $categories = DanhMuc::all();
 

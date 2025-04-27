@@ -109,10 +109,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref, onMounted } from 'vue';
 import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
+import axios from 'axios';
 
-// Define constants for status types
+// Định nghĩa trạng thái bài viết
 const STATUS_TYPES = {
   DRAFT: 'draft',           // Nháp
   PUBLISHED: 'published',   // Đang đăng
@@ -120,45 +121,42 @@ const STATUS_TYPES = {
   ARCHIVED: 'archived'      // Đã lưu trữ
 };
 
-// Sample post data
-const posts = ref([
-  {
-    id: 1,
-    name: 'Cầu lông',
-    title: 'Cầu lông',
-    author: 'Nga',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.PUBLISHED
-  },
-  {
-    id: 2,
-    name: 'Bóng đá',
-    title: 'Bóng đá',
-    author: 'Minh',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.PUBLISHED
-  },
-  {
-    id: 3,
-    name: 'Bóng đá',
-    title: 'Bóng đá',
-    author: 'Minh',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.PUBLISHED
-  },
-  {
-    id: 4,
-    name: 'Bóng đá',
-    title: 'Bóng đá',
-    author: 'Minh',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.PUBLISHED
-  }
-]);
+// Dữ liệu bài viết
+const posts = ref([]);
+const loading = ref(false);
+const error = ref(null);
 
-// Function to cycle through statuses
+// Hàm tải danh sách bài viết từ API
+async function fetchPosts() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get('/api/admin/posts', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      posts.value = response.data.data.map(post => ({
+        id: post.id,
+        name: post.name,
+        title: post.title,
+        author: post.author,
+        content: post.content,
+        status: post.status || STATUS_TYPES.DRAFT,
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách bài viết:", err);
+    error.value = "Không thể tải danh sách bài viết. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Hàm chuyển đổi trạng thái bài viết
 function changeStatus(post) {
-  // Cycle through statuses: Đang đăng -> Chưa đăng -> Nháp -> Đã lưu trữ -> Đang đăng
   switch (post.status) {
     case STATUS_TYPES.PUBLISHED:
       post.status = STATUS_TYPES.PENDING;
@@ -177,7 +175,7 @@ function changeStatus(post) {
   }
 }
 
-// Get appropriate CSS class based on status
+// Hàm lấy lớp CSS theo trạng thái
 function getStatusClass(status) {
   switch (status) {
     case STATUS_TYPES.PUBLISHED:
@@ -193,7 +191,7 @@ function getStatusClass(status) {
   }
 }
 
-// Get human-readable status text
+// Hàm lấy văn bản trạng thái
 function getStatusText(status) {
   switch (status) {
     case STATUS_TYPES.PUBLISHED:
@@ -208,6 +206,9 @@ function getStatusText(status) {
       return 'Không xác định';
   }
 }
+
+// Tải dữ liệu khi component được mount
+onMounted(fetchPosts);
 </script>
 
 <style scoped>
