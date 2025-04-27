@@ -98,7 +98,7 @@ jobs:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
           cd frontend
-          zip -r build.zip .
+          zip -r build.zip . -x "node_modules/*"
           if [ ! -f build.zip ]; then
             echo "Error: build.zip not found" && exit 1
           fi
