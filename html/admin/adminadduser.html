@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- font inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <title></title>
+</head>
+
+<body>
+    <style>
+
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.role-phone {
+    display: flex;
+    gap: 10px;
+}
+.role{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.phone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.submit-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 25px;
+    background-color: #C99928;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+button:hover {
+    background-color: #b38422;
+}
+    </style>
+    <main>
+        <section class="admin">
+            <div class="container">
+                <div class="row gx-0">
+            <!-- Bên trái -->
+                    <div class="col-12 col-lg-3 col-md-6 p-0 mt-2 admin-left">
+                        <img src="../public/img/user1.jpg" alt="" class="admin-avatar">
+                        <h5>Admin</h5>
+                        <a href="admin.html"><i class="bi bi-palette2"></i>Bảng điều khiển</a></p>
+                        <a href="admindanhmuc.html"><i class="bi bi-inboxes-fill"></i>Quản lý danh mục</a>
+                        <a href="adminsanpham.html"><i class="bi bi-box2-fill"></i>Quản lý sản phẩm</a>
+                        <a href="admindangnhap.html" class="click-admin"><i class="bi bi-people-fill"></i>Quản lý đăng nhập</a>
+                        <a href="admingiohanh.html"><i class="bi bi-receipt-cutoff"></i>Quản lý đơn hàng</a>
+                        <a href="adminbinhluan.html"><i class="bi bi-chat-fill"></i>Quản lý bình luận</a>
+                        <a href="adminbaiviet.html"><i class="bi bi-book-fill"></i>Quản lý bài viết</a>
+                        <div class="tienichadmin-left">
+                            <a href="#"><i class="bi bi-gear"></i>CÀI ĐẶT</a>
+                            <a href="#"><i class="bi bi-question-circle"></i>TRỢ GIÚP</a>
+                            <a href="#"><i class="bi bi-info-circle"></i>THOÁT</a>
+                        </div>
+                    </div>
+        <!-- Bên phải -->
+                <div class="col-lg-9 admin-right" style="margin-top: 50px;">
+                    <h2>Thêm người dùng</h2>
+
+                    <form>
+                        <div class="form-group">
+                            <label for="fullname">Họ tên</label>
+                            <input type="text" id="fullname" placeholder="VD: Nga">
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="VD: nga123@gmail.com">
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="address">Địa chỉ</label>
+                            <input type="text" id="address" placeholder="VD: Bình Thuận">
+                        </div>
+                
+                        <div class="form-group role-phone">
+                            <div class="role">
+                                <label for="role">Vai trò</label>
+                                <select id="role">
+                                    <option>Khách hàng</option>
+                                    <option>Quản trị viên</option>
+                                </select>
+                            </div>
+                
+                            <div class="phone">
+                                <label for="phone">Số điện thoại</label>
+                                <input type="text" id="phone" placeholder="VD: 0123456789">
+                            </div>
+                        </div>
+                    </form>
+                    <button class="submit-btn">Thêm</button>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../js/web.js"></script>
+</html>

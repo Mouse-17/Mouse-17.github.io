@@ -1,0 +1,661 @@
+.admin{
+    .router-link-exact-active{
+        color: var(--colortext1) !important;
+        background-color: var(--hover2) !important;
+    }
+}
+.admin-avatar{
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-left: 50px;
+}
+.admin-left{
+    width: 200px;
+    height: 100px;
+    font-size: 2rem;
+    .click-admin{
+        background-color: var(--hover2);    
+    }
+    i{
+        font-size: 1.5rem;
+        padding: 0px 5px 0px ;
+    }
+    h5{
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-top: 20px;
+        text-align: center;
+        display: block;
+    }
+    a{
+        font-size: 1.5rem;
+        font-weight: 500;
+        display: block;
+        padding: 10px;
+        color: var(--colortext1);
+        text-decoration: none;
+        margin: 5px 0;
+        border-radius: 8px;
+    }
+    a:hover {
+        background-color: var(--hover2);
+        border-radius: 8px;
+    }
+}
+.tienichadmin-left{
+    margin-top: 100px;
+    display: block;
+    a{
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: var(--colortext1);
+        text-decoration: none;
+    }
+    a:hover {
+        background-color: none;
+        border-radius: 8px;
+    }
+}
+
+/* phần bên phải*/
+/* Kiểu tiêu đề chính */
+.admin-right{
+    margin-left: 20px;
+}
+.btn-add-new-admin{
+    display: block;
+    width: fit-content;
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 16px 24px;
+    border-radius: 8px;
+    &:hover{
+        background-color: var(--hover2);
+    }
+}
+.admin-right h5{
+    font-size: 2rem;
+    font-weight: 500;
+    margin-top: 20px;
+    display: block;
+}
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    i{
+        font-size: 1.7rem;
+        padding-right: 5px;
+    }
+    h5{
+        font-weight: 700px;
+    }
+}
+
+.title-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-post-button {
+    background-color: #c59d23;
+    color: white;
+    border: none;
+    padding: 15px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-post-button:hover {
+    background-color: #b08c1b;
+}
+
+.text-muted {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Tabs điều hướng */
+.nav-tabs {
+    border-bottom: none; /* Bỏ viền dưới của cả nav */
+    display: flex;
+    gap: 20px; /* Tăng khoảng cách giữa các tab */
+}
+
+.nav-tabs .nav-item {
+    text-align: center; /* Căn giữa nội dung */
+}
+
+.nav-tabs .nav-link {
+    color: #333;
+    font-weight: 500;
+    font-size: 16px; /* Phóng to chữ */
+    padding: 12px 20px; /* Làm ô rộng hơn */
+    border: none !important; /* Bỏ viền xung quanh */
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+    border-bottom: 3px solid #000 !important; /* Gạch chân tab đang chọn */
+}
+.nav-tabs .nav-link:hover {
+    color: #000;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+/* Ô tìm kiếm và bộ lọc */
+.filter-search-container {
+    padding: 10px 15px;
+}
+
+.btn-light {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.search-box {
+    max-width: 300px;
+    width: 100%;
+}
+
+.input-group .form-control {
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+.input-group-text {
+    padding: 10px;
+    font-size: 1.5rem;
+}
+
+/* Bảng dữ liệu */
+.table {
+    margin-top: 15px;
+    background-color: #0b132b;
+    border:0;
+}
+th, td{
+    border: 0;
+    border-bottom: none;
+}
+.table thead {
+    color: white;
+    font-size: 30px;
+}
+.table tbody{
+    font-size: 30px;
+}
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+.table tbody tr td {
+    line-height:40px;
+}
+/* Hành động */
+.table td i {
+    font-size: 18px;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s;
+}
+
+.table td i:hover {
+    color: #000;
+}
+
+/* Phân trang */
+.pagination-container {
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung */
+    width: 100%; /* Đảm bảo full width */
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    background-color: #f1f1f1; /* Màu nền xanh đậm */
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.pagination .page-item {
+    margin: 0 5px; /* Khoảng cách giữa các item */
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5px;
+    height: 10px;
+    text-decoration: none;
+    background-color: var(--white);
+    color: var(--colortext2); /* Màu chữ xanh */
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    &:hover{
+        background-color: var(--primary);
+    }
+}
+.pagination .page-item.active .page-link {
+    background-color: #0b132b; /* Màu nền của item active */
+    color: white;
+}
+
+/* admin danh mục */
+
+.btn-apdung{
+    width: auto;
+    height: 28px;
+    color: var(--colortext1);
+    background-color: var();
+    font-size: 1.5rem;
+    border: var(--colortext1);
+    border-radius: 6px;
+    border-style: solid;
+    border-width: 0.1rem;
+    margin-right: 5px;
+    &:hover{
+        background-color: var(--hover2);
+    }
+}
+.select-admin-search{
+    display: inline;
+    width: auto;
+    height: auto;
+    margin-right: 5px;
+    color: var(--colortext1);
+    font-size: 1.5rem;
+    background-color: var(--white);
+    border: var(--colortext1);
+    border-style: solid;
+    border-width: 0.1rem;
+    &:hover{
+        background-color: var(--colortext3);
+    }
+}
+
+/* Sản phẩm */
+.admin-sanpham{
+    img{
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+    }
+}
+.sanpham-thongso{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    a{
+        font-size: 1.5rem;
+        margin-right: 5px;
+        color: #C22026;
+    }
+    a:hover{
+        color: var(--hover2);
+    }
+    span{
+        margin-left: 5px;
+        font-size: 1.5rem
+    };
+}
+
+/* Admin Đăng nhập */
+.btn-delete-admin-search{
+    width: 80px;
+    height: 35px;
+    float: left;
+    color: var(--white);
+    background-color: #C22026;
+    font-size: 1.5rem; 
+    border: var(--colortext1);
+    border-radius: 8px;
+    border-style: solid;
+    border-width: 0.1rem;
+    margin-right: 5px;
+    &:hover{
+        background-color: var(--hover2);
+    }
+    i{ 
+        float: right;
+        font-size: 1.5rem;
+    }
+}
+.admin-search-dangnhap{
+    display: flex;
+}
+.search-box-dangnhap {
+    max-width: 300px;
+    width: 100%;
+}
+
+/* Bảng điều khiển */
+
+.btn-xuat-admin{
+    width: 80px;
+    height: 30px;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    background-color: var(--white);
+    border: var(--colortext1);
+    border-style: solid;
+    border-width: 0.1rem;
+    &:hover{
+        background-color: var(--hover2);
+    }
+    i{
+        font-size: 1.3rem;
+        margin-right: 5px;
+    }
+}
+
+.bg-red-admin{
+    width: auto;
+    height: 160px;
+    border-radius: 8px;
+    background-color: #FFE2E5;
+    i{  
+        color: var(--white);
+        display: grid;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+        margin-left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #FA5A7D;
+        font-size: 2rem;
+    }
+    h5{
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+        margin-left: 20px;
+    }
+    p{
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--colortext1);
+        display: block;
+        margin-left: 20px;
+        margin-top: 5px;
+    }
+    small{
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #4079ED;
+        display: block;
+        margin-left: 20px;
+    }
+}
+
+.bg-orange-admin{
+    width: auto;
+    height: 160px;
+    border-radius: 8px;
+    background-color: #FFF4DE;
+    i{  
+        color: var(--white);
+        display: grid;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+        margin-left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #FF947A;
+        font-size: 2rem;
+    }
+    h5{
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+        margin-left: 20px;
+    }
+    p{
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--colortext1);
+        display: block;
+        margin-left: 20px;
+        margin-top: 5px;
+    }
+    small{
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #4079ED;
+        display: block;
+        margin-left: 20px;
+    }
+}
+
+.bg-green-admin{
+    width: auto;
+    height: 160px;
+    border-radius: 8px;
+    background-color: #DCFCE7;
+    i{  
+        color: var(--white);
+        display: grid;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+        margin-left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #3CD856;
+        font-size: 2rem;
+    }
+    h5{
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+        margin-left: 20px;
+    }
+    p{
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--colortext1);
+        display: block;
+        margin-left: 20px;
+        margin-top: 5px;
+    }
+    small{
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #4079ED;
+        display: block;
+        margin-left: 20px;
+    }
+}
+.bg-purple-admin{
+    width: auto;
+    height: 160px;
+    border-radius: 8px;
+    background-color: #F3E8FF;
+    i{  
+        color: var(--white);
+        display: grid;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+        margin-left: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #BF83FF;
+        font-size: 2rem;
+    }
+    h5{
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+        margin-left: 20px;
+    }
+    p{
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--colortext1);
+        display: block;
+        margin-left: 20px;
+        margin-top: 5px;
+    }
+    small{
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #4079ED;
+        display: block;
+        margin-left: 20px;
+    }
+}
+
+.product-card-admin .progress {
+    width: auto;
+    height: 10px;
+    display: grid;
+    margin-top: 15px;
+    td{
+        font-size: 1.2rem;
+    }
+    .progress-bar-blue{
+        background-color: #0095FF;
+    }
+    .progress-bar-green{
+        background-color: #00E58F;
+    }
+    .progress-bar-purple{
+        background-color: #884DFF;
+    }
+}
+.product-card-admin {
+    display: grid;
+    align-items: center;
+    margin-top: 20px;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    h5{
+        display: block;
+    }
+    span{
+        text-align: center;
+    }
+    .badge-blue{
+        display: grid;
+        align-items: center;
+        margin-top: 10px;
+        width: 40px;
+        font-size: 1rem;
+        background-color: #F0F9FF;
+        color: #0095FF;
+        height: 20px;
+        border-radius: 8px;
+        border-style: solid;
+        border-width: 0.2rem;
+    }
+    .badge-green{
+        display: grid;
+        align-items: center;
+        margin-top: 10px;
+        width: 40px;
+        font-size: 1rem;
+        background-color: #F0FDF4;
+        color: #00E58F;
+        height: 20px;
+        border-radius: 8px;
+        border-style: solid;
+        border-width: 0.2rem;
+    }
+    .badge-purple{
+        display: grid;
+        align-items: center;
+        margin-top: 10px;
+        width: 40px;
+        font-size: 1rem;
+        background-color: #FBF1FF;
+        color: #884DFF;
+        height: 20px;
+        border-radius: 8px;
+        border-style: solid;
+        border-width: 0.2rem;
+    }
+}
+
+
+
+/* Thêm Admin
+.admin-right-add{
+    margin-left: 20px;
+    background-color: var(--white);
+    height: auto;
+    border-radius: 8px;
+    margin-top: 20px;
+    h5{
+        font-size: 2rem;
+        font-weight: 500;
+        margin-top: 20px;
+        display: block;
+        margin-left: 7px;
+    }
+}
+.row-themadmin{
+    label{
+        margin-top: 10px;
+        font-size: 1.6rem;
+        font-weight: 500;
+    }
+}
+.form-admin-text{
+    font-size: 1.5rem;
+    height: auto;
+}
+.left-themadmin{
+    margin-left: 7px;
+    .form-admin-text{
+        font-size: 1.5rem;
+        height: auto;
+        width: 415px;
+    }
+}
+.right-themadmin{
+    margin-left: 10px;
+}
+.form-admin-select{
+    font-size: 1.5rem;
+    height: auto;
+    width: 400px;
+}
+.add-them-button{
+    width: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 45%;
+    margin-right: 50%;
+    background-color: #c59d23;
+    color: white;
+    border: none;
+    padding: 15px 24px;
+    font-size: 1.7rem;
+    font-weight: 600;
+    border-radius: 5px;
+}
+.text-add-admin{
+    width: 810px;
+    margin-left: 7px;
+} */

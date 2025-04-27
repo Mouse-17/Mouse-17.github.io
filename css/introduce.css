@@ -1,0 +1,31 @@
+
+.introduce{
+    background-color: var(--bg3);
+    padding: 40px 0;
+}
+
+.custom-intro{
+    background-color: var(--bg2);
+    border-radius: 12px;
+    padding: 32px 68px;
+}
+
+.custom-intro-box{
+    display: block;
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 20px 24px;
+    .custom-intro-text{
+        font-size: 2rem;
+        font-weight: 500;
+        margin: 0;
+        padding: 8px 0;
+        color: var(--colortext1);
+        text-align: center;
+    }
+    &:hover{
+        box-shadow: 0 0 28px var(--shadow2);
+        transform: scale(1.05);
+        transition: all 0.25s ease-in-out;
+    }
+}

@@ -1,0 +1,131 @@
+.product-detail{
+    padding: 40px 0;
+    background-color: var(--bg3);
+}
+.product-images img {
+    width: 30%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.product-thumnail{
+    height: 466px;
+    overflow-y: auto;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+
+
+.product-main img {
+    width: 100%;
+    border-radius: 5px;
+}
+.productname {
+    font-size: 2.4rem;
+    font-weight: 600;
+}
+
+.rating-link-view{
+    color: var(--colortext3);
+    &:hover{
+        color: var(--accent);
+        transition: all 0.2s ease-in-out;
+    }
+}
+
+.color-options div {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    &:hover{
+        border: 1px solid var(--primary);
+    }
+}
+
+.active-color-options{
+    border: 1px solid var(--primary);
+}
+
+.size-options {
+    display: flex;
+    gap: 8px;
+    div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 70px;
+        height: 40px;
+        border: 1px solid var(--colortext1);
+        &:hover{
+            cursor: pointer;
+            background-color: var(--primary);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+    }
+}
+
+.active-size-options{
+    background-color: var(--primary);
+    color: var(--white);
+    transition: all 0.3s ease;
+}
+
+.product-desc{
+    font-size: 1.4rem;
+    line-height: 2rem;
+    margin: 0;
+    color: var(--colortext3);
+    font-weight: 400;
+    text-align: justify;
+}
+
+.product-quantity{
+    width: 90px;
+    padding: 12px 10px;
+    background-color: transparent !important;
+    border: 1px solid var(--colortext1) !important;
+    color: var(--colortext1);
+    border-radius: 0;
+}
+
+.btn-order{
+    width: fit-content;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 14px 28px 15px 28px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    cursor: pointer;
+    &:hover{
+        background-color: var(--hover1);
+        transition: all 0.2s ease-in-out;
+    }
+}
+
+.btn-add-wishlist{
+    color: var(--colortext3);
+    div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 1px 0 0 0;
+        border-radius: 50%;
+        cursor: pointer;
+        background-color: var(--bg1);
+        &:hover{
+            background-color: var(--hover2);
+            transition: all 0.2s ease-in-out;
+            i{
+                color: var(--white);
+            }
+        }
+    }
+}

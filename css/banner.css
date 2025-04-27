@@ -1,0 +1,199 @@
+@keyframes appear {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.banner{
+    width: 100%;
+    height: fit-content;
+    background-image: url(../img/bannergif.gif);
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.banner-box{
+    padding: 90px 80px;
+}
+.heading1{
+    font-size: 3.6rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--white);
+    text-align: center;
+    text-shadow: 0 0 24px var(--shadow1);
+    @media screen and (max-width: 479px) {
+        font-size: 2.4rem;
+        line-height: 3.6rem;
+        padding: 0 12px;
+    }
+}
+.color-star{
+    color: var(--accent);
+    font-size: 1.8rem;
+}
+.color-star-gray{
+    color: var(--colortext3);
+    font-size: 1.8rem;
+}
+.custom-star{
+    position: relative;
+}
+.custom-star::after{
+    content: "";
+    position: absolute;
+    top: 48%;
+    left: 32%;
+    width: 100px;
+    height: 2px;
+    background-color: var(--white);
+    border-radius: 12px;
+    @media screen and (min-width: 768px) and (max-width: 979px) {
+        left: 26%;
+    }
+    @media screen and (max-width: 767px) {
+        left: 9%;
+    }
+    @media screen and (max-width: 479px) {
+        width: 70px;
+        left: 5%;
+    }
+}
+.custom-star::before{
+    content: "";
+    position: absolute;
+    top: 48%;
+    right: 32%;
+    width: 100px;
+    height: 2px;
+    background-color: var(--white);
+    border-radius: 12px;
+    @media screen and (min-width: 768px) and (max-width: 979px) {
+        right: 26%;
+    }
+    @media screen and (max-width: 767px) {
+        right: 9%;
+    }
+    @media screen and (max-width: 479px) {
+        width: 70px;
+        right: 5%;
+    }
+}
+.text-intro{
+    width: 47%;
+    min-width: 270px;
+    padding: 16px 0 40px 0;
+    margin-bottom: 24px;
+    line-height: 2.8rem;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--white);
+    text-shadow: 0 0 24px var(--shadow1);
+}
+
+
+.custom-form{
+    width: 74%;
+    background-color: var(--white);
+    padding: 20px 0;
+    border-radius: 12px;
+}
+
+.custom-select{
+    height: 54px;
+    color: var(--colortext1);
+    background-color: var(--bg1);
+    outline: none;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    div{
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: var(--colortext2);
+        padding: 0;
+        margin: 0;
+    }
+    i{
+        font-size: 1.4rem;
+        color: var(--colortext2);
+    }
+    &:hover{
+        div, i{
+            color: var(--colortext1);
+        }
+        .menu{
+            z-index: 10;
+            display: block;
+            animation: appear 0.25s ease-in-out;
+        }
+    }
+}
+
+.menu{
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 42px;
+    left: 0;
+    padding: 0;
+    list-style: none;
+    border-radius: 12px;
+
+    li{
+        label{
+            display: block;
+            box-sizing: border-box;
+            font-size: 1.4rem;
+            font-weight: 400;
+            cursor: pointer;
+            color: var(--colortext1);
+            background-color: var(--bg1);
+            padding: 14px;
+            border-bottom: 0.5px solid var(--bg1);
+            &:hover{
+                background-color: var(--accent);
+                color: var(--white);
+                transition: all 0.2s ease-in-out;
+            }
+        }
+    }
+}
+
+.form-date{
+    box-sizing: border-box;
+    padding: 16px 12px;
+    border-radius: 12px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    background-color: var(--bg1) !important;
+    color: var(--colortext1);
+    border: none !important;
+    outline: none !important;
+}
+
+.btn-find{
+    width: 100%;
+    text-align: center !important;;
+    padding: 18px 0;
+    border-radius: 12px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover{
+        color: var(--white);
+        transition: all 0.2s ease-in-out;
+        background-color: var(--hover2);
+    }
+}

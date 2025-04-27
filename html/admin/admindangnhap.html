@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- font inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Đăng nhập Admin</title>
+</head>
+
+<body>
+    <main>
+        <section class="admin">
+            <div class="container">
+                <div class="row gx-0">
+            <!-- Bên trái -->
+                    <div class="col-12 col-lg-3 col-md-6 p-0 mt-2 admin-left">
+                        <img src="../public/img/user1.jpg" alt="" class="admin-avatar">
+                        <h5>Admin</h5>
+                        <a href="admin.html"><i class="bi bi-palette2"></i>Bảng điều khiển</a></p>
+                        <a href="admindanhmuc.html"><i class="bi bi-inboxes-fill"></i>Quản lý danh mục</a>
+                        <a href="adminsanpham.html"><i class="bi bi-box2-fill"></i>Quản lý sản phẩm</a>
+                        <a href="admindangnhap.html" class="click-admin"><i class="bi bi-people-fill"></i>Quản lý đăng nhập</a>
+                        <a href="admingiohanh.html"><i class="bi bi-receipt-cutoff"></i>Quản lý đơn hàng</a>
+                        <a href="adminbinhluan.html"><i class="bi bi-chat-fill"></i>Quản lý bình luận</a>
+                        <a href="adminbaiviet.html"><i class="bi bi-book-fill"></i>Quản lý bài viết</a>
+                        <div class="tienichadmin-left">
+                            <a href="#"><i class="bi bi-gear"></i>CÀI ĐẶT</a>
+                            <a href="#"><i class="bi bi-question-circle"></i>TRỢ GIÚP</a>
+                            <a href="#" id="logoutButton"><i class="bi bi-info-circle"></i>THOÁT</a>
+                        </div>
+                    </div>
+        <!-- Bên phải -->
+                <div class="col-lg-9 admin-right">
+                    <div class="header-container">
+                        <div class="title-section">
+                            <h5>Tài khoản</h5>
+                            <p class="text-muted">Quản lý tài khoản người dùng</p>
+                        </div>
+                        <a href="adminadduser.html"><button class="add-post-button"><i class="bi bi-plus-lg"></i>Thêm tài khoản</button></a>
+                    </div>
+
+                    <div id="loginSection" class="auth-container" style="display:none;">
+                        <div class="auth-box">
+                            <h3 class="text-center mb-4">Đăng nhập Admin</h3>
+                            <div id="loginAlert" class="alert alert-danger" style="display: none;"></div>
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Nhập email của bạn" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Mật khẩu</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="userSection" class="user-management-container">
+                    <div class="d-flex justify-content-between mb-3">
+                            <div class="search-box">
+                                <input type="text" id="userSearchInput" class="form-control" placeholder="Tìm kiếm người dùng...">
+                            </div>
+                            <div class="filter-box">
+                                <select id="roleFilter" class="form-select">
+                                    <option value="">Tất cả vai trò</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="user">Người dùng</option>
+                            </select>
+                        </div>
+                    </div>                
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                                        <th>ID</th>
+                                        <th>Tên</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Thao tác</th>
+            </tr>
+        </thead>
+                                <tbody id="userTableBody">
+                                    <!-- Dữ liệu người dùng sẽ được hiển thị ở đây -->
+        </tbody>
+    </table>
+                        </div>
+
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul id="userPagination" class="pagination justify-content-center">
+                                <!-- Phân trang sẽ được hiển thị ở đây -->
+            </ul>
+        </nav>
+    </div>  
+
+                    <!-- Modal chỉnh sửa người dùng -->
+                    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa người dùng</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editUserForm">
+                                        <input type="hidden" id="editUserId" value="">
+                                        <div class="mb-3">
+                                            <label for="editUserName" class="form-label">Tên</label>
+                                            <input type="text" class="form-control" id="editUserName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editUserEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="editUserEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editUserRole" class="form-label">Vai trò</label>
+                                            <select class="form-select" id="editUserRole" required>
+                                                <option value="admin">Admin</option>
+                                                <option value="user">Người dùng</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editUserPhone" class="form-label">Số điện thoại</label>
+                                            <input type="text" class="form-control" id="editUserPhone">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editUserAddress" class="form-label">Địa chỉ</label>
+                                            <textarea class="form-control" id="editUserAddress" rows="3"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="button" class="btn btn-primary" id="saveUserChanges">Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../js/admin.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        const token = localStorage.getItem('auth_token');
+        const loginSection = document.getElementById('loginSection');
+        const userSection = document.getElementById('userSection');
+        
+        // Hiển thị phần phù hợp dựa trên trạng thái đăng nhập
+        if (!token) {
+            loginSection.style.display = 'block';
+            userSection.style.display = 'none';
+            document.querySelector('.admin-left').style.display = 'none';
+        } else {
+            loginSection.style.display = 'none';
+            userSection.style.display = 'block';
+            loadUserData();
+        }
+        
+        // Xử lý sự kiện đăng nhập
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    await window.adminAPI.login(email, password);
+                    window.location.reload();
+                } catch (error) {
+                    const loginAlert = document.getElementById('loginAlert');
+                    loginAlert.textContent = 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.';
+                    loginAlert.style.display = 'block';
+                }
+            });
+        }
+        
+        // Xử lý sự kiện đăng xuất
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.adminAPI.logout();
+            });
+        }
+        
+        // Xử lý lọc vai trò
+        const roleFilter = document.getElementById('roleFilter');
+        if (roleFilter) {
+            roleFilter.addEventListener('change', function() {
+                loadUserData();
+            });
+        }
+        
+        // Xử lý tìm kiếm
+        const userSearchInput = document.getElementById('userSearchInput');
+        if (userSearchInput) {
+            userSearchInput.addEventListener('input', debounce(function() {
+                loadUserData();
+            }, 500));
+        }
+        
+        // Xử lý chỉnh sửa người dùng
+        const saveUserChanges = document.getElementById('saveUserChanges');
+        if (saveUserChanges) {
+            saveUserChanges.addEventListener('click', async function() {
+                const userId = document.getElementById('editUserId').value;
+                const userData = {
+                    name: document.getElementById('editUserName').value,
+                    email: document.getElementById('editUserEmail').value,
+                    role: document.getElementById('editUserRole').value,
+                    phone: document.getElementById('editUserPhone').value,
+                    address: document.getElementById('editUserAddress').value
+                };
+                
+                try {
+                    await window.adminAPI.updateUser(userId, userData);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+                    modal.hide();
+                    showSuccessMessage('Cập nhật người dùng thành công!');
+                    loadUserData();
+                } catch (error) {
+                    showErrorMessage('Lỗi khi cập nhật người dùng: ' + (error.message || 'Vui lòng thử lại sau.'));
+                }
+            });
+        }
+    });
+    
+    // Hàm tải dữ liệu người dùng
+    async function loadUserData() {
+        const tableBody = document.getElementById('userTableBody');
+        const roleFilter = document.getElementById('roleFilter');
+        const searchInput = document.getElementById('userSearchInput');
+        
+        try {
+            const response = await window.adminAPI.getUsers();
+            let users = response;
+            
+            // Lọc theo vai trò nếu có
+            if (roleFilter.value) {
+                users = users.filter(user => user.role === roleFilter.value);
+            }
+            
+            // Lọc theo từ khóa tìm kiếm nếu có
+            if (searchInput.value) {
+                const searchTerm = searchInput.value.toLowerCase();
+                users = users.filter(user => 
+                    user.name.toLowerCase().includes(searchTerm) || 
+                    user.email.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Xóa dữ liệu cũ
+            tableBody.innerHTML = '';
+            
+            // Thêm dữ liệu mới
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge ${user.role === 'admin' ? 'bg-danger' : 'bg-primary'}">${user.role}</span></td>
+                    <td>${formatDate(user.created_at)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary edit-user" data-id="${user.id}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Thêm sự kiện cho các nút
+            document.querySelectorAll('.edit-user').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    editUser(userId, users);
+                });
+            });
+            
+            document.querySelectorAll('.delete-user').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-id');
+                    deleteUser(userId);
+                });
+            });
+            
+        } catch (error) {
+            console.error('Error loading users:', error);
+            showErrorMessage('Không thể tải danh sách người dùng. Vui lòng thử lại sau.');
+        }
+    }
+    
+    // Hàm mở modal chỉnh sửa người dùng
+    function editUser(userId, users) {
+        const user = users.find(u => u.id == userId);
+        if (!user) return;
+        
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserRole').value = user.role;
+        document.getElementById('editUserPhone').value = user.phone || '';
+        document.getElementById('editUserAddress').value = user.address || '';
+        
+        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        modal.show();
+    }
+    
+    // Hàm xóa người dùng
+    async function deleteUser(userId) {
+        if (!confirm('Bạn có chắc chắn muốn xóa người dùng này?')) return;
+        
+        try {
+            await window.adminAPI.deleteUser(userId);
+            showSuccessMessage('Xóa người dùng thành công!');
+            loadUserData();
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            showErrorMessage('Lỗi khi xóa người dùng: ' + (error.message || 'Vui lòng thử lại sau.'));
+        }
+    }
+    
+    // Hàm định dạng ngày tháng
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN');
+    }
+    
+    // Hàm debounce để tránh gọi API quá nhiều khi tìm kiếm
+    function debounce(func, delay) {
+        let timeout;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+    
+    // Hiển thị thông báo thành công
+    function showSuccessMessage(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        const container = document.querySelector('.admin-right');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 3000);
+    }
+    
+    // Hiển thị thông báo lỗi
+    function showErrorMessage(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        const container = document.querySelector('.admin-right');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+</script>
+</html>

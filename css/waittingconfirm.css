@@ -1,0 +1,155 @@
+.xuly{
+    width: 100%;
+    background-color: var(--white);
+    padding: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 2rem;
+}
+.chamthan{
+    background: var(--primary);
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    color: var(--white);
+    margin-left: 20px;
+    padding: 5px;
+}
+
+.bk-infor-font{
+    font-size: 1.5rem;
+}
+
+.tong{
+    width: 100%;
+    background-color: var(--white);
+    padding: 20px 0;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 3rem;
+    strong{
+        padding: 0px 20px;
+
+    }
+}
+.thongtinxacnhan{
+    .left-a{
+        color: var(--colortext3);
+        display: flex;
+        padding: 0 20px 20px;
+        font-size: 1.5rem;
+    }
+    .right-a{
+        font-size: 1.5rem;
+    }
+}
+.infor-bookingg{
+    background-color: var(--white);
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px var(--shadow2);
+    font-size: 2rem;
+    text-align: left;
+    span{
+        font-size: 1.2rem;
+    }
+    .infor-a{
+        color: var(--colortext3);
+    }
+    .infor-b{
+        color: var(--colortext1);
+    }
+}
+.check-a{
+    background: var(--accent);
+    border-radius: 50%;
+    height: 1rem;
+    width: 1rem;
+    font-size: 2rem;
+    color: var(--primary);
+    padding: 3px 3px 3px;
+
+}
+.infor-pay{
+    background-color: var(--white);
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px var(--shadow2);
+    font-size: 2rem;
+    text-align: left;
+    strong{
+        display: block;
+        padding: 10px 0px 10px;
+    }
+    span{
+        color: var(--colortext3);
+    }
+}
+.keynumber{
+    width: 80%;
+    height: 10px;
+    border-radius: 8px;
+    border-color: var(--colortext3);
+    background-color: var(--bg1);
+}
+
+.custom-select-pay{
+    width: 10%;
+    height: 30px;
+    color: var(--colortext2);
+    background-color: var(--bg1);
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    div{
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: var(--colortext2);
+        padding: 0;
+        margin: 0;
+    }
+    i{
+        font-size: 1.4rem;
+        color: var(--colortext2);
+    }
+    &:hover{
+        div, i{
+            color: var(--colortext1);
+        }
+        .menu{
+            z-index: 10;
+            display: block;
+            animation: appear 0.25s ease-in-out;
+        }
+    }
+}
+.custom-text-pay{
+    width: 40%;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+.key-cv{
+    width: 40%;
+    height: 30px;
+    border-radius: 8px;
+    border-color: var(--colortext3);
+    cursor: pointer;
+    min-height: 0rem
+}
+.key-cvv{
+    margin-left: 80px;
+    width: 40%;
+    height: 30px;
+    border-radius: 8px;
+    border-color: var(--colortext3);
+    background-color: var(--bg1);
+    cursor: pointer;
+}

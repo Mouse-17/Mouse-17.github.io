@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- font inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <main>
+        <section class="admin">
+            <div class="container">
+                <div class="row gx-0">
+            <!-- Bên trái -->
+                    <div class="col-12 col-lg-3 col-md-6 p-0 mt-2 admin-left">
+                        <img src="../public/img/user1.jpg" alt="" class="admin-avatar">
+                        <h5 id="adminName">Admin</h5>
+                        <a href="admin.html" class="click-admin"><i class="bi bi-palette2"></i>Bảng điều khiển</a></p>
+                        <a href="admindanhmuc.html"><i class="bi bi-inboxes-fill"></i>Quản lý danh mục</a>
+                        <a href="adminsanpham.html"><i class="bi bi-box2-fill"></i>Quản lý sản phẩm</a>
+                        <a href="admindangnhap.html"><i class="bi bi-people-fill"></i>Quản lý đăng nhập</a>
+                        <a href="admingiohanh.html"><i class="bi bi-receipt-cutoff"></i>Quản lý đơn hàng</a>
+                        <a href="adminbinhluan.html"><i class="bi bi-chat-fill"></i>Quản lý bình luận</a>
+                        <a href="adminbaiviet.html"><i class="bi bi-book-fill"></i>Quản lý bài viết</a>
+                        <div class="tienichadmin-left">
+                            <a href="#"><i class="bi bi-gear"></i>CÀI ĐẶT</a>
+                            <a href="#"><i class="bi bi-question-circle"></i>TRỢ GIÚP</a>
+                            <a href="#" id="logoutButton"><i class="bi bi-info-circle"></i>THOÁT</a>
+                        </div>
+                    </div>
+        <!-- Bên phải -->
+            <div class="col-lg-9 admin-right">
+                    <div class="header-container">
+                        <div class="title-section">
+                            <h5>Bảng điều khiển</h5>
+                            <p class="text-muted" id="dashboardDate">Ngày: <span></span></p>
+                        </div>
+                        <div class="period-selector">
+                            <select id="periodSelect" class="form-select">
+                                <option value="week">Tuần này</option>
+                                <option value="month">Tháng này</option>
+                                <option value="year">Năm nay</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-4" style="margin-top: 5px;">
+                        <div class="col">
+                            <div class="card bg-red-admin">
+                                <div><i class="bi bi-graph-up-arrow"></i></div>
+                                <h5 id="totalRevenue">0₫</h5>
+                                <p>Tổng doanh thu</p>
+                                <small id="revenueChange">-</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-orange-admin">
+                                <div><i class="bi bi-receipt"></i></div>
+                                <h5 id="totalOrders">0</h5>
+                                <p>Tổng đơn hàng</p>
+                                <small id="ordersChange">-</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-green-admin">
+                                <div><i class="bi bi-tag-fill"></i></div>
+                                <h5 id="totalProducts">0</h5>
+                                <p>Tổng sản phẩm</p>
+                                <small id="lowStockWarning">-</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-purple-admin">
+                                <div><i class="bi bi-person-fill-add"></i></div>
+                                <h5 id="totalUsers">0</h5>
+                                <p>Tổng người dùng</p>
+                                <small id="newUsers">-</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="product-card-admin">
+                                <h5 class="fw-bold">Thống kê doanh thu</h5>
+                                <canvas id="chart1"></canvas>
+                            </div>
+                        </div>
+                        <div class="col">
+                                <div class="product-card-admin">
+                                    <h5 class="fw-bold">Sự hài lòng của khách hàng</h5>
+                                    <div class="char2-hailong">
+                                        <canvas id="chart2"></canvas>
+                                    </div>
+                        </div>
+                    </div>
+            </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="product-card-admin">
+                                <h5 class="fw-bold">Sản phẩm nổi bật</h5>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Mức độ bán chạy</th>
+                                            <th>%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsTable">
+                                        <!-- Dữ liệu sản phẩm nổi bật sẽ được thêm bằng JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col">
+                                <div class="product-card-admin">
+                                    <h5 class="fw-bold">Thống kê theo danh mục</h5>
+                                    <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+            </div>
+        </section>
+    </main>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+            window.location.href = 'admindangnhap.html';
+            return;
+        }
+        
+        // Khởi tạo biểu đồ
+        initDashboard();
+        
+        // Cài đặt sự kiện đăng xuất
+        document.getElementById('logoutButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.adminAPI.logout();
+        });
+        
+        // Cài đặt sự kiện thay đổi khoảng thời gian
+        document.getElementById('periodSelect').addEventListener('change', function() {
+            const period = this.value;
+            updateDashboard(period);
+        });
+    });
+    
+    // Khởi tạo bảng điều khiển
+    async function initDashboard() {
+        try {
+            // Hiển thị ngày hôm nay
+            const today = new Date();
+            document.querySelector('#dashboardDate span').textContent = today.toLocaleDateString('vi-VN');
+            
+            // Tải dữ liệu tổng quan
+            const dashboardData = await window.adminAPI.getDashboardData();
+            
+            // Cập nhật thông tin tổng quan
+            updateOverviewStats(dashboardData);
+            
+            // Tải dữ liệu biểu đồ theo khoảng thời gian mặc định (tuần)
+            await updateDashboard('week');
+            
+        } catch (error) {
+            console.error('Error initializing dashboard:', error);
+            showErrorMessage('Không thể tải dữ liệu bảng điều khiển. Vui lòng thử lại sau.');
+        }
+    }
+    
+    // Cập nhật bảng điều khiển theo khoảng thời gian
+    async function updateDashboard(period) {
+        try {
+            const chartData = await window.adminAPI.getChartData(period);
+            
+            // Cập nhật biểu đồ doanh thu
+            updateRevenueChart(chartData.revenue_stats);
+            
+            // Cập nhật biểu đồ đánh giá
+            updateSatisfactionChart(chartData.satisfaction_stats);
+            
+            // Cập nhật biểu đồ danh mục
+            updateCategoryChart(chartData.category_stats);
+            
+        } catch (error) {
+            console.error('Error updating dashboard:', error);
+            showErrorMessage('Không thể cập nhật dữ liệu biểu đồ. Vui lòng thử lại sau.');
+        }
+    }
+    
+    // Cập nhật thông tin tổng quan
+    function updateOverviewStats(data) {
+        // Cập nhật doanh thu
+        const totalRevenue = data.order_stats.revenue || 0;
+        document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+        
+        // Cập nhật đơn hàng
+        const totalOrders = data.order_stats.total || 0;
+        const pendingOrders = data.order_stats.pending || 0;
+        document.getElementById('totalOrders').textContent = totalOrders;
+        document.getElementById('ordersChange').textContent = `${pendingOrders} đơn đang chờ xử lý`;
+        
+        // Cập nhật sản phẩm
+        const totalProducts = data.product_stats.total || 0;
+        const lowStockProducts = data.product_stats.low_stock || 0;
+        document.getElementById('totalProducts').textContent = totalProducts;
+        document.getElementById('lowStockWarning').textContent = `${lowStockProducts} sản phẩm hàng ít`;
+        
+        // Cập nhật người dùng
+        const totalUsers = (data.user_stats.user || 0) + (data.user_stats.field_owner || 0) + (data.user_stats.admin || 0);
+        document.getElementById('totalUsers').textContent = totalUsers;
+        document.getElementById('newUsers').textContent = `${data.recent_users ? data.recent_users.length : 0} người dùng mới`;
+        
+        // Cập nhật sản phẩm nổi bật
+        updateFeaturedProductsTable(data.top_selling_products);
+    }
+    
+    // Cập nhật bảng sản phẩm nổi bật
+    function updateFeaturedProductsTable(products) {
+        const tableBody = document.getElementById('productsTable');
+        if (!tableBody) return;
+        
+        // Xóa dữ liệu cũ
+        tableBody.innerHTML = '';
+        
+        // Thêm dữ liệu mới
+        products.slice(0, 3).forEach((product, index) => {
+            // Tính toán phần trăm (giả sử giá trị bestseller tối đa là 100)
+            const percentage = Math.min(Math.round((product.bestseller / 100) * 100), 100) || Math.round(Math.random() * 50);
+            
+            // Xác định màu sắc
+            let colorClass;
+            if (index === 0) colorClass = 'blue';
+            else if (index === 1) colorClass = 'green';
+            else colorClass = 'purple';
+            
+            // Tạo hàng mới
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>0${index + 1}</td>
+                <td>${product.Ten_san_pham}</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar-${colorClass}" style="width: ${percentage}%;"></div>
+                    </div>
+                </td>
+                <td><span class="badge-${colorClass}">${percentage}%</span></td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
+    }
+    
+    // Cập nhật biểu đồ doanh thu
+    function updateRevenueChart(revenueData) {
+        const ctx = document.getElementById('chart1').getContext('2d');
+        
+        // Hủy biểu đồ cũ nếu có
+        Chart.getChart(ctx)?.destroy();
+        
+        // Chuẩn bị dữ liệu
+        const labels = revenueData.map(item => formatDate(item.date));
+        const data = revenueData.map(item => item.revenue || 0);
+        
+        // Tạo biểu đồ mới
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: data,
+                    backgroundColor: '#0095FF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatShortCurrency(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return formatCurrency(context.raw);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Cập nhật biểu đồ sự hài lòng của khách hàng
+    function updateSatisfactionChart(satisfactionData) {
+        const ctx = document.getElementById('chart2').getContext('2d');
+        
+        // Hủy biểu đồ cũ nếu có
+        Chart.getChart(ctx)?.destroy();
+        
+        // Chuẩn bị dữ liệu
+        const ratingLabels = ['1 sao', '2 sao', '3 sao', '4 sao', '5 sao'];
+        const ratingCounts = [0, 0, 0, 0, 0];
+        
+        // Điền dữ liệu có sẵn
+        satisfactionData.forEach(item => {
+            const rating = Math.round(item.rating) - 1; // Chuyển về index 0-based
+            if (rating >= 0 && rating < 5) {
+                ratingCounts[rating] = item.count;
+            }
+        });
+        
+        // Tạo biểu đồ mới
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ratingLabels,
+                datasets: [{
+                    data: ratingCounts,
+                    backgroundColor: ['#e74a3b', '#f6c23e', '#36b9cc', '#4e73df', '#1cc88a'],
+                    hoverBackgroundColor: ['#c23321', '#dda20a', '#258391', '#2e59d9', '#17a673'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Cập nhật biểu đồ danh mục
+    function updateCategoryChart(categoryData) {
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        
+        // Hủy biểu đồ cũ nếu có
+        Chart.getChart(ctx)?.destroy();
+        
+        // Chuẩn bị dữ liệu
+        const labels = categoryData.map(item => item.Ten_danh_muc);
+        const data = categoryData.map(item => item.total_quantity || 0);
+        
+        // Tạo biểu đồ mới
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b',
+                        '#6f42c1', '#fd7e14', '#20c997', '#6c757d', '#17a2b8'
+                    ],
+                    hoverBackgroundColor: [
+                        '#2e59d9', '#17a673', '#258391', '#dda20a', '#c23321',
+                        '#5a32a3', '#d96412', '#19a97a', '#5a6268', '#138496'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Định dạng tiền tệ
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(value);
+    }
+    
+    // Định dạng tiền tệ rút gọn
+    function formatShortCurrency(value) {
+        if (value >= 1000000000) {
+            return (value / 1000000000).toFixed(1) + ' tỷ';
+        } else if (value >= 1000000) {
+            return (value / 1000000).toFixed(1) + ' tr';
+        } else if (value >= 1000) {
+            return (value / 1000).toFixed(0) + ' k';
+        }
+        return value;
+    }
+    
+    // Định dạng ngày tháng
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN');
+    }
+    
+    // Hiển thị thông báo lỗi
+    function showErrorMessage(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        
+        const container = document.querySelector('.admin-right');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../js/web.js"></script>
+</html>

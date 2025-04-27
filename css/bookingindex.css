@@ -1,0 +1,66 @@
+.bookingquick{
+    background-color: var(--primary);
+    padding: 40px 0;
+}
+
+.yard-infor-map{
+    padding: 8px;
+}
+
+.yardname{
+    text-align: start;
+    font-size: 2rem;
+    font-weight: 500;
+    padding: 6px 8px;
+    color: var(--white);
+}
+
+.map-icon{
+    i{
+        font-size: 1.6rem;
+        color: var(--white);
+    }
+    p{
+        margin: 0;
+        padding: 2px 0 0 0;
+        font-size: 1.6rem;
+        line-height: 2.4rem;
+        font-weight: 200;
+        color: var(--white);
+    }
+}
+
+.choose-timeframe{
+    width: 111px;
+    padding: 11px 0;
+    margin: 4px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--white);
+    &:hover{
+        background-color: #ca9c271f;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+    }
+    &:focus{
+        background-color: var(--accent);
+        color: var(--white);
+        border: 1px solid var(--accent);
+    }
+}
+
+.custom-input-booking{
+    background-color: transparent !important;
+    border: 1px solid var(--white)!important;
+    font-size: 1.4rem;
+    color: var(--white);
+    border-radius: 12px;
+    padding: 7px 10px;
+    &::placeholder{
+        color: var(--colortext3);
+    }
+}
+
+

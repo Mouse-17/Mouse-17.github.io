@@ -1,0 +1,39 @@
+.checkthanhcong{
+    background-color: var(--accent);
+    border-radius: 50%;
+    color: var(--primary);
+    width: 150px;
+    height: 150px;
+    margin: 30px auto;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    i{
+        color: var(--white);
+    }
+}
+.bookingthanhcong{
+    .container{
+        strong{
+            margin: 5px auto;
+            font-size: 1.5rem;
+            display: block;
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+        span{
+            font-size: 1.5rem;
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+        p{
+            color: var(--colortext3);
+            font-size: 1.5rem;
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+    }
+}
