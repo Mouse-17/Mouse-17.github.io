@@ -1,0 +1,13 @@
+Các lệnh cần chạy trước khi ghép dự án
+
+1. Cài đặt TinyMCE
+npm install --save "@tinymce/tinymce-vue@^4"
+
+2. Cài
+npm install @vueuse/core
+
+3. Cài chartjs
+npm install chart.js vue-chartjs
+
+4. Cài 
+npm install @fullcalendar/vue3 @fullcalendar/core @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction

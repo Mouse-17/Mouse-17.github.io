@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- font inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Trang chủ</title>
+</head>
+<body>
+    <main>
+        <section class="banner">
+               <img class="imgban" src="../../public/img/Banner2.png" alt="">
+        </section>
+
+        <div class="box">
+            <h3 class="rating-title">
+               Tổng Đánh Giá
+            </h3>
+        </div>
+
+        <div class="box">
+            <div class="rating-summary">
+                <div class="rating-score">
+                    <div class="circle" svg viewBox="0 0 70 70" preserveAspectRatio="xMidYMid meet">
+                        <svg viewBox="0 0 70 70" preserveAspectRatio="xMidYMid meet">
+                            <!-- Vòng tròn nền -->
+                            <circle cx="35" cy="35" r="30" stroke="#e0e0e0" stroke-width="5" fill="none" ></circle>
+                            <!-- Vòng tròn vàng -->
+                            <circle cx="35" cy="35" r="30" stroke="#CA9B27" stroke-width="5" fill="none" 
+                                stroke-dasharray="188.4" stroke-dashoffset="36"
+                                style=" transform-origin: 35px 35px;"></circle>
+                        </svg>
+                        <span>4.8</span>
+                    </div>
+                    <div class="content1">
+                        <div class="stars">★★★★★</div>
+                        <p>khoảng 1.25k đánh giá</p>
+                    </div>
+                </div>
+
+                <div class="rating-bars">
+                    <div class="bar">
+                        <span class="rating-label">5.0 <div class="stars"> ★</div></span>
+                        <div class="progress"><div class="progress-bar" style="width: 90%;"></div></div>
+                        <span class="rating-count">2823</span>
+                    </div>
+                    <div class="bar">
+                        <span class="rating-label">4.0 <div class="stars"> ★</div></span>
+                        <div class="progress"><div class="progress-bar" style="width: 30%;"></div></div>
+                        <span class="rating-count">38</span>
+                    </div>
+                    <div class="bar">
+                        <span class="rating-label">3.0 <div class="stars"> ★</div></span>
+                        <div class="progress"><div class="progress-bar" style="width: 10%;"></div></div>
+                        <span class="rating-count">4</span>
+                    </div>
+                    <div class="bar">
+                        <span class="rating-label">2.0 <div class="stars"> ★</div></span>
+                        <div class="progress"><div class="progress-bar" style="width: 0%;"></div></div>
+                        <span class="rating-count">0</span>
+                    </div>
+                    <div class="bar">
+                        <span class="rating-label">1.0 <div class="stars"> ★</div></span>
+                        <div class="progress"><div class="progress-bar" style="width: 0%;"></div></div>
+                        <span class="rating-count">0</span>
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="content">
+                <div class="review-container">
+                    <!-- Bộ lọc đánh giá bên trái -->
+                    <div class="review-filter">
+                        <h3>Bộ Lọc Đánh Giá</h3>
+                        <div class="filter-box">
+                            <!-- Nhóm Tỉ Lệ Đánh Giá -->
+                            <div class="filter-group">
+                                <strong>Tỉ Lệ Đánh Giá</strong>
+                                <ul>
+                                    <li><label><input type="checkbox"> ⭐ 5</label></li>
+                                    <li><label><input type="checkbox"> ⭐ 4</label></li>
+                                    <li><label><input type="checkbox"> ⭐ 3</label></li>
+                                    <li><label><input type="checkbox"> ⭐ 2</label></li>
+                                    <li><label><input type="checkbox"> ⭐ 1</label></li>
+                                </ul>
+                            </div>
+                    
+                            <!-- Nhóm Chủ Đề Đánh Giá -->
+                            <div class="filter-group">
+                                <strong>Chủ Đề Đánh Giá</strong>
+                                <ul>
+                                    <li><label><input type="checkbox"> Sản phẩm</label></li>
+                                    <li><label><input type="checkbox"> Sân bóng</label></li>
+                                    <li><label><input type="checkbox"> Cầu lông</label></li>
+                                    <li><label><input type="checkbox"> Bóng chuyền</label></li>
+                                    <li><label><input type="checkbox"> Pickleball</label></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Tổng đánh giá bên phải -->
+                    <div class="review-summary">
+                        <div class="review-header-buttons">
+                            <button class="review-btn active">Tất cả đánh giá</button>
+                            <button class="review-btn">Với hình ảnh</button>
+                        </div>
+        
+                        <div class="review-box">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="../img/Picture2.png" alt="Avatar" class="avatar">
+                                    <strong class="review-user">Tên người đánh giá</strong>
+                                </div>
+        
+                                <div class="review-content">
+                                    <div class="review-top">
+                                        <span class="review-title">Sân bóng</span>
+                                        <div class="review-stars">★★★★★</div>
+                                        <div class="review-actions">
+                                            <button class="like-btn" onclick="toggleLike(this)">
+                                                <i class="bi bi-hand-thumbs-up"></i> 4
+                                            </button>
+                                            <button class="dislike-btn" onclick="toggleDislike(this)">
+                                                <i class="bi bi-hand-thumbs-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">Gói combo tiện lợi, tiết kiệm chi phí. Đặt sân dễ dàng, nước uống luôn có sẵn trong tủ lạnh.</p>
+        
+                                    <div class="review-images">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                    </div>
+                                    
+                                    <span class="review-date">12-02-2025 16:15</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review-box">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="../img/Picture2.png" alt="Avatar" class="avatar">
+                                    <strong class="review-user">Tên người đánh giá</strong>
+                                </div>
+        
+                                <div class="review-content">
+                                    <div class="review-top">
+                                        <span class="review-title">Sân bóng</span>
+                                        <div class="review-stars">★★★★★</div>
+                                        <div class="review-actions">
+                                            <button class="like-btn" onclick="toggleLike(this)">
+                                                <i class="bi bi-hand-thumbs-up"></i> 4
+                                            </button>
+                                            <button class="dislike-btn" onclick="toggleDislike(this)">
+                                                <i class="bi bi-hand-thumbs-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">Gói combo tiện lợi, tiết kiệm chi phí. Đặt sân dễ dàng, nước uống luôn có sẵn trong tủ lạnh.</p>
+        
+                                    <div class="review-images">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                    </div>
+                                    
+                                    <span class="review-date">12-02-2025 16:15</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review-box">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="../img/Picture2.png" alt="Avatar" class="avatar">
+                                    <strong class="review-user">Tên người đánh giá</strong>
+                                </div>
+        
+                                <div class="review-content">
+                                    <div class="review-top">
+                                        <span class="review-title">Sân bóng</span>
+                                        <div class="review-stars">★★★★★</div>
+                                       <div class="review-actions">
+                                            <button class="like-btn" onclick="toggleLike(this)">
+                                                <i class="bi bi-hand-thumbs-up"></i> 4
+                                            </button>
+                                            <button class="dislike-btn" onclick="toggleDislike(this)">
+                                                <i class="bi bi-hand-thumbs-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="review-text">Gói combo tiện lợi, tiết kiệm chi phí. Đặt sân dễ dàng, nước uống luôn có sẵn trong tủ lạnh.</p>
+        
+                                    <div class="review-images">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                        <img src="../img/Picture2.png" alt="Hình ảnh đánh giá">
+                                    </div>
+                                    
+                                    <span class="review-date">12-02-2025 16:15</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-xem-them">Xem Thêm</button> 
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="box">
+            <div class="content">
+                <div class="review-box2">
+                    <div class="review-header">
+                        <div class="user-icon">👤</div>
+                        <div class="user-info">
+                            <strong class="fs-4">Tên người đánh giá</strong>
+                            <p>Tên dịch vụ, sản phẩm <span class="stars" style="font-size:x-large;">★★★★★</span></p>
+                        </div>
+                    </div>
+                
+                    <div class="review-content2">
+                        <textarea placeholder="Nhập đánh giá của bạn ...."></textarea>
+                        <div class="review-buttons">
+                            <button class="submit-btn">💬 Gửi đánh giá</button>
+                            <button class="upload-btn"> Ảnh đánh giá</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</body>
+<script>
+    function toggleLike(button) {
+    let likeBtn = button;
+    let dislikeBtn = likeBtn.parentElement.querySelector(".dislike-btn");
+
+    // Toggle like màu vàng, dislike trở lại màu đen
+    likeBtn.classList.toggle("active");
+    dislikeBtn.classList.remove("active");
+}
+
+function toggleDislike(button) {
+    let dislikeBtn = button;
+    let likeBtn = dislikeBtn.parentElement.querySelector(".like-btn");
+
+    // Toggle dislike màu vàng, like trở lại màu đen
+    dislikeBtn.classList.toggle("active");
+    likeBtn.classList.remove("active");
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</html>

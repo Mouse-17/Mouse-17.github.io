@@ -1,0 +1,116 @@
+.accept{
+    background-color: var(--bg3);
+}
+aside{
+    ul{
+        li{
+            .boss-item-link{
+                padding: 14px 0 14px 12px;
+                color: var(--colortext2);
+                p{
+                    color: var(--colotext2);
+                    font-size: 1.5rem;
+                    font-weight: 400;
+                }
+                &:hover{
+                    i{
+                        color: var(--hover2);
+                    }
+                    p{
+                        color: var(--hover2);
+                    }
+                }
+            }
+            .router-link-exact-active{
+                border-right: 3px solid var(--hover2);
+                color: var(--hover2);
+                background-color: var(--bg2);
+                p{
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
+
+.boss-img{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.boss-nav-link{
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 2.6rem;
+    color: var(--colortext2);
+}
+
+/* .boss-link-active{
+    color: var(--hover2);
+    border-right: 3px solid var(--hover2);
+} */
+
+.forboss{
+    li{
+        .route-link-active{
+            color: var(--hover2);
+            border-right: 3px solid var(--hover2);
+        }
+    }
+}
+
+.boss-text{
+    background-color: var(--bg2);
+    padding: 16px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
+    align-items: center;
+}
+
+.btn-refuse{
+    display: block;
+    width: fit-content;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 13px 32px 15px 32px;
+    margin-top: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover{
+        background-color: var(--hover1) !important;
+    }
+}
+
+.booking-item-accept{
+    height: 480px;
+    overflow-y: auto;
+    &::-webkit-scrollbar{
+        width: 4px;
+        height: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--colortext3); 
+        border-radius: 8px; 
+    }
+}
+
+
+.analytics-box{
+    height: 640px !important;
+    overflow-y: auto;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}

@@ -1,0 +1,64 @@
+.contact-info {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.contact-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    
+}
+
+.contact-box {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 25px;
+}
+
+.dark-blue {
+    background-color: #0C1B47;
+    text-align: left;
+}
+
+.gold {
+    background-color: #C9A14A;
+    text-align: center;
+}
+
+.contact-box p {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-box a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact-box i {
+    font-size: 18px;
+}
+
+.download-buttons img {
+    width: 80px;
+    margin: 10px;
+    height: auto;
+
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons i {
+    font-size: 25px;
+    margin: 0 10px;
+    cursor: pointer;
+}

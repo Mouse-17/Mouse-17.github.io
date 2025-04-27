@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- font inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- custom css -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>admin đánh giá</title>
+</head>
+
+<body>
+    <main>
+        <section class="admin">
+            <div class="container">
+                <div class="row gx-0" >
+            <!-- Bên trái -->
+                    <div class="col-12 col-lg-3 col-md-6 p-0 mt-2 admin-left">
+                        <img src="../public/img/user1.jpg" alt="" class="admin-avatar">
+                        <h5>Admin</h5>
+                        <a href="admin.html"><i class="bi bi-palette2"></i>Bảng điều khiển</a></p>
+                        <a href="admindanhmuc.html"><i class="bi bi-inboxes-fill"></i>Quản lý danh mục</a>
+                        <a href="adminsanpham.html"><i class="bi bi-box2-fill"></i>Quản lý sản phẩm</a>
+                        <a href="admindangnhap.html"><i class="bi bi-people-fill"></i>Quản lý đăng nhập</a>
+                        <a href="admingiohanh.html"><i class="bi bi-receipt-cutoff"></i>Quản lý đơn hàng</a>
+                        <a href="adminbinhluan.html"><i class="bi bi-chat-fill"></i>Quản lý bình luận</a>
+                        <a href="adminbaiviet.html"><i class="bi bi-book-fill"></i>Quản lý bài viết</a>
+                        <a href="admindanhgia.html"class="click-admin"><i class="bi bi-star-fill"></i></i>Quản lý đánh giá</a>
+                        <div class="tienichadmin-left">
+                            <a href="#"><i class="bi bi-gear"></i>CÀI ĐẶT</a>
+                            <a href="#"><i class="bi bi-question-circle"></i>TRỢ GIÚP</a>
+                            <a href="#"><i class="bi bi-info-circle"></i>THOÁT</a>
+                        </div>
+                    </div>
+        <!-- Bên phải -->
+                    <div class="col-lg-9 admin-right" >
+                        <div class="header-container">
+                            <div class="title-section">
+                                <h3>Danh sách đánh giá</h2>
+                                <p class="text-muted">Xem đánh giá</p>
+                            </div>
+                        </div>                    
+
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Tất cả đánh giá</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Xử lý đánh giá</a>
+                            </li>
+                        </ul>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3 filter-search-container">
+                            <button class="btn btn-lg btn-light">
+                                <i class="bi bi-plus-lg"></i> Thêm điều kiện lọc
+                            </button>
+                            <div class="input-group search-box">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="input-head"><input type="checkbox"></th>
+                                    <th>ID</th>
+                                    <th>Người đánh giá </th>
+                                    <th>Sản phẩm</th>
+                                    <th>Ngày đánh giá</th>
+                                    <th>Thời gian</th>
+                                    <th>số sao</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="input-head"><input type="checkbox"></td>
+                                    <td>1</td>
+                                    <td>Nga</td>
+                                    <td>Cầu lông</td>
+                                    <td>23/02/2025</td>
+                                    <td>8:45PM</td>
+                                    <td>5 sao</td>
+                                    <td>
+                                        <i class="bi bi-eye me-2"></i>
+                                        <i class="bi bi-pencil-square me-2"></i>
+                                        <i class="bi bi-trash"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="input-head"><input type="checkbox"></td>
+                                    <td>2</td>
+                                    <td>Minh</td>
+                                    <td>Cầu lông</td>
+                                    <td>23/02/2025</td>
+                                    <td>8:45PM</td>
+                                    <td>4 sao</td>
+                                    <td>
+                                        <i class="bi bi-eye me-2"></i>
+                                        <i class="bi bi-pencil-square me-2"></i>
+                                        <i class="bi bi-trash"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="input-head"><input type="checkbox"></td>
+                                    <td>3</td>
+                                    <td>Hân</td>
+                                    <td>Cầu lông</td>
+                                    <td>23/02/2025</td>
+                                    <td>8:45PM</td>
+                                    <td>4.5 sao</td>
+                                    <td>
+                                        <i class="bi bi-eye me-2"></i>
+                                        <i class="bi bi-pencil-square me-2"></i>
+                                        <i class="bi bi-trash"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="input-head"><input type="checkbox"></td>
+                                    <td>4</td>
+                                    <td>Tuấn</td>
+                                    <td>Cầu lông</td>
+                                    <td>23/02/2025</td>
+                                    <td>8:45PM</td>
+                                    <td>3 sao</td>
+                                    <td>
+                                        <i class="bi bi-eye me-2"></i>
+                                        <i class="bi bi-pencil-square me-2"></i>
+                                        <i class="bi bi-trash"></i>
+                                    </td>
+                                </tr>
+                                <!-- Thêm các dòng khác nếu cần -->
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span>Cài đặt</span>
+                            <nav class="pagination-container">
+                                <ul class="pagination">
+                                    <li class="page-item"><a class="page-link" href="#">«</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">»</a></li>
+                                </ul>
+                            </nav>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="../js/web.js"></script>
+</html>

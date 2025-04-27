@@ -1,0 +1,149 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    background-color: #002366;
+    padding: 10px;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact-banner {
+    background: url('image.png') no-repeat center center/cover;
+    text-align: center;
+    padding: 50px 0;
+    color: black;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.contact-form {
+    width: 50%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+.contact-form input, .contact-form textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.contact-form button {
+    padding: 10px;
+    background: gold;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    background: #002366;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer-column {
+    text-align: center;
+}
+
+.footer-container a {
+    color: white;
+    text-decoration: none;
+}
+
+footer p {
+    text-align: center;
+    background: #001a4d;
+    color: white;
+    padding: 10px 0;
+}
+.contact-info {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.contact-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-box {
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.dark-blue {
+    background-color: #0C1B47;
+    text-align: left;
+}
+
+.gold {
+    background-color: #C9A14A;
+    text-align: center;
+}
+
+.contact-box p {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-box a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact-box i {
+    font-size: 18px;
+}
+
+.download-buttons img {
+    width: 40px;
+    margin: 10px;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons i {
+    font-size: 25px;
+    margin: 0 10px;
+    cursor: pointer;
+}

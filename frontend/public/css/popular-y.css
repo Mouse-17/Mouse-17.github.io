@@ -1,0 +1,87 @@
+.popular-y{
+    background-color: var(--bg3);
+    padding: 40px 0;
+}
+
+.yard{
+    padding: 8px;
+    div{
+        img{
+            border-radius: 12px 12px 0 0;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.title-yard{
+    text-align: start;
+    font-size: 1.8rem;
+    font-weight: 500;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.yard-infor{
+    .yard-infor-content{
+        padding:  16px 20px 20px 20px;
+        background-color: var(--white);
+        box-shadow: 0 0 12px var(--shadow2);
+        border-radius: 0 0 12px 12px;
+    }
+}
+
+.text-rating{
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--colortext2);
+}
+
+.text-location{
+    i{
+        color: var(--primary);
+        font-size: 1.5rem;
+    }
+    p{
+        color: var(--colortext2);
+        font-size: 1.5rem;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+    }
+    .custom-open{
+        color: var(--primary);
+        font-weight: 500;
+    }
+}
+
+
+.btn-booknow{
+    display: block;
+    width: fit-content;
+    background-color: var(--accent);
+    color: var(--white);
+    border: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 13px 32px 15px 32px;
+    margin-top: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover{
+        background-color: var(--hover2) !important;
+    }
+}
+
+.line{
+    margin: 14px 0 16px 0;
+    color: var(--colortext3);
+}
+
+
+.bi-heart-fill{
+    color: var(--colortext3);
+    font-size: 1.8rem;
+}

@@ -1,0 +1,10 @@
+php artisan migrate -- khởi tạo database từ đầu
+
+Chạy theo thứ tự
+php artisan db:seed --class=DanhMucSeeder
+php artisan db:seed --class=ThuongHieuSeeder
+php artisan db:seed --class=SanPhamSeeder
+php artisan db:seed --class=KhachHangSeeder
+php artisan db:seed --class=Loai_SanSeeder
+php artisan db:seed --class=SanSeeder
+php artisan db:seed --class=BookingSeeder
