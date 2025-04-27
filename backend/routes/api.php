@@ -135,6 +135,11 @@ Route::delete('/cart/clear', [ApiCartController::class, 'clearCart']);
 // Public order route for testing
 Route::post('/guest-order', [ApiOrderController::class, 'directOrder']);
 
+Route::apiResource('products', ApiController::class);
+Route::get('/san-pham-pho-bien', [ApiController::class, 'productView']);
+
+Route::get('/san-pho-bien', [ApiController::class, 'popularYard']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     // User profile
@@ -243,10 +248,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/thong-bao/danh-dau-tat-ca-da-doc', [ThongBaoController::class, 'markAllAsRead']);
 });
 
-Route::apiResource('products', ApiController::class);
-Route::get('/san-pham-pho-bien', [ApiController::class, 'productView']);
 
-Route::get('/san-pho-bien', [ApiController::class, 'popularYard']);
 
 Route::get('/sanpham', [ProductController::class, 'showListProduct']);
 Route::get('/sanpham/{id}', [ProductController::class, 'showdetail']);
