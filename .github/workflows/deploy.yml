@@ -27,8 +27,10 @@ jobs:
           php8.2 composer-setup.php --install-dir=/usr/local/bin --filename=composer
           php8.2 -r "unlink('composer-setup.php');"
 
-      - name: Run Composer with PHP 8.2
-        run: php8.2 /usr/local/bin/composer install --ignore-platform-reqs
+      - name: Run Composer with PHP 8.2 in backend folder
+        run: |
+          cd backend
+          php8.2 /usr/local/bin/composer install --ignore-platform-reqs
 
       - name: Create SQLite database file
         run: |
@@ -73,7 +75,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install npm dependencies and build Vue app
         run: |
