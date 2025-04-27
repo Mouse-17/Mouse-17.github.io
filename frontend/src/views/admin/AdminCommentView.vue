@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="admin">
-      <AdminSidebar/>
+      <AdminSidebar />
 
       <div class="admin-right">
         <div class="header-container">
@@ -9,49 +9,17 @@
             <h5>Danh sách bình luận</h5>
             <p class="text-muted">Xem bình luận</p>
           </div>
-          <div class="button-wrapper">
-            <button class="btn-xuat-admin">
-              <i class="bi bi-plus-lg"></i>
-              <span>Thêm điều kiện lọc</span>
-            </button>
-          </div>
         </div>
 
-        <div class="content-wrapper">
-          <div class="tabs-container">
-            <ul class="comment-tabs">
-              <li class="tab-item active"><a href="#">Tất cả bình luận</a></li>
-              <li class="tab-item"><a href="#">Chưa đăng</a></li>
-              <li class="tab-item"><a href="#">Xử lý bình luận</a></li>
-            </ul>
-          </div>
-
-          <div class="filter-toolbar">
-            <div class="filter-group">
-              <select class="filter-select">
-                <option>Tác vụ</option>
-                <option>Duyệt bình luận</option>
-                <option>Xóa bình luận</option>
-              </select>
-              <button class="btn-apply">Áp dụng</button>
-
-              <select class="filter-select">
-                <option>Sắp xếp theo</option>
-                <option>Mới nhất</option>
-                <option>Cũ nhất</option>
-              </select>
-            </div>
-
-            <div class="search-group">
-              <div class="search-box">
-                <input class="search-input" placeholder="Tìm kiếm bình luận..." type="text">
-                <button class="search-btn"><i class="bi bi-search"></i></button>
-              </div>
-            </div>
-          </div>
+        <div v-if="loading" class="text-center py-5">
+          <span>Đang tải dữ liệu...</span>
         </div>
 
-        <div class="comment-table-container">
+        <div v-else-if="error" class="text-center py-5 text-danger">
+          <span>{{ error }}</span>
+        </div>
+
+        <div v-else class="comment-table-container">
           <table class="comment-table">
             <thead>
             <tr>
@@ -72,13 +40,14 @@
               <td class="time-cell">{{ comment.time }}</td>
               <td class="content-cell">{{ comment.content }}</td>
               <td class="status-cell">
-                                    <span
-                                        :class="getStatusClass(comment.status)"
-                                        class="status-badge"
-                                        title="Nhấn để thay đổi trạng thái"
-                                        @click="changeStatus(comment)">
-                                        {{ getStatusText(comment.status) }}
-                                    </span>
+                  <span
+                      :class="getStatusClass(comment.status)"
+                      class="status-badge"
+                      title="Nhấn để thay đổi trạng thái"
+                      @click="changeStatus(comment)"
+                  >
+                    {{ getStatusText(comment.status) }}
+                  </span>
               </td>
               <td class="actions-cell">
                 <div class="actions">
@@ -91,98 +60,87 @@
             </tbody>
           </table>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top">
-          <div class="text-muted">Hiển thị 1-10 trong tổng số 50 bình luận</div>
-          <nav>
-            <ul class="pagination mb-0">
-              <li class="page-item"><a class="page-link" href="#">«</a></li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
-          </nav>
-        </div>
       </div>
     </section>
   </main>
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
 
-// Define constants for status types
+// Trạng thái bình luận
 const STATUS_TYPES = {
-  PENDING: 'pending',    // Chưa đăng
-  ACTIVE: 'active',      // Đang đăng
-  APPROVED: 'approved',  // Đã đăng
-  SPAM: 'spam'           // Spam
+  PENDING: 0,    // Chưa đăng
+  ACTIVE: 1,     // Đang đăng
+  APPROVED: 2,   // Đã đăng
+  SPAM: 3,       // Spam
 };
 
-// Sample comment data
-const comments = ref([
-  {
-    id: 1,
-    date: '19/2/2025',
-    time: '8h45 AM',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.ACTIVE
-  },
-  {
-    id: 2,
-    date: '19/2/2025',
-    time: '8h45 AM',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.ACTIVE
-  },
-  {
-    id: 3,
-    date: '19/2/2025',
-    time: '8h45 AM',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.ACTIVE
-  },
-  {
-    id: 4,
-    date: '19/2/2025',
-    time: '8h45 AM',
-    content: 'Cầu lông có thể đổi luật tính điểm...',
-    status: STATUS_TYPES.ACTIVE
-  }
-]);
+// Dữ liệu bình luận
+const comments = ref([]);
+const loading = ref(false);
+const error = ref(null);
 
-// Function to cycle through statuses
+// Hàm gọi API để tải danh sách bình luận
+async function fetchComments() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get('/api/admin/comments', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data && response.data.length > 0) {
+      comments.value = response.data.map((comment) => ({
+        id: comment.id,
+        date: new Date(comment.created_at).toLocaleDateString(),
+        time: new Date(comment.created_at).toLocaleTimeString(),
+        content: comment.content,
+        status: comment.status,
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách bình luận:", err);
+    error.value = "Không thể tải danh sách bình luận. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Hàm chuyển đổi trạng thái bình luận
 function changeStatus(comment) {
-  // Cycle through statuses: Đang đăng -> Đã đăng -> Chưa đăng -> Spam -> Đang đăng
+  // Luân chuyển trạng thái: Chưa đăng -> Đang đăng -> Đã đăng -> Spam -> Chưa đăng
   switch (comment.status) {
+    case STATUS_TYPES.PENDING:
+      comment.status = STATUS_TYPES.ACTIVE;
+      break;
     case STATUS_TYPES.ACTIVE:
       comment.status = STATUS_TYPES.APPROVED;
       break;
     case STATUS_TYPES.APPROVED:
-      comment.status = STATUS_TYPES.PENDING;
-      break;
-    case STATUS_TYPES.PENDING:
       comment.status = STATUS_TYPES.SPAM;
       break;
     case STATUS_TYPES.SPAM:
-      comment.status = STATUS_TYPES.ACTIVE;
+      comment.status = STATUS_TYPES.PENDING;
       break;
     default:
-      comment.status = STATUS_TYPES.ACTIVE;
+      comment.status = STATUS_TYPES.PENDING;
   }
 }
 
-// Get appropriate CSS class based on status
+// Trả về lớp CSS tương ứng với trạng thái
 function getStatusClass(status) {
   switch (status) {
+    case STATUS_TYPES.PENDING:
+      return 'status-pending';
     case STATUS_TYPES.ACTIVE:
       return 'status-active';
     case STATUS_TYPES.APPROVED:
       return 'status-approved';
-    case STATUS_TYPES.PENDING:
-      return 'status-pending';
     case STATUS_TYPES.SPAM:
       return 'status-spam';
     default:
@@ -190,21 +148,24 @@ function getStatusClass(status) {
   }
 }
 
-// Get human-readable status text
+// Trả về văn bản hiển thị tương ứng với trạng thái
 function getStatusText(status) {
   switch (status) {
+    case STATUS_TYPES.PENDING:
+      return 'Chưa đăng';
     case STATUS_TYPES.ACTIVE:
       return 'Đang đăng';
     case STATUS_TYPES.APPROVED:
       return 'Đã đăng';
-    case STATUS_TYPES.PENDING:
-      return 'Chưa đăng';
     case STATUS_TYPES.SPAM:
       return 'Spam';
     default:
       return 'Không xác định';
   }
 }
+
+// Tải dữ liệu khi component được mount
+onMounted(fetchComments);
 </script>
 
 <style scoped>

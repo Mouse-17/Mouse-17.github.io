@@ -9,54 +9,22 @@
             <p class="text-muted">Xem và tìm kiếm sản phẩm</p>
           </div>
           <div class="button-wrapper">
-            <RouterLink class="btn-xuat-admin" to="/admin/themsanpham">
+            <router-link class="btn-xuat-admin" to="/admin/themsanpham">
               <i class="bi bi-plus-lg"></i>
               <span>Thêm sản phẩm</span>
-            </RouterLink>
+            </router-link>
           </div>
         </div>
 
-        <div class="status-filter">
-          <div class="status-links">
-            <a class="status-link active" href="#">Tất cả <span class="count">(100)</span></a>
-            <a class="status-link" href="#">Đã đăng <span class="count">(80)</span></a>
-            <a class="status-link" href="#">Bản nháp <span class="count">(20)</span></a>
-            <a class="status-link special" href="#">Lọc sản phẩm</a>
-          </div>
+        <div v-if="loading" class="text-center py-5">
+          <span>Đang tải dữ liệu...</span>
         </div>
 
-        <div class="filter-toolbar">
-          <select class="filter-select">
-            <option>Tác vụ</option>
-            <option>Xóa</option>
-            <option>Cập nhật</option>
-          </select>
-          <button class="btn-apply">Áp dụng</button>
-          <select class="filter-select">
-            <option>Tất cả các ngày</option>
-            <option>Tuần này</option>
-            <option>Tháng này</option>
-          </select>
-          <select class="filter-select">
-            <option>Chọn danh mục</option>
-            <option>Quần áo</option>
-            <option>Giày dép</option>
-          </select>
-          <select class="filter-select">
-            <option>Toàn bộ sản phẩm</option>
-            <option>Còn hànghàng</option>
-            <option>Hết hàng</option>
-            <option>Mới về</option>
-            <option>Giảm giá</option>
-            <option>Ngưng kinh doanh</option>
-          </select>
-          <div class="search-box">
-            <input class="search-input" placeholder="Tìm kiếm sản phẩm..." type="text">
-            <button class="search-btn"><i class="bi bi-search"></i></button>
-          </div>
+        <div v-else-if="error" class="text-center py-5 text-danger">
+          <span>{{ error }}</span>
         </div>
 
-        <div class="product-table-container">
+        <div v-else class="product-table-container">
           <table class="product-table">
             <thead>
             <tr>
@@ -78,13 +46,13 @@
               <td class="price">{{ product.price }}</td>
               <td class="description">{{ product.description }}</td>
               <td class="status">
-                                    <span
-                                        :class="['status-badge', product.status]"
-                                        title="Click để thay đổi trạng thái"
-                                        @click="changeStatus(product)"
-                                    >
-                                        {{ getStatusName(product.status) }}
-                                    </span>
+                  <span
+                      :class="['status-badge', product.status]"
+                      title="Click để thay đổi trạng thái"
+                      @click="changeStatus(product)"
+                  >
+                    {{ getStatusName(product.status) }}
+                  </span>
               </td>
               <td class="actions">
                 <button class="action-btn view-btn" title="Xem"><i class="bi bi-eye"></i></button>
@@ -95,80 +63,59 @@
             </tbody>
           </table>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top">
-          <div class="text-muted">Hiển thị 1-10 trong tổng số 50 danh mục</div>
-          <nav>
-            <ul class="pagination mb-0">
-              <li class="page-item"><a class="page-link" href="#">«</a></li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
-          </nav>
-        </div>
       </div>
     </section>
   </main>
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
+import axios from 'axios';
 
 // Mảng các trạng thái sản phẩm
 const statuses = [
-  {id: 'in-stock', name: 'Còn hàng'},
-  {id: 'out-of-stock', name: 'Hết hàng'},
-  {id: 'sale', name: 'Giảm giá'},
-  {id: 'new', name: 'Mới về'},
-  {id: 'discontinued', name: 'Ngừng kinh doanh'}
+  { id: 'in-stock', name: 'Còn hàng' },
+  { id: 'out-of-stock', name: 'Hết hàng' },
+  { id: 'sale', name: 'Giảm giá' },
+  { id: 'new', name: 'Mới về' },
+  { id: 'discontinued', name: 'Ngừng kinh doanh' }
 ];
 
-// Dữ liệu các sản phẩm với trạng thái
-const products = ref([
-  {
-    id: 1,
-    name: 'Áo thể thao nam',
-    price: '244.000đ',
-    status: 'in-stock',
-    image: '../../../public/img/p1.png',
-    description: 'Áo thể thao chất liệu cao cấp, thấm hút mồ hôi tốt'
-  },
-  {
-    id: 2,
-    name: 'Áo polo',
-    price: '244.000đ',
-    status: 'out-of-stock',
-    image: '../../../public/img/p1.png',
-    description: 'Áo polo thiết kế đơn giản, phù hợp nhiều dịp'
-  },
-  {
-    id: 3,
-    name: 'Áo khoác gió',
-    price: '244.000đ',
-    status: 'sale',
-    image: '../../../public/img/p1.png',
-    description: 'Áo khoác chống nước, chống gió tốt cho mùa đông'
-  },
-  {
-    id: 4,
-    name: 'Áo thun tay dài',
-    price: '244.000đ',
-    status: 'new',
-    image: '../../../public/img/p1.png',
-    description: 'Áo thun dài tay chất cotton thoáng mát'
-  },
-  {
-    id: 5,
-    name: 'Áo thun tay dài',
-    price: '244.000đ',
-    status: 'new',
-    image: '../../../public/img/p1.png',
-    description: 'Áo thun dài tay chất cotton thoáng mát'
+// Dữ liệu sản phẩm
+const products = ref([]);
+const loading = ref(false);
+const error = ref(null);
+
+// Hàm tải danh sách sản phẩm từ API
+async function fetchProducts() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get('/api/admin/products', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      products.value = response.data.data.map(product => ({
+        id: product.id,
+        name: product.name,
+        price: `${parseFloat(product.price).toLocaleString()}đ`,
+        status: product.status,
+        image: product.image || 'https://via.placeholder.com/50',
+        description: product.description,
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách sản phẩm:", err);
+    error.value = "Không thể tải danh sách sản phẩm. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
   }
-]);
+}
 
 // Hàm thay đổi trạng thái khi click
 function changeStatus(product) {
@@ -182,6 +129,9 @@ function getStatusName(statusId) {
   const status = statuses.find(s => s.id === statusId);
   return status ? status.name : '';
 }
+
+// Tải dữ liệu khi component được mount
+onMounted(fetchProducts);
 </script>
 
 <style scoped>

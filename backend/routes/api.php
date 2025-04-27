@@ -203,6 +203,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/admin/post-categories/{id}', [PostController::class, 'destroyCategory']);
 
         // Products management
+        Route::get('/admin/products', [ProductController::class, 'index']);
         Route::post('/admin/products', [ProductController::class, 'store']);
         Route::put('/admin/products/{id}', [ProductController::class, 'update']);
         Route::delete('/admin/products/{id}', [ProductController::class, 'destroy']);
