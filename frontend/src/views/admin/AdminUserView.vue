@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="admin">
-      <AdminSidebar/>
+      <AdminSidebar />
       <div class="admin-right">
         <div class="header-container">
           <div class="title-section">
@@ -9,34 +9,26 @@
             <p class="text-muted">Xem và tìm kiếm người dùng</p>
           </div>
           <div class="button-wrapper">
-            <button class="btn-add-user">
+            <!-- Điều hướng đến view Thêm mới -->
+            <button class="btn-add-user" @click="addUser">
               <i class="bi bi-plus-lg"></i>
               <span>Thêm người dùng</span>
             </button>
           </div>
         </div>
 
-        <div class="filter-toolbar">
-          <select class="filter-select">
-            <option>All</option>
-          </select>
-          <select class="filter-select">
-            <option>All Departments</option>
-          </select>
-          <button class="btn-delete">Delete <i class="bi bi-trash"></i></button>
-          <div class="search-box">
-            <input class="search-input" placeholder="Tìm kiếm..." type="text">
-            <button class="search-btn"><i class="bi bi-search"></i></button>
-          </div>
+        <div v-if="loading" class="text-center py-5">
+          <span>Đang tải dữ liệu...</span>
         </div>
 
-        <div class="user-table-container">
+        <div v-else-if="error" class="text-center py-5 text-danger">
+          <span>{{ error }}</span>
+        </div>
+
+        <div v-else class="user-table-container">
           <table class="user-table">
             <thead>
             <tr>
-              <th class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </th>
               <th>Họ tên</th>
               <th>Email</th>
               <th>sđt</th>
@@ -46,116 +38,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </td>
-              <td>Minh</td>
-              <td>minh123@gmail.com</td>
-              <td>0123456789</td>
-              <td>Bình thuận</td>
-              <td>Khách hàng</td>
+            <tr v-for="user in users" :key="user.id">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.address }}</td>
+              <td>{{ translateRole(user.role) }}</td>
               <td class="action-col">
                 <div class="action-buttons">
-                  <a class="action-icon view-icon" href="#" title="Xem">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a class="action-icon edit-icon" href="#" title="Sửa">
+                  <!-- Điều hướng đến view sửa -->
+                  <a class="action-icon edit-icon" href="#" @click.prevent="editUser(user.id)" title="Sửa">
                     <i class="bi bi-pencil-square"></i>
                   </a>
-                  <a class="action-icon delete-icon" href="#" title="Xóa">
-                    <i class="bi bi-trash3-fill"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </td>
-              <td>Nga</td>
-              <td>nga123@gmail.com</td>
-              <td>0123456789</td>
-              <td>Bình thuận</td>
-              <td>Admin</td>
-              <td class="action-col">
-                <div class="action-buttons">
-                  <a class="action-icon view-icon" href="#" title="Xem">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a class="action-icon edit-icon" href="#" title="Sửa">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <a class="action-icon delete-icon" href="#" title="Xóa">
-                    <i class="bi bi-trash3-fill"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </td>
-              <td>Hân</td>
-              <td>han123@gmail.com</td>
-              <td>0123456789</td>
-              <td>Bình thuận</td>
-              <td>Khách hàng</td>
-              <td class="action-col">
-                <div class="action-buttons">
-                  <a class="action-icon view-icon" href="#" title="Xem">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a class="action-icon edit-icon" href="#" title="Sửa">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <a class="action-icon delete-icon" href="#" title="Xóa">
-                    <i class="bi bi-trash3-fill"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </td>
-              <td>Tuấn</td>
-              <td>tuan123@gmail.com</td>
-              <td>0123456789</td>
-              <td>Bình thuận</td>
-              <td>Khách hàng</td>
-              <td class="action-col">
-                <div class="action-buttons">
-                  <a class="action-icon view-icon" href="#" title="Xem">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a class="action-icon edit-icon" href="#" title="Sửa">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <a class="action-icon delete-icon" href="#" title="Xóa">
-                    <i class="bi bi-trash3-fill"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="checkbox-col">
-                <input class="table-checkbox" type="checkbox">
-              </td>
-              <td>Đạt</td>
-              <td>dat123@gmail.com</td>
-              <td>0123456789</td>
-              <td>Bình thuận</td>
-              <td>Khách hàng</td>
-              <td class="action-col">
-                <div class="action-buttons">
-                  <a class="action-icon view-icon" href="#" title="Xem">
-                    <i class="bi bi-eye-fill"></i>
-                  </a>
-                  <a class="action-icon edit-icon" href="#" title="Sửa">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <a class="action-icon delete-icon" href="#" title="Xóa">
+                  <a class="action-icon delete-icon" href="#" @click.prevent="deleteUser(user.id)" title="Xóa">
                     <i class="bi bi-trash3-fill"></i>
                   </a>
                 </div>
@@ -164,23 +59,90 @@
             </tbody>
           </table>
         </div>
-
-        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top">
-          <div class="text-muted">Hiển thị 1-10 trong tổng số 50 danh mục</div>
-          <nav>
-            <ul class="pagination mb-0">
-              <li class="page-item"><a class="page-link" href="#">«</a></li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
-          </nav>
-        </div>
       </div>
     </section>
   </main>
 </template>
+
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router"; // Sử dụng router để điều hướng
+import axios from "axios";
+import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
+
+// Router
+const router = useRouter();
+
+// Danh sách người dùng
+const users = ref([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
+
+// Tải dữ liệu người dùng từ API
+const fetchUsers = async () => {
+  loading.value = true;
+  error.value = null;
+  try {
+    const response = await axios.get("/api/admin/users", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+    users.value = response.data;
+  } catch (err) {
+    console.error("Lỗi khi tải danh sách người dùng:", err);
+    error.value = "Không thể tải danh sách người dùng. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Hàm dịch vai trò sang tiếng Việt
+const translateRole = (role: string): string => {
+  switch (role) {
+    case "field_owner":
+      return "Chủ sân";
+    case "user":
+      return "Người dùng";
+    case "admin":
+      return "Quản trị viên";
+    default:
+      return "Không xác định";
+  }
+};
+
+// Hàm điều hướng đến view Thêm mới
+const addUser = () => {
+  router.push("/admin/quanlinguoidung/them");
+};
+
+// Hàm điều hướng đến view Sửa
+const editUser = (userId: number) => {
+  router.push(`/admin/quanlinguoidung/sua/${userId}`);
+};
+
+// Hàm xóa người dùng
+const deleteUser = async (userId: number) => {
+  if (confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+    try {
+      await axios.delete(`/api/admin/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      users.value = users.value.filter((user: any) => user.id !== userId);
+      alert("Xóa người dùng thành công!");
+    } catch (err) {
+      console.error("Lỗi khi xóa người dùng:", err);
+      alert("Không thể xóa người dùng. Vui lòng thử lại sau.");
+    }
+  }
+};
+
+// Tải danh sách người dùng khi component được mount
+onMounted(fetchUsers);
+</script>
 
 <style scoped>
 .admin {
@@ -682,7 +644,4 @@
     font-size: 28px;
   }
 }
-</style>0
-<script lang="ts" setup>
-import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
-</script>
+</style>

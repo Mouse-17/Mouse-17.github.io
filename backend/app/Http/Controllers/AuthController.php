@@ -574,6 +574,24 @@ class AuthController extends Controller
         return response()->json($users);
     }
 
+    public function show($id)
+    {
+        if (!$request->user()->isAdmin()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        return response()->json([
+            'message' => 'Get user successfully',
+            'user' => $user
+        ]);
+    }
+
     /**
      * Update user (admin only)
      */

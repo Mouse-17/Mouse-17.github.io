@@ -36,6 +36,20 @@ const routesadmin = [
     meta: { hideHeaderFooter: true, requiresAuth: true, requiresAdmin: true },
   },
   {
+    path: "/admin/quanlinguoidung/them",
+    name: "Thêm người dùng",
+    component: () => import("../views/admin/AddUserView.vue"),
+    meta: { hideHeaderFooter: true, requiresAuth: true, requiresAdmin: true },
+  },
+  // Route sửa người dùng
+  {
+    path: "/admin/quanlinguoidung/sua/:id",
+    name: "Sửa người dùng",
+    component: () => import("../views/admin/EditUserView.vue"),
+    props: true, // Truyền props ID người dùng vào component
+    meta: { hideHeaderFooter: true, requiresAuth: true, requiresAdmin: true },
+  },
+  {
     path: "/admin/quanlibinhluan",
     name: "Quản lí bình luận",
     component: () => import("../views/admin/AdminCommentView.vue"),

@@ -48,7 +48,7 @@ Route::get('/test-orders', function () {
         // Kiểm tra kết nối và đếm số lượng đơn hàng
         $count = DB::table('don_hang')->count();
         $firstFew = DB::table('don_hang')->take(3)->get();
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'Kết nối đến bảng đơn hàng thành công',
@@ -75,7 +75,7 @@ Route::get('/create-sample-order', function () {
             'created_at' => now(),
             'updated_at' => now()
         ]);
-        
+
         // Tạo chi tiết đơn hàng mẫu
         $orderDetailId = DB::table('don_hang_chi_tiet')->insertGetId([
             'ID_DH' => $orderId,
@@ -85,7 +85,7 @@ Route::get('/create-sample-order', function () {
             'created_at' => now(),
             'updated_at' => now()
         ]);
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'Đã tạo đơn hàng mẫu thành công',
@@ -142,35 +142,35 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
-    
+
     // Bookings
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings/{id}', [BookingController::class, 'show']);
     Route::put('/bookings/{id}', [BookingController::class, 'update']);
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
-    
+
     // Owner bookings - di chuyển ra khỏi middleware field.owner để dễ debug
     Route::get('/owner/bookings', [BookingController::class, 'ownerBookings']);
     Route::post('/bookings/{id}/update-status', [BookingController::class, 'updateStatus']);
-    
+
     // Orders
     Route::post('/orders', [ApiOrderController::class, 'store']);
     Route::post('/direct-order', [ApiOrderController::class, 'directOrder']);
     Route::get('/orders', [ApiOrderController::class, 'getOrdersByUser']);
     Route::get('/orders/{id}', [ApiOrderController::class, 'getOrderDetail']);
     Route::put('/orders/{id}/status', [ApiOrderController::class, 'updateOrderStatus']);
-    
+
     // Comments
     Route::post('/comments', [CommentController::class, 'store']);
     Route::put('/comments/{id}', [CommentController::class, 'update']);
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
-    
+
     // Ratings
     Route::post('/ratings', [RatingController::class, 'store']);
     Route::put('/ratings/{id}', [RatingController::class, 'update']);
     Route::delete('/ratings/{id}', [RatingController::class, 'destroy']);
-    
+
     // Field Owner routes
     Route::middleware('field.owner')->group(function () {
         Route::post('/fields', [FieldController::class, 'store']);
@@ -181,18 +181,19 @@ Route::middleware('auth:sanctum')->group(function () {
         // Route::get('/owner/bookings', [BookingController::class, 'ownerBookings']);
         // Route::post('/bookings/{id}/update-status', [BookingController::class, 'updateStatus']);
     });
-    
+
     // Admin routes
     Route::middleware('admin')->group(function () {
         // Dashboard
         Route::get('/admin/dashboard', [DashboardController::class, 'index']);
         Route::get('/admin/stats', [DashboardController::class, 'stats']);
-        
+
         // User management
         Route::get('/admin/users', [AuthController::class, 'index']);
+        Route::get('/admin/users/{id}', [AuthController::class, 'show']);
         Route::put('/admin/users/{id}', [AuthController::class, 'update']);
         Route::delete('/admin/users/{id}', [AuthController::class, 'destroy']);
-        
+
         // Posts management
         Route::post('/admin/posts', [PostController::class, 'store']);
         Route::put('/admin/posts/{id}', [PostController::class, 'update']);
@@ -200,7 +201,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/post-categories', [PostController::class, 'storeCategory']);
         Route::put('/admin/post-categories/{id}', [PostController::class, 'updateCategory']);
         Route::delete('/admin/post-categories/{id}', [PostController::class, 'destroyCategory']);
-        
+
         // Products management
         Route::post('/admin/products', [ProductController::class, 'store']);
         Route::put('/admin/products/{id}', [ProductController::class, 'update']);
@@ -210,19 +211,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/admin/categories/{id}', [ProductController::class, 'destroyCategory']);
         Route::put('/admin/products/{id}/bestseller', [ProductController::class, 'updateBestseller']);
         Route::get('/admin/products/top', [ProductController::class, 'getTopProducts']);
-        
+
         // Comments management
         Route::get('/admin/comments', [CommentController::class, 'index']);
         Route::put('/admin/comments/{id}/status', [CommentController::class, 'updateStatus']);
-        
+
         // Ratings management
         Route::get('/admin/ratings', [RatingController::class, 'index']);
         Route::put('/admin/ratings/{id}/status', [RatingController::class, 'updateStatus']);
-        
+
         // Orders management
         Route::get('/admin/orders', [OrderController::class, 'adminIndex']);
         Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus']);
-        
+
         // Contacts management
         Route::get('/admin/contacts', [ContactController::class, 'index']);
         Route::put('/admin/contacts/{id}/status', [ContactController::class, 'updateStatus']);
@@ -257,7 +258,7 @@ Route::get('/check-mau-size', function() {
     $mau = \App\Models\MauSac::all();
     $size = \App\Models\Size::all();
     $sp_mau_size = \App\Models\SP_MauSize::with(['mau', 'size'])->get();
-    
+
     return response()->json([
         'mau' => $mau,
         'size' => $size,
@@ -295,7 +296,7 @@ Route::get('/debug/don-hang', function() {
     try {
         $schema = DB::getSchemaBuilder()->getColumnListing('don_hang');
         $sampleData = DB::table('don_hang')->limit(3)->get();
-        
+
         return response()->json([
             'success' => true,
             'schema' => $schema,
@@ -318,7 +319,7 @@ Route::get('/cart-test', function() {
 Route::get('/check-session', function(Request $request) {
     $cartSession = $request->cookie('cart_session') ?? $request->header('X-Cart-Session');
     $laravelSession = session()->getId();
-    
+
     return response()->json([
         'cart_session' => $cartSession,
         'laravel_session' => $laravelSession,
