@@ -99,9 +99,12 @@ jobs:
         run: |
           cd frontend
           zip -r build.zip dist -x "node_modules/*"
+          if [ ! -f build.zip ]; then
+            echo "Error: build.zip not found" && exit 1
+          fi
           sshpass -e scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} build.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/www/wwwroot/keysport-api.sitilink.vn/frontend
           sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "\
-            if [ -f /www/wwwroot/keysport-api.sitilink.vn/frontend ]; then rm /www/wwwroot/keysport-api.sitilink.vn/frontend; fi && \
             mkdir -p /www/wwwroot/keysport-api.sitilink.vn/frontend && \
-            cd /www/wwwroot/keysport-api.sitilink.vn/frontend && \
-            unzip -o build.zip && rm build.zip"
+            ls -l /www/wwwroot/keysport-api.sitilink.vn/frontend && \
+            unzip -o /www/wwwroot/keysport-api.sitilink.vn/frontend/build.zip -d /www/wwwroot/keysport-api.sitilink.vn/frontend && \
+            rm /www/wwwroot/keysport-api.sitilink.vn/frontend/build.zip"
