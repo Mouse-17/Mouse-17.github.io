@@ -37,7 +37,6 @@ class SanPham extends Model
         'diem_danh_gia' => 'float',
         'tong_danh_gia' => 'integer'
     ];
-
     public function danhMuc()
     {
         return $this->belongsTo(DanhMuc::class, 'id_danhmuc');
@@ -52,28 +51,28 @@ class SanPham extends Model
     {
         return $this->hasMany(SP_MauSize::class, 'ID_SP');
     }
-    
+
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'id_sp');
     }
-    
+
     public function danhGia()
     {
         return $this->hasMany(DanhGia::class, 'ID_SP', 'id');
     }
-    
+
     public function getAverageRatingAttribute()
     {
         $danhGiaAvg = $this->danhGia()->avg('So_sao') ?? 0;
         $ratingsAvg = $this->ratings()->avg('So_sao') ?? 0;
-        
+
         // Nếu có đánh giá từ cả hai bảng, lấy giá trị trung bình
         if ($danhGiaAvg > 0 && $ratingsAvg > 0) {
             return ($danhGiaAvg + $ratingsAvg) / 2;
         }
-        
+
         // Nếu chỉ có một bảng có đánh giá, lấy giá trị đó
         return $danhGiaAvg > 0 ? $danhGiaAvg : $ratingsAvg;
     }
-} 
+}
