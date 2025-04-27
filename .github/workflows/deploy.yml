@@ -38,7 +38,7 @@ jobs:
           touch database/database.sqlite
 
       - name: Create .env file
-        run: echo "${{ secrets.ENV_PROD }}" >> .env
+        run: echo "${{ secrets.ENV_PROD }}" >> backend/.env
 
       - name: Zip Backend Source Code
         run: |
