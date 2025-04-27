@@ -167,9 +167,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 
     // Ratings
-    Route::post('/ratings', [RatingController::class, 'store']);
-    Route::put('/ratings/{id}', [RatingController::class, 'update']);
-    Route::delete('/ratings/{id}', [RatingController::class, 'destroy']);
+    Route::get('/', [RatingController::class, 'index']); // Lấy danh sách đánh giá
+    Route::post('/', [RatingController::class, 'store']); // Thêm đánh giá mới
+    Route::get('/{id}', [RatingController::class, 'show']); // Lấy chi tiết đánh giá
+    Route::put('/{id}', [RatingController::class, 'update']); // Cập nhật đánh giá
+    Route::delete('/{id}', [RatingController::class, 'destroy']); // Xóa đánh giá
+    Route::put('/{id}/status', [RatingController::class, 'updateStatus']); // Cập nhật trạng thái đánh giá
+    Route::get('/product/{productId}', [RatingController::class, 'getProductRatings']); // Lấy đánh giá cho sản phẩm
 
     // Field Owner routes
     Route::middleware('field.owner')->group(function () {
