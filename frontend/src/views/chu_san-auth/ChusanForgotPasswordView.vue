@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="banner">
-      <img src="/img/Banner-ChuSan.png" alt="Banner">
+      <img src="/img/Banner2.png" alt="Banner">
     </section>
 
     <section class="recovery-section py-5">
