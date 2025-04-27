@@ -491,73 +491,76 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="row gx-0">
-      <Sidebar />
-      <div class="col-10">
-        <div
-          class="bg-white p-4 p-lg-5"
-          style="
+    <section class="accept">
+      <div class="row gx-0">
+        <Sidebar />
+        <div class="col-10">
+          <div
+              class="bg-white p-4 p-lg-5"
+              style="
             box-shadow: 0 0 18px var(--shadow2);
             min-height: 667px;
             border-radius: 20px 0 0 20px;
           "
-        >
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="m-0 fs-2 fw-bold" style="color: var(--colortext1)">
-              Quản lý đặt sân
-            </h3>
-            <div class="d-flex gap-3 align-items-center">
-              <input type="date" class="form-date" v-model="currentDate" />
-              <input
-                type="text"
-                class="form-control search-input"
-                v-model="searchTerm"
-                placeholder="Tìm kiếm"
-              />
-            </div>
-          </div>
-
-          <div class="calendar-container">
-            <div class="time-col">
-              <div class="header-cell"></div>
-              <div v-for="slot in timeSlots" :key="slot.id" class="time-cell">
-                {{ slot.display }}
+          >
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3 class="m-0 fs-2 fw-bold" style="color: var(--colortext1)">
+                Quản lý đặt sân
+              </h3>
+              <div class="d-flex gap-3 align-items-center">
+                <input type="date" class="form-date" v-model="currentDate" />
+                <input
+                    type="text"
+                    class="form-control search-input"
+                    v-model="searchTerm"
+                    placeholder="Tìm kiếm"
+                />
               </div>
             </div>
 
-            <div v-for="field in fields" :key="field.id" class="field-col">
-              <div class="header-cell">Sân {{ field.id }}</div>
-              <div
-                v-for="slot in timeSlots"
-                :key="slot.id"
-                class="booking-cell"
-                @click="openBookingModal(field.id, slot.time)"
-              >
-                <div
-                  v-if="getBooking(field.id, slot.time)"
-                  class="booking-card"
-                >
-                  <div class="booking-id">
-                    {{ getBooking(field.id, slot.time).id }} -
-                    {{ getBooking(field.id, slot.time).customer }}
-                  </div>
-                  <div class="booking-price">
-                    {{ formatPrice(getBooking(field.id, slot.time).price) }}đ
-                  </div>
+            <div class="calendar-container">
+              <div class="time-col">
+                <div class="header-cell"></div>
+                <div v-for="slot in timeSlots" :key="slot.id" class="time-cell">
+                  {{ slot.display }}
                 </div>
-                <div v-else class="empty-slot">
-                  <i class="bi bi-plus-circle"></i>
+              </div>
+
+              <div v-for="field in fields" :key="field.id" class="field-col">
+                <div class="header-cell">Sân {{ field.id }}</div>
+                <div
+                    v-for="slot in timeSlots"
+                    :key="slot.id"
+                    class="booking-cell"
+                    @click="openBookingModal(field.id, slot.time)"
+                >
+                  <div
+                      v-if="getBooking(field.id, slot.time)"
+                      class="booking-card"
+                  >
+                    <div class="booking-id">
+                      {{ getBooking(field.id, slot.time).id }} -
+                      {{ getBooking(field.id, slot.time).customer }}
+                    </div>
+                    <div class="booking-price">
+                      {{ formatPrice(getBooking(field.id, slot.time).price) }}đ
+                    </div>
+                  </div>
+                  <div v-else class="empty-slot">
+                    <i class="bi bi-plus-circle"></i>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </main>
 </template>
 
 <style scoped>
+@import url(\'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap\');
 .calendar-container {
   display: flex;
   overflow-x: auto;
@@ -790,5 +793,19 @@ onMounted(() => {
     transform: translateX(0);
     opacity: 1;
   }
+}
+.col-2 {
+  flex: 0 0 16.66%;
+  max-width: 16.66%;
+}
+
+.col-10 {
+  flex: 0 0 83.33%;
+  max-width: 83.33%;
+}
+.accept {
+  min-height: 100vh;
+  background: #f4f4f4;
+  padding: 20px;
 }
 </style>
