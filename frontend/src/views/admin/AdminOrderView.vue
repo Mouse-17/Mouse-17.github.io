@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="admin">
-      <AdminSidebar/>
+      <AdminSidebar />
 
       <div class="admin-right">
         <div class="header-container">
@@ -10,98 +10,16 @@
             <p class="text-muted">Xem và tìm kiếm đơn hàng</p>
           </div>
         </div>
-        <div class="content-section">
-          <div class="stats-container">
-            <div class="stat-card">
-              <div class="stat-icon orders">
-                <i class="bi bi-cart-check-fill"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-value">256</div>
-                <div class="stat-label">Tổng đơn hàng</div>
-              </div>
-              <div class="stat-trend up">
-                <i class="bi bi-graph-up-arrow"></i>
-                <span>+12%</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon pending">
-                <i class="bi bi-hourglass-split"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-value">42</div>
-                <div class="stat-label">Chờ xử lý</div>
-              </div>
-              <div class="stat-trend up">
-                <i class="bi bi-graph-up-arrow"></i>
-                <span>+8%</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon completed">
-                <i class="bi bi-check-circle-fill"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-value">198</div>
-                <div class="stat-label">Hoàn thành</div>
-              </div>
-              <div class="stat-trend up">
-                <i class="bi bi-graph-up-arrow"></i>
-                <span>+15%</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon revenue">
-                <i class="bi bi-currency-dollar"></i>
-              </div>
-              <div class="stat-info">
-                <div class="stat-value">48.5M</div>
-                <div class="stat-label">Doanh thu</div>
-              </div>
-              <div class="stat-trend up">
-                <i class="bi bi-graph-up-arrow"></i>
-                <span>+24%</span>
-              </div>
-            </div>
-          </div>
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">Tất cả đơn hàng</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Chưa thanh toán</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Xử lý đơn hàng</a>
-            </li>
-          </ul>
 
-          <div class="d-flex justify-content-between align-items-center mt-3 filter-search-container">
-            <div class="filter-options">
-              <button class="btn btn-filter">
-                <i class="bi bi-funnel-fill"></i> Bộ lọc
-              </button>
-              <div class="filter-pills">
-                                <span class="filter-pill active">
-                                    <i class="bi bi-calendar3"></i> Hôm nay
-                                    <i class="bi bi-x-circle-fill remove-filter"></i>
-                                </span>
-                <span class="filter-pill">
-                                    <i class="bi bi-currency-dollar"></i> > 500.000đ
-                                    <i class="bi bi-x-circle-fill remove-filter"></i>
-                                </span>
-                <button class="btn btn-sm btn-add-filter">
-                  <i class="bi bi-plus-circle"></i> Thêm điều kiện
-                </button>
-              </div>
-            </div>
-            <div class="input-group search-box">
-              <input class="form-control" placeholder="Tìm kiếm đơn hàng..." type="text">
-              <button class="search-btn"><i class="bi bi-search"></i></button>
-            </div>
-          </div>
+        <div v-if="loading" class="text-center py-5">
+          <span>Đang tải dữ liệu...</span>
+        </div>
 
+        <div v-else-if="error" class="text-center py-5 text-danger">
+          <span>{{ error }}</span>
+        </div>
+
+        <div v-else class="content-section">
           <table class="table table-bordered table-hover mt-3">
             <thead class="table-dark">
             <tr>
@@ -120,50 +38,38 @@
               <td class="order-id">{{ order.id }}</td>
               <td class="date-col">
                 <div class="date-info">
-                  <span class="date-main">{{ order.date }}</span>
-                  <span class="date-time text-muted">{{ order.time }}</span>
+                  <span class="date-main">{{ order.date_created }}</span>
+                  <span class="date-time text-muted">{{ order.time_created }}</span>
                 </div>
               </td>
               <td class="customer-info">
-                <div class="customer-name">{{ order.customer.name }}</div>
-                <div class="customer-detail">{{ order.customer.phone }}</div>
+                <div class="customer-name">{{ order.customer_name }}</div>
+                <div class="customer-detail">{{ order.customer_phone }}</div>
               </td>
               <td>
-                                    <span class="payment-method">
-                                        <i :class="getPaymentIcon(order.payment.method)"></i> {{ order.payment.method }}
-                                    </span>
+                <span class="payment-method">
+                  <i :class="getPaymentMethod(order.payment_method)"></i> {{ order.payment_method }}
+                </span>
               </td>
               <td>
-                                    <span
-                                        :class="getStatusClass(order.status)"
-                                        class="status-badge"
-                                        title="Nhấn để thay đổi trạng thái"
-                                        @click="changeStatus(order)">
-                                        <i :class="getStatusIcon(order.status)"></i> {{ getStatusText(order.status) }}
-                                    </span>
+                  <span
+                      :class="getStatusClass(order.status)"
+                      class="status-badge"
+                      title="Nhấn để thay đổi trạng thái"
+                      @click="changeStatus(order)"
+                  >
+                    <i :class="getStatusClass(order.status)"></i> {{ getStatusText(order.status) }}
+                  </span>
               </td>
               <td class="price">
                 <div class="price-info">
-                  <span class="price-value">{{ order.price }}</span>
-                  <span class="price-items text-muted">{{ order.items }} sản phẩm</span>
+                  <span class="price-value">{{ order.total_price }}</span>
+                  <span class="price-items text-muted">{{ order.items_count }} sản phẩm</span>
                 </div>
               </td>
             </tr>
             </tbody>
           </table>
-
-          <div class="d-flex justify-content-between align-items-center pt-3 pb-2 px-3 border-top">
-            <div class="text-muted">Hiển thị 1-10 trong tổng số 50 danh mục</div>
-            <nav>
-              <ul class="pagination mb-0">
-                <li class="page-item"><a class="page-link" href="#">«</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">»</a></li>
-              </ul>
-            </nav>
-          </div>
         </div>
       </div>
     </section>
@@ -171,139 +77,108 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import { ref, onMounted } from 'vue';
 import AdminSidebar from "@/views/admin/partials/AdminSidebar.vue";
+import axios from 'axios';
 
 // Định nghĩa trạng thái đơn hàng
 const STATUS_TYPES = {
-  DELIVERED: 'delivered',
-  SHIPPING: 'shipping',
-  PENDING: 'pending'
+  0: 'Chưa thanh toán',
+  1: 'Đã thanh toán',
+};
+
+const ORDER_STATUS = {
+  0: 'Đang xử lý',
+  1: 'Hoàn thành',
+  2: 'Đã hủy',
 };
 
 // Dữ liệu đơn hàng
-const orders = ref([
-  {
-    id: '#M0909',
-    date: '10/09/2024',
-    time: '14:30',
-    customer: {
-      name: 'Nga',
-      phone: '0912345678'
-    },
-    payment: {
-      method: 'Thẻ tín dụng'
-    },
-    status: STATUS_TYPES.DELIVERED,
-    price: '500.000đ',
-    items: 2
-  },
-  {
-    id: '#M0989',
-    date: '10/09/2024',
-    time: '09:15',
-    customer: {
-      name: 'Minh',
-      phone: '0987654321'
-    },
-    payment: {
-      method: 'Tiền mặt (COD)'
-    },
-    status: STATUS_TYPES.SHIPPING,
-    price: '850.000đ',
-    items: 3
-  },
-  {
-    id: '#M0979',
-    date: '10/09/2024',
-    time: '11:45',
-    customer: {
-      name: 'Minh',
-      phone: '0923456789'
-    },
-    payment: {
-      method: 'Chuyển khoản'
-    },
-    status: STATUS_TYPES.PENDING,
-    price: '700.000đ',
-    items: 1
-  },
-  {
-    id: '#M0910',
-    date: '10/09/2024',
-    time: '16:20',
-    customer: {
-      name: 'Minh',
-      phone: '0934567890'
-    },
-    payment: {
-      method: 'Ví điện tử'
-    },
-    status: STATUS_TYPES.SHIPPING,
-    price: '1.200.000đ',
-    items: 4
-  }
-]);
+const orders = ref([]);
+const loading = ref(false);
+const error = ref(null);
 
-// Chuyển đổi trạng thái khi nhấp vào
-function changeStatus(order) {
-  // Thứ tự luân chuyển trạng thái: pending -> shipping -> delivered -> pending
-  switch (order.status) {
-    case STATUS_TYPES.PENDING:
-      order.status = STATUS_TYPES.SHIPPING;
-      break;
-    case STATUS_TYPES.SHIPPING:
-      order.status = STATUS_TYPES.DELIVERED;
-      break;
-    case STATUS_TYPES.DELIVERED:
-      order.status = STATUS_TYPES.PENDING;
-      break;
-    default:
-      order.status = STATUS_TYPES.PENDING;
+// Hàm lấy danh sách đơn hàng từ API
+async function fetchOrders() {
+  loading.value = true;
+
+  try {
+    const response = await axios.get('/api/admin/orders', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      // Đồng bộ hóa dữ liệu trả về với giao diện
+      orders.value = response.data.data.map(order => ({
+        id: order.id,
+        date_created: new Date(order.created_at).toLocaleDateString(),
+        time_created: new Date(order.created_at).toLocaleTimeString(),
+        customer_name: order.user_name,
+        total_price: `${parseFloat(order.total_price).toLocaleString()}đ`,
+        payment_method: getPaymentMethod(order.payment_method),
+        payment_status: STATUS_TYPES[order.payment_status],
+        status: {
+          text: ORDER_STATUS[order.status],
+          class: getStatusClass(order.status),
+        },
+      }));
+    }
+  } catch (err) {
+    console.error("Lỗi khi tải đơn hàng:", err);
+    error.value = "Không thể tải danh sách đơn hàng. Vui lòng thử lại sau.";
+  } finally {
+    loading.value = false;
   }
 }
 
-// Trả về lớp CSS tương ứng với trạng thái
-function getStatusClass(status) {
-  return status;
-}
-
-// Trả về biểu tượng tương ứng với trạng thái
-function getStatusIcon(status) {
-  switch (status) {
-    case STATUS_TYPES.PENDING:
-      return 'bi bi-hourglass';
-    case STATUS_TYPES.SHIPPING:
-      return 'bi bi-truck';
-    case STATUS_TYPES.DELIVERED:
-      return 'bi bi-truck';
-    default:
-      return 'bi bi-question-circle';
-  }
-}
-
-// Trả về văn bản tương ứng với trạng thái
-function getStatusText(status) {
-  switch (status) {
-    case STATUS_TYPES.PENDING:
-      return 'Chưa vận chuyển';
-    case STATUS_TYPES.SHIPPING:
-      return 'Đang vận chuyển';
-    case STATUS_TYPES.DELIVERED:
-      return 'Đã vận chuyển';
+// Hàm lấy tên phương thức thanh toán từ mã
+function getPaymentMethod(method) {
+  switch (method) {
+    case 1:
+      return 'Tiền mặt (COD)';
+    case 2:
+      return 'Tiền mặt (COD)';
+    case 3:
+      return 'Chuyển khoản';
+    case 4:
+      return 'Ví điện tử';
     default:
       return 'Không xác định';
   }
 }
 
-// Trả về biểu tượng tương ứng với phương thức thanh toán
-function getPaymentIcon(method) {
-  if (method.includes('Thẻ tín dụng')) return 'bi bi-credit-card';
-  if (method.includes('Tiền mặt')) return 'bi bi-cash-coin';
-  if (method.includes('Chuyển khoản')) return 'bi bi-bank';
-  if (method.includes('Ví điện tử')) return 'bi bi-wallet2';
-  return 'bi bi-credit-card';
+// Hàm lấy lớp CSS cho trạng thái đơn hàng
+function getStatusClass(status) {
+  switch (status) {
+    case 0:
+      return 'Chưa thanh toán';
+    case 1:
+      return 'Hoàn thành';
+    case 2:
+      return 'Đã hủy';
+    default:
+      return 'Không xác định';
+  }
 }
+
+
+function getStatusText(status) {
+  switch (status) {
+    case 0:
+      return 'Chưa thanh toán';
+    case 1:
+      return 'Hoàn thành';
+    case 2:
+      return 'Đã hủy';
+    default:
+      return 'Không xác định';
+  }
+}
+
+// Tải dữ liệu khi component được mount
+onMounted(fetchOrders);
 </script>
 
 <style scoped>
