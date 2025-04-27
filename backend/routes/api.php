@@ -140,6 +140,93 @@ Route::get('/san-pham-pho-bien', [ApiController::class, 'productView']);
 
 Route::get('/san-pho-bien', [ApiController::class, 'popularYard']);
 
+Route::get('/sanpham', [ProductController::class, 'showListProduct']);
+Route::get('/sanpham/{id}', [ProductController::class, 'showdetail']);
+Route::post('/sanpham/boloc', [ProductController::class, 'sortProduct']);
+
+Route::apiResource('san', SanController::class);
+Route::get('/san', [SanController::class, 'showListYard']);
+Route::get('/san/{id}', [SanController::class, 'show']);
+Route::get('/san/{id}/danh-gia', [SanController::class, 'getSanRatings']);
+
+// Thêm route cho API tìm kiếm sân
+Route::get('/timkiemsan', [SanController::class, 'timkiemSan']);
+
+// Route kiểm tra màu sắc và kích thước
+Route::get('/check-mau-size', function() {
+    $mau = \App\Models\MauSac::all();
+    $size = \App\Models\Size::all();
+    $sp_mau_size = \App\Models\SP_MauSize::with(['mau', 'size'])->get();
+
+    return response()->json([
+        'mau' => $mau,
+        'size' => $size,
+        'sp_mau_size' => $sp_mau_size
+    ]);
+});
+
+// API endpoints để lấy thông tin màu và size từ ID
+Route::get('/mau/{id}', function($id) {
+    $mau = \App\Models\MauSac::find($id);
+    return response()->json([
+        'status' => 'success',
+        'data' => $mau
+    ]);
+});
+
+Route::get('/size/{id}', function($id) {
+    $size = \App\Models\Size::find($id);
+    return response()->json([
+        'status' => 'success',
+        'data' => $size
+    ]);
+});
+
+// Route for bestseller products
+Route::get('/bestseller', [ProductController::class, 'bestseller']);
+
+Route::get('/loai-san', [LoaiSanController::class, 'index']);
+
+// Route để lấy khung giờ và giá
+Route::get('/khung-gio', [SanController::class, 'getTimeSlots']);
+
+// Debug route để kiểm tra kết nối đến bảng đơn hàng
+Route::get('/debug/don-hang', function() {
+    try {
+        $schema = DB::getSchemaBuilder()->getColumnListing('don_hang');
+        $sampleData = DB::table('don_hang')->limit(3)->get();
+
+        return response()->json([
+            'success' => true,
+            'schema' => $schema,
+            'sample_data' => $sampleData,
+            'count' => DB::table('don_hang')->count()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+});
+
+Route::get('/cart-test', function() {
+    return response()->json(['status' => 'success', 'message' => 'API hoạt động']);
+});
+
+Route::get('/check-session', function(Request $request) {
+    $cartSession = $request->cookie('cart_session') ?? $request->header('X-Cart-Session');
+    $laravelSession = session()->getId();
+
+    return response()->json([
+        'cart_session' => $cartSession,
+        'laravel_session' => $laravelSession,
+        'all_cookies' => $_COOKIE,
+        'headers' => $request->headers->all()
+    ]);
+});
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     // User profile
@@ -250,89 +337,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-Route::get('/sanpham', [ProductController::class, 'showListProduct']);
-Route::get('/sanpham/{id}', [ProductController::class, 'showdetail']);
-Route::post('/sanpham/boloc', [ProductController::class, 'sortProduct']);
 
-Route::apiResource('san', SanController::class);
-Route::get('/san', [SanController::class, 'showListYard']);
-Route::get('/san/{id}', [SanController::class, 'show']);
-Route::get('/san/{id}/danh-gia', [SanController::class, 'getSanRatings']);
-
-// Thêm route cho API tìm kiếm sân
-Route::get('/timkiemsan', [SanController::class, 'timkiemSan']);
-
-// Route kiểm tra màu sắc và kích thước
-Route::get('/check-mau-size', function() {
-    $mau = \App\Models\MauSac::all();
-    $size = \App\Models\Size::all();
-    $sp_mau_size = \App\Models\SP_MauSize::with(['mau', 'size'])->get();
-
-    return response()->json([
-        'mau' => $mau,
-        'size' => $size,
-        'sp_mau_size' => $sp_mau_size
-    ]);
-});
-
-// API endpoints để lấy thông tin màu và size từ ID
-Route::get('/mau/{id}', function($id) {
-    $mau = \App\Models\MauSac::find($id);
-    return response()->json([
-        'status' => 'success',
-        'data' => $mau
-    ]);
-});
-
-Route::get('/size/{id}', function($id) {
-    $size = \App\Models\Size::find($id);
-    return response()->json([
-        'status' => 'success',
-        'data' => $size
-    ]);
-});
-
-// Route for bestseller products
-Route::get('/bestseller', [ProductController::class, 'bestseller']);
-
-Route::get('/loai-san', [LoaiSanController::class, 'index']);
-
-// Route để lấy khung giờ và giá
-Route::get('/khung-gio', [SanController::class, 'getTimeSlots']);
-
-// Debug route để kiểm tra kết nối đến bảng đơn hàng
-Route::get('/debug/don-hang', function() {
-    try {
-        $schema = DB::getSchemaBuilder()->getColumnListing('don_hang');
-        $sampleData = DB::table('don_hang')->limit(3)->get();
-
-        return response()->json([
-            'success' => true,
-            'schema' => $schema,
-            'sample_data' => $sampleData,
-            'count' => DB::table('don_hang')->count()
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ], 500);
-    }
-});
-
-Route::get('/cart-test', function() {
-    return response()->json(['status' => 'success', 'message' => 'API hoạt động']);
-});
-
-Route::get('/check-session', function(Request $request) {
-    $cartSession = $request->cookie('cart_session') ?? $request->header('X-Cart-Session');
-    $laravelSession = session()->getId();
-
-    return response()->json([
-        'cart_session' => $cartSession,
-        'laravel_session' => $laravelSession,
-        'all_cookies' => $_COOKIE,
-        'headers' => $request->headers->all()
-    ]);
-});
