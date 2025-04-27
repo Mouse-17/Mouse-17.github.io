@@ -19,7 +19,10 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['/img/Banner-ChuSan.png']
+      external: [
+          '/img/Banner-ChuSan.png',
+        '/img/logo.jpg',
+      ]
     }
   }
 })
