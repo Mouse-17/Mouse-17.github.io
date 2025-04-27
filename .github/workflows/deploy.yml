@@ -100,4 +100,7 @@ jobs:
           cd frontend
           zip -r build.zip dist -x "node_modules/*"
           sshpass -e scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} build.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/www/wwwroot/keysport-api.sitilink.vn/frontend
-          sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /www/wwwroot/keysport-api.sitilink.vn/frontend && unzip -o build.zip && rm build.zip"
+          sshpass -e ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "\
+            mkdir -p /www/wwwroot/keysport-api.sitilink.vn/frontend && \
+            cd /www/wwwroot/keysport-api.sitilink.vn/frontend && \
+            unzip -o build.zip && rm build.zip"
