@@ -41,7 +41,9 @@ jobs:
         run: echo "${{ secrets.ENV_PROD }}" >> .env
 
       - name: Zip Backend Source Code
-        run: zip -r backend.zip backend -x "vendor/*"
+        run: |
+          cd backend
+          zip -r ../backend.zip . -x "vendor/*"
 
       - name: Zip Vendor Directory
         run: zip -r vendor.zip backend/vendor
