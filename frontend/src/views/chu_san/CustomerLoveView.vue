@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import Chart from "chart.js/auto";
+import Sidebar from "@/views/chu_san/partials/Sidebar.vue";
 
 const route = useRoute();
 // Xác định đường dẫn hiện tại
@@ -249,56 +250,7 @@ onMounted(() => {
 
     <section class="accept">
       <div class="row gx-0">
-        <div class="col-2">
-          <aside class="py-5">
-            <div
-              class="d-flex align-items-center gap-3 mb-5"
-              style="margin-left: 12px"
-            >
-              <div class="boss-img">
-                <img
-                  src="../../../public/img/user.webp"
-                  class="img-fluid"
-                  alt=""
-                />
-              </div>
-              <div>
-                <p
-                  class="m-0 fs-4 fw-regular my-1"
-                  style="color: var(--colortext3)"
-                >
-                  Xin chào,
-                </p>
-                <p
-                  class="m-0 fs-3 fw-semibold my-1"
-                  style="color: var(--colortext1)"
-                >
-                  Shin
-                </p>
-              </div>
-            </div>
-            <RouterLink
-              to="/themsanmoi"
-              class="btn-booknow my-3 mb-4"
-              style="color: var(--white) !important; margin-left: 12px"
-              >Thêm sân mới</RouterLink
-            >
-            <ul class="p-0 forboss">
-              <li v-for="item in menuItems" :key="item.path">
-                <RouterLink
-                  :to="item.path"
-                  class="d-flex align-items-center gap-3 boss-item-link"
-                  :class="{
-                    'router-link-exact-active': currentPath === item.path,
-                  }"
-                >
-                  <i :class="`bi ${item.icon} fs-4`"></i>
-                  <p class="m-0">{{ item.name }}</p>
-                </RouterLink>
-              </li>
-            </ul>
-          </aside>
-        </div>
+        <Sidebar />
         <div class="col-10">
           <div
             class="bg-white p-5"
