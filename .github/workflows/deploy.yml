@@ -97,9 +97,9 @@ jobs:
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          cd frontend
-          zip -r build.zip dist -x "node_modules/*"
-          if [ ! -f build.zip ]; then
+          cd frontend/dist
+          zip -r ../build.zip . -x "node_modules/*"
+          if [ ! -f ../build.zip ]; then
             echo "Error: build.zip not found" && exit 1
           fi
           sshpass -e scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} build.zip ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/www/wwwroot/keysport-api.sitilink.vn/frontend
