@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="banner">
-      <img class="imgban" src="../../../public/img/Banner-ChuSan.png" alt="" />
+      <img class="imgban" src="/img/Banner-ChuSan.png" alt="" />
     </section>
 
     <section class="login-section py-5">

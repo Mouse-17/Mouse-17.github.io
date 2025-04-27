@@ -12,6 +12,7 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
+  publicDir: fileURLToPath(new URL('public', import.meta.url)), // Đảm bảo ./public là đường dẫn đúng
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -19,7 +20,9 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: []  // Remove image paths from here
+      external: [
+        '/img/Banner-ChuSan.png' // Thêm file vào danh sách ngoại lệ
+      ]
     }
   }
 })
