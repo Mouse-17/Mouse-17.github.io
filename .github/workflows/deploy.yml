@@ -81,7 +81,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install npm dependencies and build Vue app
+      - name: Install npm dependencies and build Vue  app
         run: |
           cd frontend
           npm install
