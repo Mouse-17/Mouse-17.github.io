@@ -30,7 +30,7 @@ const fetchyard = async () => {
   try {
     // Tạo URL với tham số tìm kiếm (nếu có)
 
-    let apiUrl = `http://localhost:8000/api/san?page=${currentPage.value}`;
+    let apiUrl = `/api/san?page=${currentPage.value}`;
 
     // Thêm các tham số lọc vào URL
     if (searchKeyword.value) {
@@ -63,7 +63,7 @@ const fetchyard = async () => {
 
     console.log(apiUrl);
 
-    const response = await fetch(apiUrl);
+    const response = await axios.get(apiUrl);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -81,13 +81,9 @@ const fetchyard = async () => {
 
 const fetchPopularYards = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/san-pho-bien');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const datas = await response.json();
-    if (datas.status == 'success') {
-      popular_yards.value = datas.data;
+    const response = await axios.get('/api/san-pho-bien');
+    if (response.data.status === 'success') {
+      popular_yards.value = response.data.data;
       console.log('Sân phổ biến:', popular_yards.value);
     }
   } catch (error) {
@@ -168,7 +164,7 @@ watch(() => route.query.tukhoa, (newValue) => {
 
 const fetchYardTypes = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/loai-san');
+    const response = await axios.get('/api/loai-san');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

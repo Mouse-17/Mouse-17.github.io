@@ -8,16 +8,14 @@ const yard_store = ref<Yard[]>([]);
 const yardType = ref('');
 const timeRange = ref('');
 const playDate = ref('');
+import axios from 'axios';
+
 
 const fetchProducts = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/san-pham-pho-bien');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const datas = await response.json();
-    if (datas.status == 'success') {
-      product_store.value = datas.data;
+    const response = await axios.get('/api/san-pham-pho-bien');
+    if (response.data.status === 'success') {
+      product_store.value = response.data.data;
     }
   } catch (error) {
     console.error('Lỗi khi tải sản phẩm:', error);
@@ -32,13 +30,9 @@ onMounted(() => {
 
 const fetchyard = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/san-pho-bien');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const datas = await response.json();
-    if (datas.status == 'success') {
-      yard_store.value = datas.data;
+    const response = await axios.get('/api/san-pho-bien');
+    if (response.data.status === 'success') {
+      yard_store.value = response.data.data;
     }
   } catch (error) {
     console.error('Lỗi khi tải sân:', error);

@@ -1,8 +1,8 @@
-<script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
-import { useRoute } from "vue-router";
-import type { Product } from "../stores/product";
-import { useCartStore } from "../stores/cart";
+<script lang="ts" setup>
+import {computed, onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import type {Product} from "../stores/product";
+import {useCartStore} from "../stores/cart";
 
 const route = useRoute();
 const product_store = ref<Product | null>(null);
@@ -48,8 +48,8 @@ const addToCart = async () => {
 
   // Kiểm tra đã chọn màu và size chưa (nếu sản phẩm có màu và size)
   if (
-    product_store.value?.san_pham_mau_size &&
-    product_store.value.san_pham_mau_size.length > 0
+      product_store.value?.san_pham_mau_size &&
+      product_store.value.san_pham_mau_size.length > 0
   ) {
     if (!selectedColor.value) {
       showMessage("Vui lòng chọn màu sắc", "error");
@@ -92,12 +92,12 @@ const addToCart = async () => {
       // Chuyển hướng đến trang giỏ hàng với tham số query để hiển thị thông báo
       setTimeout(() => {
         window.location.href =
-          "/giohang?from_product=true&added=" + product_store.value?.id;
+            "/giohang?from_product=true&added=" + product_store.value?.id;
       }, 1000);
     } else {
       showMessage(
-        cartStore.error || "Có lỗi xảy ra khi thêm vào giỏ hàng",
-        "error"
+          cartStore.error || "Có lỗi xảy ra khi thêm vào giỏ hàng",
+          "error"
       );
     }
   } catch (error) {
@@ -110,8 +110,8 @@ const addToCart = async () => {
 
 // Hiển thị thông báo
 const showMessage = (
-  message: string,
-  type: "success" | "error" = "success"
+    message: string,
+    type: "success" | "error" = "success"
 ) => {
   // Nếu là thông báo thành công, thêm thông tin sản phẩm vào
   if (type === "success" && product_store.value) {
@@ -120,8 +120,8 @@ const showMessage = (
     const productPrice = product_store.value.Gia.toLocaleString("vi-VN") + "đ";
     const productSize = selectedSize.value ? `Size: ${selectedSize.value}` : "";
     const productColor = selectedColor.value
-      ? `Màu: #${selectedColor.value}`
-      : "";
+        ? `Màu: #${selectedColor.value}`
+        : "";
     const productQuantity = `Số lượng: ${quantity.value}`;
 
     // Chuỗi thông tin sản phẩm
@@ -132,8 +132,8 @@ const showMessage = (
       productColor,
       productQuantity,
     ]
-      .filter(Boolean)
-      .join(" | ");
+        .filter(Boolean)
+        .join(" | ");
 
     cart_message.value = `${message}\n${productInfo}`;
   } else {
@@ -165,7 +165,7 @@ const uniqueColors = computed(() => {
   // Lấy danh sách ID_Mau không trùng lặp
   const uniqueMauIds = [
     ...new Set(
-      product_store.value.san_pham_mau_size.map((item) => item.ID_Mau)
+        product_store.value.san_pham_mau_size.map((item) => item.ID_Mau)
     ),
   ];
   return uniqueMauIds;
@@ -178,7 +178,7 @@ const uniqueSizes = computed(() => {
   // Lấy danh sách ID_Kichthuoc không trùng lặp
   const uniqueSizeIds = [
     ...new Set(
-      product_store.value.san_pham_mau_size.map((item) => item.ID_Kichthuoc)
+        product_store.value.san_pham_mau_size.map((item) => item.ID_Kichthuoc)
     ),
   ];
   return uniqueSizeIds;
@@ -186,9 +186,7 @@ const uniqueSizes = computed(() => {
 
 const fetchProduct = async () => {
   try {
-    const response = await fetch(
-      `http://localhost:8000/api/sanpham/${route.params.id}`
-    );
+    const response = await axios.get(`/api/sanpham/${route.params.id}`);
     const data = await response.json();
     if (data.status == "success") {
       product_store.value = data.data;
@@ -199,8 +197,8 @@ const fetchProduct = async () => {
 
       // Kiểm tra cấu trúc dữ liệu mau và size
       if (
-        product_store.value?.san_pham_mau_size &&
-        product_store.value.san_pham_mau_size.length > 0
+          product_store.value?.san_pham_mau_size &&
+          product_store.value.san_pham_mau_size.length > 0
       ) {
         console.log("Mẫu Màu Size:", product_store.value.san_pham_mau_size);
         product_store.value.san_pham_mau_size.forEach((item, index) => {
@@ -224,9 +222,7 @@ const fetchProductRatings = async (productId) => {
 
     // Sử dụng endpoint chính xác để lấy đánh giá của sản phẩm
     // Route in api.php is: Route::get('/product/{id}/ratings', [RatingController::class, 'getProductRatings']);
-    const response = await fetch(
-      `http://localhost:8000/api/product/${productId}/ratings`
-    );
+    const response = await axios.get(`/api/product/${productId}/ratings`);
     const data = await response.json();
 
     console.log("API đánh giá trả về:", data);
@@ -263,7 +259,7 @@ const fetchProductRatings = async (productId) => {
     } else {
       console.warn("API đánh giá trả về không thành công:", data);
       console.warn(
-        "Đảm bảo rằng route /api/product/{id}/ratings đã được đăng ký"
+          "Đảm bảo rằng route /api/product/{id}/ratings đã được đăng ký"
       );
     }
   } catch (error) {
@@ -287,21 +283,21 @@ onMounted(() => {
       <div class="container">
         <!-- Thay thế thông báo cũ bằng toast notification đẹp hơn -->
         <div
-          v-if="show_cart_message"
-          class="toast-notification"
-          :class="
+            v-if="show_cart_message"
+            :class="
             cart_message.includes('lỗi') || cart_message.includes('Vui lòng')
               ? 'toast-error'
               : 'toast-success'
           "
+            class="toast-notification"
         >
           <div class="toast-icon">
             <i
-              v-if="
+                v-if="
                 cart_message.includes('lỗi') ||
                 cart_message.includes('Vui lòng')
               "
-              class="bi bi-exclamation-circle-fill"
+                class="bi bi-exclamation-circle-fill"
             ></i>
             <i v-else class="bi bi-check-circle-fill"></i>
           </div>
@@ -310,8 +306,8 @@ onMounted(() => {
               {{
                 cart_message.includes("lỗi") ||
                 cart_message.includes("Vui lòng")
-                  ? "Thông báo lỗi"
-                  : "Thêm vào giỏ hàng thành công"
+                    ? "Thông báo lỗi"
+                    : "Thêm vào giỏ hàng thành công"
               }}
             </h4>
             <p class="toast-message">
@@ -321,16 +317,16 @@ onMounted(() => {
 
             <!-- Hiển thị thông tin sản phẩm nếu có (phần sau \n) -->
             <div
-              v-if="cart_message.split('\n').length > 1"
-              class="product-info-toast"
+                v-if="cart_message.split('\n').length > 1"
+                class="product-info-toast"
             >
               <!-- Hiển thị thông tin sản phẩm với định dạng đẹp hơn -->
               <div
-                v-for="(info, index) in cart_message
+                  v-for="(info, index) in cart_message
                   .split('\n')[1]
                   .split(' | ')"
-                :key="index"
-                class="product-info-item"
+                  :key="index"
+                  class="product-info-item"
               >
                 {{ info }}
               </div>
@@ -347,73 +343,74 @@ onMounted(() => {
             <div class="px-lg-2 px-3 d-flex gap-4">
               <div class="product-thumnail">
                 <div
-                  v-if="product_store.anh_phu"
-                  v-for="(image, index) in product_store.anh_phu"
-                  :key="index"
-                  class="custom-thumnail__box mb-3"
+                    v-for="(image, index) in product_store.anh_phu"
+                    v-if="product_store.anh_phu"
+                    :key="index"
+                    class="custom-thumnail__box mb-3"
                 >
                   <img
-                    :src="getImageSrc(image)"
-                    :alt="product_store.Ten_san_pham"
-                    class="img-fluid"
+                      :alt="product_store.Ten_san_pham"
+                      :src="getImageSrc(image)"
+                      class="img-fluid"
                   />
                 </div>
               </div>
               <div class="flex-fill">
                 <img
-                  :src="getImageSrc(product_store.Anh_dai_dien)"
-                  :alt="product_store.Ten_san_pham"
-                  class="rounded-4"
+                    :alt="product_store.Ten_san_pham"
+                    :src="getImageSrc(product_store.Anh_dai_dien)"
+                    class="rounded-4"
                 />
               </div>
             </div>
           </div>
           <div class="col-12 col-lg-6 p-0">
             <div class="product-info px-5">
-              <a href="#" class="category-bkdetail__link mt-2">{{
-                product_store.danh_muc?.ten_danh_muc
-              }}</a>
+              <a class="category-bkdetail__link mt-2" href="#">{{
+                  product_store.danh_muc?.ten_danh_muc
+                }}</a>
               <h2 class="text-start productname my-2">
                 {{ product_store.Ten_san_pham }}
               </h2>
               <p class="text-muted fs-4">Mã sản phẩm: {{ product_store.id }}</p>
               <p class="mt-4">
                 <del
-                  class="fs-4 me-3"
-                  style="color: var(--colortext3)"
-                  v-if="product_store.gia_giam"
-                  >{{ product_store.gia_giam.toLocaleString("vi-VN") }}đ</del
+                    v-if="product_store.gia_giam"
+                    class="fs-4 me-3"
+                    style="color: var(--colortext3)"
+                >{{ product_store.gia_giam.toLocaleString("vi-VN") }}đ
+                </del
                 >
                 <strong style="color: var(--accent); font-size: 1.9rem"
-                  >{{ product_store.Gia.toLocaleString("vi-VN") }}đ</strong
+                >{{ product_store.Gia.toLocaleString("vi-VN") }}đ</strong
                 >
               </p>
               <div class="d-flex align-items-center gap-2 mt-2 mb-3">
                 <template v-for="star in 5" :key="star">
                   <i
-                    class="bi bi-star-fill"
-                    :class="
+                      :class="
                       star <= averageRating ? 'color-star' : 'color-star-gray'
                     "
+                      class="bi bi-star-fill"
                   ></i>
                 </template>
                 <p
-                  class="m-0 me-1 fs-3 fw-bold"
-                  style="color: var(--colortext1)"
+                    class="m-0 me-1 fs-3 fw-bold"
+                    style="color: var(--colortext1)"
                 >
                   {{ averageRating }}
                 </p>
                 <i class="bi bi-dot fs-2" style="color: var(--colortext2)"></i>
                 <a
-                  href="#"
-                  class="m-0 fs-4 fw-regular fst-italic rating-link-view"
-                  @click.prevent="handleTabClick('reviews')"
-                  >Đánh giá ({{ totalRatings }})</a
+                    class="m-0 fs-4 fw-regular fst-italic rating-link-view"
+                    href="#"
+                    @click.prevent="handleTabClick('reviews')"
+                >Đánh giá ({{ totalRatings }})</a
                 >
               </div>
               <p class="product-desc">{{ product_store.Mo_ta }}</p>
               <template
-                v-if="
+                  v-if="
                   product_store.san_pham_mau_size &&
                   product_store.san_pham_mau_size.length > 0
                 "
@@ -421,23 +418,23 @@ onMounted(() => {
                 <h5 class="mt-4 fs-4">Màu sắc:</h5>
                 <div class="color-options mt-3">
                   <div
-                    v-for="(colorId, index) in uniqueColors"
-                    :key="'color-' + index"
-                    class="color-option"
-                    :class="{ selected: selectedColor === colorId }"
-                    :style="{ backgroundColor: '#' + colorId }"
-                    @click="selectColor(colorId)"
+                      v-for="(colorId, index) in uniqueColors"
+                      :key="'color-' + index"
+                      :class="{ selected: selectedColor === colorId }"
+                      :style="{ backgroundColor: '#' + colorId }"
+                      class="color-option"
+                      @click="selectColor(colorId)"
                   ></div>
                 </div>
 
                 <h5 class="mt-4 fs-4">Size:</h5>
                 <div class="size-options mt-3">
                   <div
-                    v-for="(sizeId, index) in uniqueSizes"
-                    :key="'size-' + index"
-                    class="size-option fs-4"
-                    :class="{ selected: selectedSize === sizeId }"
-                    @click="selectSize(sizeId)"
+                      v-for="(sizeId, index) in uniqueSizes"
+                      :key="'size-' + index"
+                      :class="{ selected: selectedSize === sizeId }"
+                      class="size-option fs-4"
+                      @click="selectSize(sizeId)"
                   >
                     {{ sizeId }}
                   </div>
@@ -446,17 +443,17 @@ onMounted(() => {
               <div class="mt-4 d-flex align-items-center gap-4">
                 <div>
                   <input
-                    type="number"
-                    v-model="quantity"
-                    class="form-date product-quantity"
-                    name="quantity"
-                    min="1"
+                      v-model="quantity"
+                      class="form-date product-quantity"
+                      min="1"
+                      name="quantity"
+                      type="number"
                   />
                 </div>
                 <button
-                  class="btn-order"
-                  :disabled="isLoading"
-                  @click.prevent="addToCart"
+                    :disabled="isLoading"
+                    class="btn-order"
+                    @click.prevent="addToCart"
                 >
                   <i v-if="isLoading" class="bi bi-arrow-repeat"></i>
                   <span v-else>Thêm vào giỏ hàng</span>
@@ -478,16 +475,16 @@ onMounted(() => {
       <div class="container">
         <ul class="d-flex list-unstyled detail-infor__list">
           <li
-            class="detail-infor__desc-rating"
-            :class="{ 'desc-detail__seleted': activeTab == 'description' }"
-            @click="handleTabClick('description')"
+              :class="{ 'desc-detail__seleted': activeTab == 'description' }"
+              class="detail-infor__desc-rating"
+              @click="handleTabClick('description')"
           >
             Mô tả
           </li>
           <li
-            class="detail-infor__desc-rating"
-            :class="{ 'desc-detail__seleted': activeTab == 'reviews' }"
-            @click="handleTabClick('reviews')"
+              :class="{ 'desc-detail__seleted': activeTab == 'reviews' }"
+              class="detail-infor__desc-rating"
+              @click="handleTabClick('reviews')"
           >
             Đánh giá
           </li>
@@ -501,8 +498,8 @@ onMounted(() => {
                     Thông tin sản phẩm
                   </h3>
                   <div
-                    class="mt-3"
-                    style="
+                      class="mt-3"
+                      style="
                       color: var(--colortext2);
                       font-size: 1.5rem;
                       line-height: 2.4rem;
@@ -518,14 +515,14 @@ onMounted(() => {
               <div class="ps-5 pe-lg-0 pe-3 detail-infor__thumnail">
                 <template v-if="product_store.anh_phu">
                   <div
-                    v-for="(image, index) in product_store.anh_phu"
-                    :key="index"
-                    class="my-2"
+                      v-for="(image, index) in product_store.anh_phu"
+                      :key="index"
+                      class="my-2"
                   >
                     <img
-                      :src="getImageSrc(image)"
-                      :alt="product_store.Ten_san_pham"
-                      class="img-fluid"
+                        :alt="product_store.Ten_san_pham"
+                        :src="getImageSrc(image)"
+                        class="img-fluid"
                     />
                   </div>
                 </template>
@@ -538,7 +535,7 @@ onMounted(() => {
             <div class="col-6">
               <div class="comment-box__rating mt-4">
                 <div
-                  class="d-flex align-items-center justify-content-between gap-3"
+                    class="d-flex align-items-center justify-content-between gap-3"
                 >
                   <h1 class="m-0 fw-semibold" style="font-size: 3.2rem">
                     {{ averageRating }}
@@ -547,40 +544,40 @@ onMounted(() => {
                     <div class="d-flex align-items-center gap-2 mb-3">
                       <template v-for="star in 5" :key="star">
                         <i
-                          class="bi bi-star-fill fs-2"
-                          :class="
+                            :class="
                             star <= averageRating
                               ? 'color-star'
                               : 'color-star-gray'
                           "
+                            class="bi bi-star-fill fs-2"
                         ></i>
                       </template>
                     </div>
                     <p
-                      class="fs-4 fst-italic m-0 text-end"
-                      style="color: var(--colortext3)"
+                        class="fs-4 fst-italic m-0 text-end"
+                        style="color: var(--colortext3)"
                     >
                       {{ totalRatings }} đánh giá
                     </p>
                   </div>
                 </div>
-                <hr style="color: var(--colortext3)" />
+                <hr style="color: var(--colortext3)"/>
 
                 <!-- 5 sao -->
                 <div
-                  class="d-flex align-items-center justify-content-between my-4 mt-5"
+                    class="d-flex align-items-center justify-content-between my-4 mt-5"
                 >
                   <h3 style="width: 5%; font-size: 2rem">5</h3>
                   <i class="bi bi-star-fill fs-3 color-star"></i>
                   <div class="bkdt__percent-rating">
                     <div
-                      class="bkdt__percent-rating-child"
-                      :style="{ width: getRatingPercentage(4) + '%' }"
+                        :style="{ width: getRatingPercentage(4) + '%' }"
+                        class="bkdt__percent-rating-child"
                     ></div>
                   </div>
                   <p
-                    class="fs-4 fst-italic m-0 text-end"
-                    style="color: var(--colortext3); width: 90px"
+                      class="fs-4 fst-italic m-0 text-end"
+                      style="color: var(--colortext3); width: 90px"
                   >
                     {{ ratingCounts[4] }} đánh giá
                   </p>
@@ -588,19 +585,19 @@ onMounted(() => {
 
                 <!-- 4 sao -->
                 <div
-                  class="d-flex align-items-center justify-content-between my-4"
+                    class="d-flex align-items-center justify-content-between my-4"
                 >
                   <h3 style="width: 5%; font-size: 2rem">4</h3>
                   <i class="bi bi-star-fill fs-3 color-star"></i>
                   <div class="bkdt__percent-rating">
                     <div
-                      class="bkdt__percent-rating-child"
-                      :style="{ width: getRatingPercentage(3) + '%' }"
+                        :style="{ width: getRatingPercentage(3) + '%' }"
+                        class="bkdt__percent-rating-child"
                     ></div>
                   </div>
                   <p
-                    class="fs-4 fst-italic m-0 text-end"
-                    style="color: var(--colortext3); width: 90px"
+                      class="fs-4 fst-italic m-0 text-end"
+                      style="color: var(--colortext3); width: 90px"
                   >
                     {{ ratingCounts[3] }} đánh giá
                   </p>
@@ -608,19 +605,19 @@ onMounted(() => {
 
                 <!-- 3 sao -->
                 <div
-                  class="d-flex align-items-center justify-content-between my-4"
+                    class="d-flex align-items-center justify-content-between my-4"
                 >
                   <h3 style="width: 5%; font-size: 2rem">3</h3>
                   <i class="bi bi-star-fill fs-3 color-star"></i>
                   <div class="bkdt__percent-rating">
                     <div
-                      class="bkdt__percent-rating-child"
-                      :style="{ width: getRatingPercentage(2) + '%' }"
+                        :style="{ width: getRatingPercentage(2) + '%' }"
+                        class="bkdt__percent-rating-child"
                     ></div>
                   </div>
                   <p
-                    class="fs-4 fst-italic m-0 text-end"
-                    style="color: var(--colortext3); width: 90px"
+                      class="fs-4 fst-italic m-0 text-end"
+                      style="color: var(--colortext3); width: 90px"
                   >
                     {{ ratingCounts[2] }} đánh giá
                   </p>
@@ -628,19 +625,19 @@ onMounted(() => {
 
                 <!-- 2 sao -->
                 <div
-                  class="d-flex align-items-center justify-content-between my-4"
+                    class="d-flex align-items-center justify-content-between my-4"
                 >
                   <h3 style="width: 5%; font-size: 2rem">2</h3>
                   <i class="bi bi-star-fill fs-3 color-star"></i>
                   <div class="bkdt__percent-rating">
                     <div
-                      class="bkdt__percent-rating-child"
-                      :style="{ width: getRatingPercentage(1) + '%' }"
+                        :style="{ width: getRatingPercentage(1) + '%' }"
+                        class="bkdt__percent-rating-child"
                     ></div>
                   </div>
                   <p
-                    class="fs-4 fst-italic m-0 text-end"
-                    style="color: var(--colortext3); width: 90px"
+                      class="fs-4 fst-italic m-0 text-end"
+                      style="color: var(--colortext3); width: 90px"
                   >
                     {{ ratingCounts[1] }} đánh giá
                   </p>
@@ -648,19 +645,19 @@ onMounted(() => {
 
                 <!-- 1 sao -->
                 <div
-                  class="d-flex align-items-center justify-content-between my-4"
+                    class="d-flex align-items-center justify-content-between my-4"
                 >
                   <h3 style="width: 5%; font-size: 2rem">1</h3>
                   <i class="bi bi-star-fill fs-3 color-star"></i>
                   <div class="bkdt__percent-rating">
                     <div
-                      class="bkdt__percent-rating-child"
-                      :style="{ width: getRatingPercentage(0) + '%' }"
+                        :style="{ width: getRatingPercentage(0) + '%' }"
+                        class="bkdt__percent-rating-child"
                     ></div>
                   </div>
                   <p
-                    class="fs-4 fst-italic m-0 text-end"
-                    style="color: var(--colortext3); width: 90px"
+                      class="fs-4 fst-italic m-0 text-end"
+                      style="color: var(--colortext3); width: 90px"
                   >
                     {{ ratingCounts[0] }} đánh giá
                   </p>
@@ -673,37 +670,37 @@ onMounted(() => {
             </div>
             <div class="col-5">
               <div
-                style="
+                  style="
                   background-color: var(--white);
                   border-radius: 12px;
                   box-shadow: 0 0 16px var(--shadow2);
                 "
               >
                 <h2
-                  class="m-0 fs-2 fw-semibold text-start"
-                  style="padding: 24px"
+                    class="m-0 fs-2 fw-semibold text-start"
+                    style="padding: 24px"
                 >
                   Tất cả bình luận
                 </h2>
                 <div class="comment-box__comment-content mt-1">
                   <!-- Hiển thị danh sách bình luận nếu có dữ liệu -->
                   <div
-                    v-if="
+                      v-if="
                       product_store.danh_gia &&
                       product_store.danh_gia.length > 0
                     "
                   >
                     <div
-                      v-for="(review, index) in product_store.danh_gia"
-                      :key="index"
-                      class="px-5"
+                        v-for="(review, index) in product_store.danh_gia"
+                        :key="index"
+                        class="px-5"
                     >
                       <div class="d-flex gap-4 flex-fill">
                         <div class="bkdt__comment-user">
                           <img
-                            :src="review.user?.avatar || '../img/user1.jpg'"
-                            alt=""
-                            class="img-fluid rounded-circle"
+                              :src="review.user?.avatar || '../img/user1.jpg'"
+                              alt=""
+                              class="img-fluid rounded-circle"
                           />
                         </div>
                         <div>
@@ -715,40 +712,40 @@ onMounted(() => {
                               <div class="d-flex align-items-center gap-1 mb-1">
                                 <template v-for="star in 5" :key="star">
                                   <i
-                                    class="bi bi-star-fill fs-4"
-                                    :class="
+                                      :class="
                                       star <= review.So_sao
                                         ? 'color-star'
                                         : 'color-star-gray'
                                     "
+                                      class="bi bi-star-fill fs-4"
                                   ></i>
                                 </template>
                               </div>
                               <i
-                                class="bi bi-dot fs-4"
-                                style="color: var(--colortext2)"
+                                  class="bi bi-dot fs-4"
+                                  style="color: var(--colortext2)"
                               ></i>
                               <p
-                                class="m-0 fs-4 hidden-text"
-                                style="color: var(--colortext3)"
+                                  class="m-0 fs-4 hidden-text"
+                                  style="color: var(--colortext3)"
                               >
                                 {{
                                   new Date(
-                                    review.created_at
+                                      review.created_at
                                   ).toLocaleDateString("vi-VN")
                                 }}
                               </p>
                               <div class="flex-fill">
                                 <i
-                                  class="bi bi-hand-thumbs-up-fill fs-2 color-star"
+                                    class="bi bi-hand-thumbs-up-fill fs-2 color-star"
                                 ></i>
                               </div>
                             </div>
                           </div>
                           <div>
                             <p
-                              class="m-0 mt-2"
-                              style="
+                                class="m-0 mt-2"
+                                style="
                                 color: var(--colortext1);
                                 font-size: 1.5rem;
                                 line-height: 2rem;
@@ -762,7 +759,7 @@ onMounted(() => {
                         </div>
                       </div>
                       <hr
-                        style="color: var(--colortext3); margin: 24px 0 20px 0"
+                          style="color: var(--colortext3); margin: 24px 0 20px 0"
                       />
                     </div>
                   </div>
@@ -774,9 +771,9 @@ onMounted(() => {
                 </div>
                 <form action="" class="p-5 pt-2">
                   <input
-                    type="text"
-                    class="form-date d-block w-100"
-                    placeholder="Viết bình luận..."
+                      class="form-date d-block w-100"
+                      placeholder="Viết bình luận..."
+                      type="text"
                   />
                 </form>
               </div>
@@ -789,10 +786,10 @@ onMounted(() => {
     <section class="popular-y mx-lg-auto mx-2">
       <div class="container">
         <div
-          class="d-flex justify-content-between align-items-center mb-2 px-2"
+            class="d-flex justify-content-between align-items-center mb-2 px-2"
         >
           <h1 class="title-section">ĐỀ XUẤT CHO BẠN</h1>
-          <a href="" class="seemore">
+          <a class="seemore" href="">
             <div>Xem thêm</div>
             <i class="bi bi-caret-right-fill"></i>
           </a>
@@ -800,12 +797,12 @@ onMounted(() => {
         <div class="row gx-0">
           <div class="col-12 col-lg-3 col-md-6 p-0">
             <div class="product my-3">
-              <a href="#" class="link-img-p">
-                <img src="/public/img/p1.png" alt="" class="img-fluid" />
+              <a class="link-img-p" href="#">
+                <img alt="" class="img-fluid" src="/public/img/p1.png"/>
               </a>
               <div class="product-infor">
-                <a href="#" class="m-0 title-product fs-3"
-                  >Áo thun Unisex phối bo cổ</a
+                <a class="m-0 title-product fs-3" href="#"
+                >Áo thun Unisex phối bo cổ</a
                 >
                 <div class="d-flex align-items-center gap-2 pt-1 pb-2">
                   <i class="bi bi-star-fill color-star fs-5"></i>
@@ -831,21 +828,21 @@ onMounted(() => {
                 </div>
               </div>
               <div class="atc-love-box">
-                <a href="" class="atc-love"><i class="bi bi-heart-fill"></i></a>
-                <a href="" class="atc-love atc-icon"
-                  ><i class="bi bi-cart-fill"></i
+                <a class="atc-love" href=""><i class="bi bi-heart-fill"></i></a>
+                <a class="atc-love atc-icon" href=""
+                ><i class="bi bi-cart-fill"></i
                 ></a>
               </div>
             </div>
           </div>
           <div class="col-12 col-lg-3 col-md-6 p-0">
             <div class="product my-3">
-              <a href="#" class="link-img-p">
-                <img src="/public/img/p1.png" alt="" class="img-fluid" />
+              <a class="link-img-p" href="#">
+                <img alt="" class="img-fluid" src="/public/img/p1.png"/>
               </a>
               <div class="product-infor">
-                <a href="#" class="m-0 title-product fs-3"
-                  >Áo thun Unisex phối bo cổ</a
+                <a class="m-0 title-product fs-3" href="#"
+                >Áo thun Unisex phối bo cổ</a
                 >
                 <div class="d-flex align-items-center gap-2 pt-1 pb-2">
                   <i class="bi bi-star-fill color-star fs-5"></i>
@@ -871,21 +868,21 @@ onMounted(() => {
                 </div>
               </div>
               <div class="atc-love-box">
-                <a href="" class="atc-love"><i class="bi bi-heart-fill"></i></a>
-                <a href="" class="atc-love atc-icon"
-                  ><i class="bi bi-cart-fill"></i
+                <a class="atc-love" href=""><i class="bi bi-heart-fill"></i></a>
+                <a class="atc-love atc-icon" href=""
+                ><i class="bi bi-cart-fill"></i
                 ></a>
               </div>
             </div>
           </div>
           <div class="col-12 col-lg-3 col-md-6 p-0">
             <div class="product my-3">
-              <a href="#" class="link-img-p">
-                <img src="/public/img/p1.png" alt="" class="img-fluid" />
+              <a class="link-img-p" href="#">
+                <img alt="" class="img-fluid" src="/public/img/p1.png"/>
               </a>
               <div class="product-infor">
-                <a href="#" class="m-0 title-product fs-3"
-                  >Áo thun Unisex phối bo cổ</a
+                <a class="m-0 title-product fs-3" href="#"
+                >Áo thun Unisex phối bo cổ</a
                 >
                 <div class="d-flex align-items-center gap-2 pt-1 pb-2">
                   <i class="bi bi-star-fill color-star fs-5"></i>
@@ -911,21 +908,21 @@ onMounted(() => {
                 </div>
               </div>
               <div class="atc-love-box">
-                <a href="" class="atc-love"><i class="bi bi-heart-fill"></i></a>
-                <a href="" class="atc-love atc-icon"
-                  ><i class="bi bi-cart-fill"></i
+                <a class="atc-love" href=""><i class="bi bi-heart-fill"></i></a>
+                <a class="atc-love atc-icon" href=""
+                ><i class="bi bi-cart-fill"></i
                 ></a>
               </div>
             </div>
           </div>
           <div class="col-12 col-lg-3 col-md-6 p-0">
             <div class="product my-3">
-              <a href="#" class="link-img-p">
-                <img src="/public/img/p1.png" alt="" class="img-fluid" />
+              <a class="link-img-p" href="#">
+                <img alt="" class="img-fluid" src="/public/img/p1.png"/>
               </a>
               <div class="product-infor">
-                <a href="#" class="m-0 title-product fs-3"
-                  >Áo thun Unisex phối bo cổ</a
+                <a class="m-0 title-product fs-3" href="#"
+                >Áo thun Unisex phối bo cổ</a
                 >
                 <div class="d-flex align-items-center gap-2 pt-1 pb-2">
                   <i class="bi bi-star-fill color-star fs-5"></i>
@@ -951,9 +948,9 @@ onMounted(() => {
                 </div>
               </div>
               <div class="atc-love-box">
-                <a href="" class="atc-love"><i class="bi bi-heart-fill"></i></a>
-                <a href="" class="atc-love atc-icon"
-                  ><i class="bi bi-cart-fill"></i
+                <a class="atc-love" href=""><i class="bi bi-heart-fill"></i></a>
+                <a class="atc-love atc-icon" href=""
+                ><i class="bi bi-cart-fill"></i
                 ></a>
               </div>
             </div>

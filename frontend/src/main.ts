@@ -12,9 +12,9 @@ import App from "./App.vue";
 import router from "./router";
 import { useAuthStore } from "./stores/auth";
 import { useCartStore } from "./stores/cart";
+const apiURL = import.meta.env.VITE_API_URL as string;
 
 // Configure axios - đảm bảo đúng cấu hình cho backend
-const apiURL = "http://localhost:8000";
 axios.defaults.baseURL = apiURL;
 axios.defaults.withCredentials = true; // Cho phép gửi cookies với request
 axios.defaults.headers.common["Accept"] = "application/json";

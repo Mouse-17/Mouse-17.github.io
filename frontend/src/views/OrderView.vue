@@ -104,20 +104,16 @@ const fetchOrderById = async (orderId: string) => {
 
     // Gọi API lấy chi tiết đơn hàng theo ID với timestamp để tránh cache
     const timestamp = new Date().getTime();
-    const response = await fetch(
-      `http://localhost:8000/api/orders/${orderId}?_t=${timestamp}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        },
-        credentials: "include",
-      }
-    );
+    const response = await axios.get(`/api/orders/${orderId}?_t=${timestamp}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+      withCredentials: true,
+    });
 
     // Kiểm tra trạng thái response
     if (response.status === 401) {
@@ -337,16 +333,15 @@ const fetchOrders = async () => {
 
     // Gọi API lấy danh sách đơn hàng với timestamp để tránh cache
     const timestamp = new Date().getTime();
-    const response = await fetch(`http://localhost:8000/api/orders?_t=${timestamp}`, {
-      method: "GET",
+    const response = await axios.get(`/api/orders?_t=${timestamp}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0"
       },
-      credentials: "include",
+      withCredentials: true
     });
 
     // Kiểm tra trạng thái response
@@ -456,16 +451,15 @@ const fetchOrdersWithRetry = async (retries = 3) => {
 
     // Gọi API lấy danh sách đơn hàng với timestamp để tránh cache
     const timestamp = new Date().getTime();
-    const response = await fetch(`http://localhost:8000/api/orders?_t=${timestamp}`, {
-      method: "GET",
+    const response = await axios.get(`/api/orders?_t=${timestamp}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0"
       },
-      credentials: "include",
+      withCredentials: true
     });
 
     // Kiểm tra trạng thái response

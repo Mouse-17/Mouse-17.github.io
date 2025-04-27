@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
-import { useAuthStore } from "../stores/auth";
-import { useCartStore } from "../stores/cart";
+<script lang="ts" setup>
+import {computed, onMounted, ref} from "vue";
+import {useAuthStore} from "../stores/auth";
+import {useCartStore} from "../stores/cart";
 
 // Hàm tiện ích xử lý đường dẫn hình ảnh từ database
 const getImageUrl = (imagePath: string): string => {
@@ -141,7 +141,7 @@ const updateQuantity = async (itemId, newQuantity) => {
 
   try {
     const result = await cartStore.updateQuantity(itemId, newQuantity);
-    
+
     if (!result) {
       showError(cartStore.error || "Không thể cập nhật giỏ hàng");
     }
@@ -163,7 +163,7 @@ const removeItem = async (itemId) => {
 
   try {
     const result = await cartStore.removeItem(itemId);
-    
+
     if (result) {
       showSuccess("Đã xóa sản phẩm khỏi giỏ hàng");
     } else {
@@ -187,16 +187,16 @@ const clearCart = async () => {
 
   try {
     const result = await cartStore.clearCart();
-    
+
     if (result) {
-        showSuccess("Đã xóa toàn bộ giỏ hàng");
-      } else {
+      showSuccess("Đã xóa toàn bộ giỏ hàng");
+    } else {
       showError(cartStore.error || "Không thể xóa giỏ hàng");
-      }
-    } catch (err) {
-      console.error("Lỗi khi xóa giỏ hàng:", err);
+    }
+  } catch (err) {
+    console.error("Lỗi khi xóa giỏ hàng:", err);
     showError("Lỗi kết nối khi xóa giỏ hàng");
-    } finally {
+  } finally {
     updateLoading.value = null;
   }
 };
@@ -210,7 +210,7 @@ const checkout = () => {
 
     // Hiển thị modal thông báo có nút chuyển tới trang đăng nhập
     if (
-      confirm("Bạn cần đăng nhập để thanh toán. Chuyển đến trang đăng nhập?")
+        confirm("Bạn cần đăng nhập để thanh toán. Chuyển đến trang đăng nhập?")
     ) {
       // Chuyển đến trang đăng nhập
       window.location.href = "/dangnhap";
@@ -240,7 +240,7 @@ const checkCartNotEmpty = () => {
 // Hàm ánh xạ thông tin người dùng từ user data
 const mapUserToOrderInfo = (userData) => {
   console.log("Mapping user data:", userData); // Thêm log để debug
-  
+
   return {
     ID_KH: userData.id,
     ho_ten: userData.name || "",
@@ -277,15 +277,15 @@ const processPayment = async () => {
     // Reload giỏ hàng để đảm bảo có dữ liệu mới nhất
     console.log("Bắt đầu reload giỏ hàng...");
     await loadCart();
-    
+
     // Thêm delay ngắn để đảm bảo dữ liệu đã được cập nhật
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     console.log("Kết quả sau khi reload giỏ hàng:", {
       cartItems: cartData.value?.items,
       itemCount: cartData.value?.items?.length
     });
-    
+
     // Kiểm tra lại sau khi load
     if (!cartData.value || !cartData.value.items || cartData.value.items.length === 0) {
       paymentError.value = "Không thể tải dữ liệu giỏ hàng. Vui lòng tải lại trang và thử lại.";
@@ -301,7 +301,7 @@ const processPayment = async () => {
       console.error("Lỗi xác thực giỏ hàng:", error);
       paymentError.value = "Giỏ hàng không hợp lệ hoặc trống theo server. Vui lòng làm mới trang và thêm sản phẩm lại.";
       paymentProcessing.value = false;
-      
+
       if (confirm("Giỏ hàng không hợp lệ theo server. Bạn có muốn tải lại trang để cập nhật không?")) {
         window.location.reload();
       }
@@ -312,16 +312,16 @@ const processPayment = async () => {
     if (!authStore.user) {
       await authStore.checkAuth();
     }
-    
+
     if (!authStore.user) {
       paymentError.value = "Không thể tải thông tin người dùng từ server. Vui lòng đăng nhập lại!";
       paymentProcessing.value = false;
       return;
     }
-    
+
     // Map thông tin người dùng từ authStore
     const userInfo = mapUserToOrderInfo(authStore.user);
-    
+
     // Kiểm tra thông tin người dùng có đầy đủ không
     if (!userInfo.ID_KH || !userInfo.ho_ten || !userInfo.so_dien_thoai || !userInfo.dia_chi || !userInfo.thanh_pho || !userInfo.phuong_xa) {
       // Log thông tin debug để kiểm tra
@@ -334,10 +334,10 @@ const processPayment = async () => {
         ward: userInfo.phuong_xa ? "OK" : "Missing",
         userInfoFull: userInfo
       });
-      
+
       paymentError.value = "Vui lòng cập nhật đầy đủ thông tin giao hàng (bao gồm thành phố và phường/xã) trước khi thanh toán!";
       paymentProcessing.value = false;
-      
+
       if (confirm("Bạn cần cập nhật đầy đủ thông tin giao hàng bao gồm địa chỉ, thành phố và phường/xã. Chuyển đến trang hồ sơ cá nhân?")) {
         window.location.href = "/profile";
       }
@@ -399,7 +399,7 @@ const processPayment = async () => {
       // Lấy cart_session cookie
       const cartSessionId = getCookie("cart_session") || "";
       console.log("Cart session ID khi thanh toán:", cartSessionId);
-      
+
       // Thêm thông tin cart_items trực tiếp vào request để đảm bảo server nhận được dữ liệu
       const requestData = {
         ...orderData,
@@ -422,71 +422,71 @@ const processPayment = async () => {
           using_frontend_data: true
         }
       };
-      
+
       console.log("Dữ liệu gửi API đặt hàng:", JSON.stringify(requestData));
-      
-    const response = await fetch("http://localhost:8000/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+
+      const response = await axios.post("/api/orders", requestData, {
+        headers: {
+          "Content-Type": "application/json",
           "Authorization": `Bearer ${authStore.token}`,
           "X-Cart-Session": cartSessionId
         },
-        body: JSON.stringify(requestData),
-        credentials: "include",
+        withCredentials: true
       });
 
       // Kiểm tra response status trước khi parse JSON
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`Lỗi HTTP ${response.status}:`, errorText);
-        
+
         // Thử parse JSON nếu có thể
         try {
           const errorJson = JSON.parse(errorText);
-          
+
           // Nếu lỗi là "Giỏ hàng trống", thử tạo lại giỏ hàng và gửi lại
           if (errorJson.error && (errorJson.error.includes("trống") || errorJson.error.includes("empty"))) {
             console.log("Phát hiện lỗi giỏ hàng trống, thử làm mới session và gửi lại...");
-            
+
             // Lưu lại dữ liệu sản phẩm từ frontend
             const currentItems = JSON.parse(JSON.stringify(cartData.value?.items || []));
-            
+
             // Làm mới giỏ hàng
             if (await createEmptyCart()) {
               console.log("Đã làm mới session giỏ hàng");
-              
+
               // Nếu sau khi tạo giỏ hàng mới nhưng vẫn có sản phẩm từ trước
               if (currentItems.length > 0) {
                 console.log("Dữ liệu sản phẩm trước khi làm mới:", currentItems);
-                
+
                 // Thêm sản phẩm vào giỏ hàng mới thủ công
                 for (const item of currentItems) {
                   try {
                     console.log(`Thêm sản phẩm ${item.product_id} vào giỏ hàng mới...`);
-                    const addResponse = await fetch("http://localhost:8000/api/cart/add", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        "X-Cart-Session": getCookie("cart_session") || ""
-      },
-      body: JSON.stringify({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          color_id: item.color?.id,
-                        size_id: item.size?.id
-                      }),
-                      credentials: "include"
-                    });
+                    const addResponse = await axios.post(
+                        "/api/cart/add",
+                        {
+                          product_id: item.product_id,
+                          quantity: item.quantity,
+                          color_id: item.color?.id,
+                          size_id: item.size?.id
+                        },
+                        {
+                          headers: {
+                            "Content-Type": "application/json",
+                            "X-Cart-Session": getCookie("cart_session") || ""
+                          },
+                          withCredentials: true
+                        }
+                    );
                     await addResponse.json();
                   } catch (e) {
                     console.error("Lỗi khi thêm sản phẩm vào giỏ hàng mới:", e);
                   }
                 }
-                
+
                 // Tải lại giỏ hàng sau khi thêm xong
                 await loadCart();
-                
+
                 // Thử thanh toán lại
                 if (cartData.value?.items?.length > 0) {
                   console.log("Giỏ hàng mới đã có sản phẩm, thử thanh toán lại...");
@@ -495,11 +495,11 @@ const processPayment = async () => {
                   return processPayment(); // Gọi lại hàm processPayment một lần nữa
                 }
               }
-              
+
               // Nếu tất cả phương pháp trên thất bại, thử đặt hàng trực tiếp không qua giỏ hàng
               if (currentItems.length > 0) {
                 console.log("Thử đặt hàng trực tiếp không qua giỏ hàng...");
-                
+
                 // Chuẩn bị dữ liệu đơn hàng mới
                 const directOrderData = {
                   phuong_thuc_thanh_toan: paymentMethod.value === "cod" ? 1 : 2,
@@ -524,31 +524,33 @@ const processPayment = async () => {
                     hinh_anh: item.product.image
                   })),
                 };
-                
+
                 try {
-                  const directResponse = await fetch("http://localhost:8000/api/direct-order", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "Authorization": `Bearer ${authStore.token}`,
-                    },
-                    body: JSON.stringify(directOrderData),
-                    credentials: "include",
-                  });
-                  
+                  const directResponse = await axios.post(
+                      "/api/direct-order",
+                      directOrderData,
+                      {
+                        headers: {
+                          "Content-Type": "application/json",
+                          "Authorization": `Bearer ${authStore.token}`
+                        },
+                        withCredentials: true
+                      }
+                  );
+
                   if (directResponse.ok) {
                     const directResult = await directResponse.json();
                     console.log("Kết quả đặt hàng trực tiếp:", directResult);
-                    
+
                     if (directResult.status === "success") {
                       // Hiển thị thông báo thành công
                       paymentSuccess.value = true;
-                      
+
                       // Xử lý thành công
                       setTimeout(() => {
                         // Đóng modal
                         showPaymentModal.value = false;
-                        
+
                         // Xóa giỏ hàng 
                         cartData.value = {
                           id: 0,
@@ -556,16 +558,16 @@ const processPayment = async () => {
                           total_price: 0,
                           total_items: 0,
                         };
-                        
+
                         // Hiển thị thông báo thành công
                         showSuccess("Đặt hàng thành công! Đang chuyển đến trang đơn hàng...");
-                        
+
                         // Chuyển đến trang đơn hàng
                         setTimeout(() => {
                           window.location.href = `/don-hang?status=success&payment=${paymentMethod.value}`;
                         }, 1500);
                       }, 2000);
-                      
+
                       return; // Thoát khỏi hàm xử lý
                     }
                   }
@@ -575,7 +577,7 @@ const processPayment = async () => {
               }
             }
           }
-          
+
           throw new Error(`Lỗi server: ${response.status} - ${JSON.stringify(errorJson)}`);
         } catch (parseError) {
           // Nếu không parse được, hiển thị text gốc
@@ -593,48 +595,48 @@ const processPayment = async () => {
 
       // Lấy ID đơn hàng từ kết quả API
       const orderId = result.data?.id || result.order_id;
-      
+
       if (!orderId) {
         throw new Error("Không nhận được ID đơn hàng từ server");
       }
-      
+
       // Nếu thanh toán bằng chuyển khoản, hiển thị thông tin chuyển khoản
       if (paymentMethod.value === "bank_transfer") {
         await handleBankTransfer(orderId);
-    }
-
-    // Hiển thị thông báo thành công
-    paymentSuccess.value = true;
-
-      // Reset giỏ hàng sau khi thanh toán thành công
-    setTimeout(() => {
-      // Đóng modal
-      showPaymentModal.value = false;
-
-      // Xóa giỏ hàng
-      cartData.value = {
-        id: 0,
-        items: [],
-        total_price: 0,
-        total_items: 0,
-      };
+      }
 
       // Hiển thị thông báo thành công
+      paymentSuccess.value = true;
+
+      // Reset giỏ hàng sau khi thanh toán thành công
+      setTimeout(() => {
+        // Đóng modal
+        showPaymentModal.value = false;
+
+        // Xóa giỏ hàng
+        cartData.value = {
+          id: 0,
+          items: [],
+          total_price: 0,
+          total_items: 0,
+        };
+
+        // Hiển thị thông báo thành công
         showSuccess("Đặt hàng thành công! Đang chuyển đến trang đơn hàng...");
 
         // Reset trạng thái thanh toán và chuyển hướng đến trang đơn hàng
-      setTimeout(() => {
-        paymentSuccess.value = false;
-        paymentProcessing.value = false;
+        setTimeout(() => {
+          paymentSuccess.value = false;
+          paymentProcessing.value = false;
           paymentInstructions.value = null;
 
           // Tạo URL đến trang đơn hàng với các tham số cần thiết
           const orderPageUrl = `/don-hang?order_id=${orderId}&status=success&payment=${paymentMethod.value}`;
-          
+
           // Thông báo chuyển hướng
           console.log("Chuyển hướng đến trang đơn hàng:", orderPageUrl);
 
-        // Chuyển hướng đến trang đơn hàng
+          // Chuyển hướng đến trang đơn hàng
           window.location.href = orderPageUrl;
         }, 1500);
       }, 2000);
@@ -644,9 +646,9 @@ const processPayment = async () => {
     }
   } catch (err) {
     console.error("Lỗi khi xử lý thanh toán:", err);
-    paymentError.value = typeof err === 'object' && err.message 
-      ? `Có lỗi xảy ra: ${err.message}` 
-      : "Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.";
+    paymentError.value = typeof err === 'object' && err.message
+        ? `Có lỗi xảy ra: ${err.message}`
+        : "Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.";
     paymentProcessing.value = false;
   }
 };
@@ -655,13 +657,13 @@ const processPayment = async () => {
 const handleBankTransfer = async (orderId: number | string) => {
   // Hiển thị hướng dẫn chuyển khoản
   showPaymentInstructions("bank_transfer");
-  
+
   // Cập nhật nội dung hướng dẫn với thông tin đơn hàng cụ thể
   const method = paymentMethods.value.find(m => m.id === "bank_transfer");
   if (method?.instructions) {
     paymentInstructions.value = method.instructions.replace("[SỐ ĐIỆN THOẠI]", "ĐH" + orderId);
   }
-  
+
   return new Promise(resolve => setTimeout(resolve, 1000));
 };
 
@@ -698,29 +700,28 @@ const validateCartBeforePayment = async () => {
     console.log("Kiểm tra giỏ hàng trước khi thanh toán...");
     const cartSessionId = getCookie("cart_session") || "";
     console.log("Session cookie hiện tại:", cartSessionId);
-    
+
     // Gọi API cart thông thường để kiểm tra giỏ hàng
-    const response = await fetch("http://localhost:8000/api/cart?debug=true", {
-      method: "GET",
+    const response = await axios.get("/api/cart?debug=true", {
       headers: {
         "Content-Type": "application/json",
         "X-Cart-Session": cartSessionId
       },
-      credentials: "include"
+      withCredentials: true
     });
-    
+
     if (!response.ok) {
       throw new Error(`Lỗi khi kiểm tra giỏ hàng: ${response.status}`);
     }
-    
+
     const result = await response.json();
     console.log("Kết quả kiểm tra giỏ hàng:", result);
-    
+
     // Kiểm tra xem giỏ hàng có trống không
     if (result.status !== "success" || !result.data || !result.data.items || result.data.items.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không hợp lệ theo server");
     }
-    
+
     // Cập nhật lại dữ liệu giỏ hàng từ server
     const items = (result.data?.items || []).map((item) => ({
       id: item.id,
@@ -749,7 +750,7 @@ const validateCartBeforePayment = async () => {
       total_price: result.data.total_amount || 0,
       total_items: result.data.item_count || 0
     };
-    
+
     return true;
   } catch (error) {
     console.error("Lỗi khi xác thực giỏ hàng:", error);
@@ -761,21 +762,21 @@ const validateCartBeforePayment = async () => {
 const createEmptyCart = async () => {
   try {
     console.log("Làm mới session giỏ hàng...");
-    
+
     // 1. Xóa cookie cart_session cũ
     document.cookie = "cart_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=localhost;";
-    
+
     // 2. Tạo cookie mới
     const newSessionId = "cart_" + Date.now() + "_" + Math.random().toString(36).substring(2, 9);
     document.cookie = `cart_session=${newSessionId}; path=/; max-age=2592000; SameSite=Lax; domain=localhost`;
     console.log("Đã tạo cookie cart_session mới:", newSessionId);
-    
+
     // 3. Ngủ 500ms để đảm bảo cookie được áp dụng
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     // 4. Tải lại giỏ hàng
     await loadCart();
-    
+
     return true;
   } catch (error) {
     console.error("Lỗi khi làm mới giỏ hàng:", error);
@@ -814,8 +815,8 @@ const showDebugButton = ref(false);
 
     <!-- Thông báo thành công -->
     <div
-      v-if="successMessage"
-      class="alert alert-success toast-notification toast-success"
+        v-if="successMessage"
+        class="alert alert-success toast-notification toast-success"
     >
       <div class="toast-icon">
         <i class="bi bi-check-circle-fill"></i>
@@ -851,14 +852,14 @@ const showDebugButton = ref(false);
     </div>
 
     <div
-      v-else-if="!cartData || cartData.items.length === 0"
-      class="empty-cart text-center py-5"
+        v-else-if="!cartData || cartData.items.length === 0"
+        class="empty-cart text-center py-5"
     >
       <div class="empty-cart-icon mb-4">
         <i class="bi bi-cart-x"></i>
       </div>
       <p class="empty-cart-text">Giỏ hàng của bạn đang trống</p>
-      <a href="/" class="btn-booknow px-4 py-3 fs-4 mt-3">Tiếp tục mua sắm</a>
+      <a class="btn-booknow px-4 py-3 fs-4 mt-3" href="/">Tiếp tục mua sắm</a>
 
       <!-- Nút tạo giỏ hàng thử nghiệm cho mục đích debug -->
       <div v-if="showDebugButton" class="mt-4 p-3 border rounded bg-light">
@@ -867,8 +868,8 @@ const showDebugButton = ref(false);
           phẩm mẫu:
         </p>
         <button
-          @click="createEmptyCart"
-          class="btn btn-sm btn-outline-secondary"
+            class="btn btn-sm btn-outline-secondary"
+            @click="createEmptyCart"
         >
           <i class="bi bi-tools me-1"></i>
           Tạo giỏ hàng thử nghiệm
@@ -882,9 +883,9 @@ const showDebugButton = ref(false);
           <div class="cart-item-details">
             <div class="cart-item-image-container">
               <img
-                :src="getImageUrl(item.product.image)"
-                :alt="item.product.name"
-                class="cart-item-image"
+                  :alt="item.product.name"
+                  :src="getImageUrl(item.product.image)"
+                  class="cart-item-image"
               />
             </div>
             <div class="cart-item-info">
@@ -902,32 +903,32 @@ const showDebugButton = ref(false);
           <div class="cart-item-actions">
             <div class="quantity-control">
               <button
-                @click="updateQuantity(item.id, item.quantity - 1)"
-                class="quantity-btn"
-                :disabled="updateLoading === item.id"
+                  :disabled="updateLoading === item.id"
+                  class="quantity-btn"
+                  @click="updateQuantity(item.id, item.quantity - 1)"
               >
                 -
               </button>
               <input
-                type="number"
-                v-model.number="item.quantity"
-                min="1"
-                @change="updateQuantity(item.id, item.quantity)"
-                class="quantity-input"
-                :disabled="updateLoading === item.id"
+                  v-model.number="item.quantity"
+                  :disabled="updateLoading === item.id"
+                  class="quantity-input"
+                  min="1"
+                  type="number"
+                  @change="updateQuantity(item.id, item.quantity)"
               />
               <button
-                @click="updateQuantity(item.id, item.quantity + 1)"
-                class="quantity-btn"
-                :disabled="updateLoading === item.id"
+                  :disabled="updateLoading === item.id"
+                  class="quantity-btn"
+                  @click="updateQuantity(item.id, item.quantity + 1)"
               >
                 +
               </button>
             </div>
             <div v-if="updateLoading === item.id" class="text-center mt-2">
               <div
-                class="spinner-border spinner-border-sm text-primary"
-                role="status"
+                  class="spinner-border spinner-border-sm text-primary"
+                  role="status"
               >
                 <span class="visually-hidden">Đang cập nhật...</span>
               </div>
@@ -938,9 +939,9 @@ const showDebugButton = ref(false);
             </div>
 
             <button
-              @click="removeItem(item.id)"
-              class="btn-remove"
-              :disabled="updateLoading === item.id"
+                :disabled="updateLoading === item.id"
+                class="btn-remove"
+                @click="removeItem(item.id)"
             >
               <i class="bi bi-trash"></i>
             </button>
@@ -951,13 +952,13 @@ const showDebugButton = ref(false);
       <div class="cart-footer">
         <div class="cart-actions">
           <button
-            @click="clearCart"
-            class="btn-outline"
-            :disabled="isLoading"
+              :disabled="isLoading"
+              class="btn-outline"
+              @click="clearCart"
           >
             <i class="bi bi-trash me-2"></i>Xóa giỏ hàng
           </button>
-          <a href="/" class="btn-outline">
+          <a class="btn-outline" href="/">
             <i class="bi bi-arrow-left me-2"></i>Tiếp tục mua sắm
           </a>
         </div>
@@ -970,7 +971,7 @@ const showDebugButton = ref(false);
             <span>Tổng tiền:</span>
             <span>{{ cartTotal.toLocaleString("vi-VN") }}đ</span>
           </div>
-          <button @click="checkout" class="btn-booknow px-4 py-3 fs-4 w-100">
+          <button class="btn-booknow px-4 py-3 fs-4 w-100" @click="checkout">
             <i class="bi bi-credit-card me-2"></i>Thanh toán
           </button>
         </div>
@@ -983,9 +984,9 @@ const showDebugButton = ref(false);
         <div class="payment-modal-header">
           <h3 class="payment-title">Xác nhận thanh toán</h3>
           <button
-            class="close-btn"
-            @click="showPaymentModal = false"
-            :disabled="paymentProcessing"
+              :disabled="paymentProcessing"
+              class="close-btn"
+              @click="showPaymentModal = false"
           >
             <i class="bi bi-x-lg"></i>
           </button>
@@ -1012,14 +1013,14 @@ const showDebugButton = ref(false);
 
             <div class="order-items">
               <div
-                v-for="item in cartData?.items"
-                :key="item.id"
-                class="order-item"
+                  v-for="item in cartData?.items"
+                  :key="item.id"
+                  class="order-item"
               >
                 <div class="item-image">
                   <img
-                    :src="getImageUrl(item.product.image)"
-                    :alt="item.product.name"
+                      :alt="item.product.name"
+                      :src="getImageUrl(item.product.image)"
                   />
                 </div>
                 <div class="item-details">
@@ -1059,17 +1060,17 @@ const showDebugButton = ref(false);
             <h4>Phương thức thanh toán</h4>
 
             <div class="payment-options">
-              <label 
-                v-for="method in paymentMethods" 
-                :key="method.id" 
-                class="payment-option"
-                :class="{ 'selected': paymentMethod === method.id }"
+              <label
+                  v-for="method in paymentMethods"
+                  :key="method.id"
+                  :class="{ 'selected': paymentMethod === method.id }"
+                  class="payment-option"
               >
                 <input
-                  type="radio"
-                  v-model="paymentMethod"
-                  :value="method.id" 
-                  @change="showPaymentInstructions(method.id)"
+                    v-model="paymentMethod"
+                    :value="method.id"
+                    type="radio"
+                    @change="showPaymentInstructions(method.id)"
                 />
                 <span class="radio-custom"></span>
                 <div class="option-content">
@@ -1081,7 +1082,7 @@ const showDebugButton = ref(false);
                 </div>
               </label>
             </div>
-            
+
             <!-- Hướng dẫn thanh toán -->
             <div v-if="paymentInstructions" class="payment-instructions">
               <h5>Hướng dẫn thanh toán</h5>
@@ -1098,16 +1099,16 @@ const showDebugButton = ref(false);
 
           <div class="payment-actions">
             <button
-              class="btn-outline"
-              @click="showPaymentModal = false"
-              :disabled="paymentProcessing"
+                :disabled="paymentProcessing"
+                class="btn-outline"
+                @click="showPaymentModal = false"
             >
               Hủy
             </button>
             <button
-              class="btn-booknow px-4 py-3"
-              @click="processPayment"
-              :disabled="paymentProcessing"
+                :disabled="paymentProcessing"
+                class="btn-booknow px-4 py-3"
+                @click="processPayment"
             >
               <span v-if="paymentProcessing">
                 <i class="spinner bi bi-arrow-repeat"></i> Đang xử lý...
@@ -1961,28 +1962,28 @@ const showDebugButton = ref(false);
   .payment-modal {
     max-height: 95vh;
   }
-  
+
   .order-item {
     flex-direction: column;
   }
-  
+
   .item-image {
     width: 100%;
     height: 150px;
     margin-right: 0;
     margin-bottom: 10px;
   }
-  
+
   .item-subtotal {
     margin-top: 10px;
     width: 100%;
     justify-content: flex-start;
   }
-  
+
   .payment-actions {
     flex-direction: column;
   }
-  
+
   .payment-actions button {
     width: 100%;
   }

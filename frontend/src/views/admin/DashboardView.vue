@@ -1187,8 +1187,9 @@ function getProductImageUrl(imagePath) {
   
   // If path starts with a slash, it's likely a server path
   if (imagePath.startsWith('/')) {
+    const apiURL = import.meta.env.VITE_API_URL as string;
     // For server paths
-    return `http://localhost:8000${imagePath}`;
+    return apiURL + `${imagePath}`;
   }
   
   // For paths stored as relative paths in database without img/img_sp prefix

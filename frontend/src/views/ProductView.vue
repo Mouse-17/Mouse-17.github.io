@@ -34,10 +34,9 @@ const brands = ref<any[]>([]);
 // Lấy danh sách danh mục và thương hiệu
 const fetchCategories = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/categories");
-    const data = await response.json();
-    if (data.status === "success") {
-      categories.value = data.data;
+    const response = await axios.get("/api/categories");
+    if (response.data.status === "success") {
+      categories.value = response.data.data;
     }
   } catch (error) {
     console.error("Lỗi khi tải danh mục:", error);
@@ -46,7 +45,7 @@ const fetchCategories = async () => {
 
 const fetchBrands = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/thuong-hieu");
+    const response = await axios.get("/api/thuong-hieu");
     const data = await response.json();
     if (data.status === "success") {
       brands.value = data.data;
@@ -83,10 +82,8 @@ const fetchBrands = async () => {
 const fetchProducts = async () => {
   try {
     isLoading.value = true;
-    const response = await fetch(
-        `http://localhost:8000/api/sanpham?trang=${currentPage.value}&tukhoa=${
-            route.query.tukhoa || ""
-        }`
+    const response = await axios.get(
+        `/api/sanpham?trang=${currentPage.value}&tukhoa=${route.query.tukhoa || ""}`
     );
     const data = await response.json();
 
@@ -151,11 +148,9 @@ watch(
 // lấy bestseller
 const fetchBestseller = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/bestseller");
-    const data = await response.json();
-    if (data.status == "success" && Array.isArray(data.data)) {
-      bestseller.value = data.data;
-      // console.log(bestseller.value);
+    const response = await axios.get("/api/bestseller");
+    if (response.data.status === "success" && Array.isArray(response.data.data)) {
+      bestseller.value = response.data.data;
     }
   } catch (error) {
     console.error("Lỗi khi tải sản phẩm bán chạy:", error);
@@ -220,7 +215,7 @@ const sortProduct = async () => {
     });
 
     const response = await axios.post(
-        "http://localhost:8000/api/sanpham/boloc",
+        "/api/sanpham/boloc",
         {
           popular: sort.value || null,
           price: price.value || null,
@@ -316,10 +311,8 @@ const availableColors = ref<string[]>([]);
 const fetchProductOptions = async (productId: number) => {
   try {
     // API endpoint để lấy thông tin size và màu
-    const response = await fetch(
-        `http://localhost:8000/api/sanpham/giohang/${productId}`
-    );
-    const data = await response.json();
+    const response = await axios.get(`/api/sanpham/giohang/${productId}`);
+    const data = response.data;
 
     if (data.status == "success") {
       // Lấy thông tin từ API
@@ -513,12 +506,14 @@ const addToCart = async () => {
     }
 
     // Gọi API thêm vào giỏ hàng
-    const response = await fetch("http://localhost:8000/api/cart/add", {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(cart_data),
-      credentials: "include", // Để gửi cookie session
-    });
+    const response = await axios.post(
+        "/api/cart/add",
+        cart_data,
+        {
+          headers: headers,
+          withCredentials: true
+        }
+    );
 
     // Kiểm tra status code
     if (!response.ok) {

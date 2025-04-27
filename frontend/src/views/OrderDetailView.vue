@@ -94,20 +94,16 @@ const fetchOrderDetail = async () => {
     }
 
     // Gọi API lấy chi tiết đơn hàng
-    const response = await fetch(
-      `http://localhost:8000/api/orders/${orderId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        },
-        credentials: "include",
-      }
-    );
+    const response = await axios.get(`/api/orders/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0"
+      },
+      withCredentials: true,
+    });
 
     const result = await response.json();
 

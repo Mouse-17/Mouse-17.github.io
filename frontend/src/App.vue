@@ -78,11 +78,11 @@ const fetchNotifications = async () => {
       console.log('Không tìm thấy token, không fetch thông báo');
       return;
     }
-    
-    const response = await axios.get('http://localhost:8000/api/thong-bao', {
+
+    const response = await axios.get("/api/thong-bao", {
       headers: {
-        'Authorization': `Bearer ${userToken}`,
-        'Accept': 'application/json'
+        "Authorization": `Bearer ${userToken}`,
+        "Accept": "application/json"
       }
     });
     
@@ -109,16 +109,16 @@ const markAsRead = async (notificationId: number) => {
   try {
     const userToken = authStore.token || localStorage.getItem('auth_token') || localStorage.getItem('token');
     if (!userToken) return;
-    
+
     const response = await axios.post(
-      `http://localhost:8000/api/thong-bao/danh-dau-da-doc/${notificationId}`,
-      {},
-      {
-        headers: {
-          'Authorization': `Bearer ${userToken}`,
-          'Accept': 'application/json'
+        `/api/thong-bao/danh-dau-da-doc/${notificationId}`,
+        {},
+        {
+          headers: {
+            "Authorization": `Bearer ${userToken}`,
+            "Accept": "application/json"
+          }
         }
-      }
     );
     
     if (response.data.status === 'success') {
@@ -148,16 +148,16 @@ const markAllAsRead = async () => {
   try {
     const userToken = authStore.token || localStorage.getItem('auth_token') || localStorage.getItem('token');
     if (!userToken) return;
-    
+
     const response = await axios.post(
-      'http://localhost:8000/api/thong-bao/danh-dau-tat-ca-da-doc',
-      {},
-      {
-        headers: {
-          'Authorization': `Bearer ${userToken}`,
-          'Accept': 'application/json'
+        `/api/thong-bao/danh-dau-tat-ca-da-doc`,
+        {},
+        {
+          headers: {
+            "Authorization": `Bearer ${userToken}`,
+            "Accept": "application/json"
+          }
         }
-      }
     );
     
     if (response.data.status === 'success') {
@@ -263,18 +263,15 @@ const submitSearch = async () => {
   try {
     if (searchType.value === "products") {
       // Tìm kiếm sản phẩm - sử dụng phương thức GET
-      const response = await axios.get(
-        "http://localhost:8000/api/sanpham",
-        {
-          params: {
-            tukhoa: tukhoa.value,
-            trang: 1
-          },
-          headers: {
-            "Accept": "application/json",
-          },
+      const response = await axios.get("/api/sanpham", {
+        params: {
+          tukhoa: tukhoa.value,
+          trang: 1
+        },
+        headers: {
+          "Accept": "application/json"
         }
-      );
+      });
       console.log("Kết quả tìm kiếm sản phẩm:", response.data);
 
       if (response.data.status === "success") {
