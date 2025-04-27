@@ -214,11 +214,12 @@ const submitBooking = async () => {
       }
     });
 
-    // Luôn lấy dữ liệu phản hồi để kiểm tra
-    const data = await response.data;
+    // Kiểm tra phản hồi từ API
+    const data = response.data;
     console.log('Phản hồi API:', data);
 
     if (response.status === 401) {
+      // Lỗi xác thực
       console.error('Lỗi xác thực: Chưa đăng nhập hoặc token không hợp lệ');
       bookingError.value = 'Vui lòng đăng nhập để đặt sân hoặc liên hệ quản trị viên.';
     } else if (response.status === 422) {
@@ -231,7 +232,7 @@ const submitBooking = async () => {
         errorMessage += data.message || 'Vui lòng kiểm tra lại thông tin.';
       }
       bookingError.value = errorMessage;
-    } else if (data.status === 'success') {
+    } else if (response.status === 200 && data.status === 'success') {
       // Đặt sân thành công
       bookingSuccess.value = true;
 
@@ -241,12 +242,26 @@ const submitBooking = async () => {
       customerPhone.value = '';
       bookingNote.value = '';
     } else {
-      // Xử lý lỗi từ server
+      // Xử lý lỗi khác từ server
       bookingError.value = data.message || 'Có lỗi xảy ra khi đặt sân. Vui lòng thử lại sau.';
     }
   } catch (error) {
-    console.error('Lỗi khi đặt sân:', error);
-    bookingError.value = 'Có lỗi xảy ra khi đặt sân. Vui lòng thử lại sau.';
+    // Xử lý lỗi ngoại lệ
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        console.error('Lỗi từ server:', error.response.data);
+        bookingError.value = error.response.data.message || 'Có lỗi xảy ra từ server. Vui lòng thử lại sau.';
+      } else if (error.request) {
+        console.error('Không nhận được phản hồi từ server:', error.request);
+        bookingError.value = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.';
+      } else {
+        console.error('Lỗi khi tạo yêu cầu:', error.message);
+        bookingError.value = 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau.';
+      }
+    } else {
+      console.error('Lỗi không xác định:', error);
+      bookingError.value = 'Có lỗi xảy ra. Vui lòng thử lại sau.';
+    }
   } finally {
     isProcessing.value = false;
   }
