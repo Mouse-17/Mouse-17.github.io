@@ -6,6 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+import axios from 'axios';
 
 interface OrderItem {
   id: number;
@@ -94,7 +95,7 @@ const fetchOrderById = async (orderId: string) => {
   try {
     // Lấy token xác thực
     const token =
-      localStorage.getItem("auth_token") || localStorage.getItem("user_token");
+        localStorage.getItem("auth_token") || localStorage.getItem("user_token");
 
     if (!token) {
       error.value = "Bạn cần đăng nhập để xem đơn hàng";
@@ -115,7 +116,7 @@ const fetchOrderById = async (orderId: string) => {
       withCredentials: true,
     });
 
-    // Kiểm tra trạng thái response
+    // Kiểm tra trạng thái và xử lý kết quả trả về
     if (response.status === 401) {
       error.value = "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại";
       localStorage.removeItem("auth_token");
@@ -129,11 +130,12 @@ const fetchOrderById = async (orderId: string) => {
 
     if (response.status === 404) {
       // Không tìm thấy đơn hàng
-      console.log(`Không tìm thấy đơn hàng với ID: ${orderId}`);
+      error.value = `Không tìm thấy đơn hàng với ID: ${orderId}`;
+      console.log(error.value);
       return null;
     }
 
-    const result = await response.json();
+    const result = response.data;
     console.log(`Kết quả chi tiết đơn hàng ${orderId}:`, result);
 
     if (result.status === "success" && result.data) {
@@ -141,9 +143,11 @@ const fetchOrderById = async (orderId: string) => {
       return mapOrderData(result.data);
     }
 
+    error.value = result.message || "Có lỗi xảy ra khi tải đơn hàng.";
     return null;
   } catch (err) {
     console.error(`Lỗi khi tải đơn hàng ID ${orderId}:`, err);
+    error.value = "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.";
     return null;
   } finally {
     loading.value = false;
@@ -357,7 +361,7 @@ const fetchOrders = async () => {
       return;
     }
 
-    const result = await response.json();
+    const result = await response.data;
     console.log("Kết quả API đơn hàng:", result);
 
     if (result.status === "success") {
@@ -405,12 +409,12 @@ const fetchOrders = async () => {
           if (specificOrder) {
             // Nếu tìm thấy đơn hàng qua API riêng, hiển thị nó
             currentOrder.value = specificOrder;
-            
+
             // Thêm đơn hàng này vào danh sách nếu chưa có
             if (!orders.value.some(o => o.id === specificOrder.id)) {
               orders.value = [specificOrder, ...orders.value];
             }
-            
+
             success.value = "Đơn hàng của bạn đã được tạo thành công!";
             setTimeout(() => {
               success.value = null;
