@@ -88,7 +88,7 @@ app.post('/api/momo/payment', (req, res) => {
 });
 
 // Start server
-const PORT = 3000;
+const PORT = 5555;
 const HOST = '0.0.0.0'; // Lắng nghe trên tất cả các địa chỉ IP
 app.listen(PORT, HOST, () => {
     console.log(`Server đang chạy trên host ${HOST} và cổng ${PORT}`);
