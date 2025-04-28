@@ -1,77 +1,95 @@
-var partnerCode = "MOMO";
-var accessKey = "F8BBA842ECF85";
-var secretkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
-var requestId = partnerCode + new Date().getTime();
-var orderId = requestId;
-var orderInfo = "pay with MoMo";
-var redirectUrl = "https://momo.vn/return";
-var ipnUrl = "https://callback.url/notify";
-// var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
-var amount = "50000";
-var requestType = "captureWallet"
-var extraData = ""; //pass empty value if your merchant does not have stores
-
-//before sign HMAC SHA256 with format
-//accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
-var rawSignature = "accessKey="+accessKey+"&amount=" + amount+"&extraData=" + extraData+"&ipnUrl=" + ipnUrl+"&orderId=" + orderId+"&orderInfo=" + orderInfo+"&partnerCode=" + partnerCode +"&redirectUrl=" + redirectUrl+"&requestId=" + requestId+"&requestType=" + requestType
-//puts raw signature
-console.log("--------------------RAW SIGNATURE----------------")
-console.log(rawSignature)
-//signature
+import express from 'express';
 import crypto from 'crypto';
-var signature = crypto.createHmac('sha256', secretkey)
-    .update(rawSignature)
-    .digest('hex');
-console.log("--------------------SIGNATURE----------------")
-console.log(signature)
-
-//json object send to MoMo endpoint
-const requestBody = JSON.stringify({
-    partnerCode : partnerCode,
-    accessKey : accessKey,
-    requestId : requestId,
-    amount : amount,
-    orderId : orderId,
-    orderInfo : orderInfo,
-    redirectUrl : redirectUrl,
-    ipnUrl : ipnUrl,
-    extraData : extraData,
-    requestType : requestType,
-    signature : signature,
-    lang: 'en'
-});
-//Create the HTTPS objects
 import https from 'https';
-const options = {
-    hostname: 'test-payment.momo.vn',
-    port: 443,
-    path: '/v2/gateway/api/create',
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(requestBody)
-    }
-}
-//Send the request and get the response
-const req = https.request(options, res => {
-    console.log(`Status: ${res.statusCode}`);
-    console.log(`Headers: ${JSON.stringify(res.headers)}`);
-    res.setEncoding('utf8');
-    res.on('data', (body) => {
-        console.log('Body: ');
-        console.log(body);
-        console.log('payUrl: ');
-        console.log(JSON.parse(body).payUrl);
-    });
-    res.on('end', () => {
-        console.log('No more data in response.');
-    });
-})
 
-req.on('error', (e) => {
-    console.log(`problem with request: ${e.message}`);
+const app = express();
+app.use(express.json());
+
+// API MoMo Payment Endpoint
+app.post('/api/momo/payment', (req, res) => {
+    const { amount, orderInfo, redirectUrl, ipnUrl } = req.body;
+
+    // Thông tin MoMo
+    const partnerCode = "MOMO";
+    const accessKey = "F8BBA842ECF85";
+    const secretkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
+    const requestId = partnerCode + Date.now();
+    const orderId = requestId;
+    const requestType = "captureWallet";
+    const extraData = ""; // Dữ liệu bổ sung, để trống nếu không sử dụng
+
+    // Tạo raw signature
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
+
+    // Ký SHA256
+    const signature = crypto.createHmac('sha256', secretkey).update(rawSignature).digest('hex');
+
+    // Tạo request body
+    const requestBody = JSON.stringify({
+        partnerCode: partnerCode,
+        accessKey: accessKey,
+        requestId: requestId,
+        amount: amount,
+        orderId: orderId,
+        orderInfo: orderInfo,
+        redirectUrl: redirectUrl,
+        ipnUrl: ipnUrl,
+        extraData: extraData,
+        requestType: requestType,
+        signature: signature,
+        lang: 'en'
+    });
+
+    // Options cho HTTPS request
+    const options = {
+        hostname: 'test-payment.momo.vn',
+        port: 443,
+        path: '/v2/gateway/api/create',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(requestBody)
+        }
+    };
+
+    // Gửi request đến MoMo
+    const reqMoMo = https.request(options, (response) => {
+        let data = '';
+        response.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        response.on('end', () => {
+            const responseBody = JSON.parse(data);
+            if (responseBody.payUrl) {
+                res.json({
+                    status: 'success',
+                    payUrl: responseBody.payUrl
+                });
+            } else {
+                res.status(400).json({
+                    status: 'error',
+                    message: responseBody.message || 'Không lấy được URL thanh toán từ MoMo.'
+                });
+            }
+        });
+    });
+
+    reqMoMo.on('error', (e) => {
+        console.error(`Lỗi khi gửi yêu cầu tới MoMo: ${e.message}`);
+        res.status(500).json({
+            status: 'error',
+            message: 'Đã xảy ra lỗi khi kết nối tới MoMo.'
+        });
+    });
+
+    reqMoMo.write(requestBody);
+    reqMoMo.end();
 });
-// write data to request body
-console.log("Sending....")
-req.write(requestBody);
-req.end();
+
+// Start server
+const PORT = 3000;
+const HOST = '0.0.0.0'; // Lắng nghe trên tất cả các địa chỉ IP
+app.listen(PORT, HOST, () => {
+    console.log(`Server đang chạy trên host ${HOST} và cổng ${PORT}`);
+});

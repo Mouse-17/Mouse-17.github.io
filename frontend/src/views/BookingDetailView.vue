@@ -224,10 +224,15 @@ const submitBooking = async () => {
       if (data.phuong_thuc_thanh_toan === 3) {
         try {
           // Gọi API MoMo để lấy URL thanh toán
-          const momoResponse = await axios.post('https://momo-test.sililink.vn', {
-            booking_id: data.booking_id, // ID đặt sân vừa tạo
-            amount: data.Tong_tien, // Tổng tiền
-            description: `Thanh toán đặt sân ${yard_store.value?.Ten_san} vào ${selectedDate.value}`,
+          const response = await axios.post('https://momo-test.sililink.vn/api/momo/payment', {
+            amount: data.amount, // Số tiền thanh toán
+            orderInfo: data.orderInfo, // Thông tin đặt sân
+            redirectUrl: data.redirectUrl, // URL chuyển hướng sau thanh toán
+            ipnUrl: data.ipnUrl, // URL nhận thông báo từ MoMo
+          }, {
+            headers: {
+              'Content-Type': 'application/json', // Đảm bảo gửi dữ liệu JSON
+            },
           });
 
           if (momoResponse.data && momoResponse.data.payUrl) {
