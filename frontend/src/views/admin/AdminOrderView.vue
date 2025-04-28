@@ -163,7 +163,6 @@ function getStatusClass(status) {
   }
 }
 
-
 function getStatusText(status) {
   switch (status) {
     case 0:

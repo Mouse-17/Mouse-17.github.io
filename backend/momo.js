@@ -82,7 +82,6 @@ app.post('/api/momo/payment', (req, res) => {
             message: 'Đã xảy ra lỗi khi kết nối tới MoMo.'
         });
     });
-
     reqMoMo.write(requestBody);
     reqMoMo.end();
 });
