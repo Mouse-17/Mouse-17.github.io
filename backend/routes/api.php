@@ -20,6 +20,7 @@ use App\Http\Controllers\LoaiSanController;
 use App\Http\Controllers\Api\CartController as ApiCartController;
 use App\Http\Controllers\Api\OrderController as ApiOrderController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,6 +150,8 @@ Route::get('/san', [SanController::class, 'showListYard']);
 Route::get('/san/{id}', [SanController::class, 'show']);
 Route::get('/san/{id}/danh-gia', [SanController::class, 'getSanRatings']);
 
+Route::post('/momo/payment', [PaymentController::class, 'processPayment']);
+
 // Thêm route cho API tìm kiếm sân
 Route::get('/timkiemsan', [SanController::class, 'timkiemSan']);
 
@@ -237,7 +240,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Bookings
     Route::get('/bookings', [BookingController::class, 'index']);
-    Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings/{id}', [BookingController::class, 'show']);
     Route::put('/bookings/{id}', [BookingController::class, 'update']);
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);

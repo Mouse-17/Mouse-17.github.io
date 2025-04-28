@@ -122,6 +122,10 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/bramus/ansi-php" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/bramus/monolog-colored-line-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/mservice/payment" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/phpseclib/phpseclib" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

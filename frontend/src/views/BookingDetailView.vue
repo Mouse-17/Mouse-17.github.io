@@ -211,44 +211,54 @@ const submitBooking = async () => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {})
-      }
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
     });
 
     // Kiểm tra phản hồi từ API
-    const data = response.data;
+    const data = response.data.booking;
     console.log('Phản hồi API:', data);
 
-    if (response.status === 401) {
-      // Lỗi xác thực
-      console.error('Lỗi xác thực: Chưa đăng nhập hoặc token không hợp lệ');
-      bookingError.value = 'Vui lòng đăng nhập để đặt sân hoặc liên hệ quản trị viên.';
-    } else if (response.status === 422) {
-      // Xử lý lỗi validation
-      let errorMessage = 'Dữ liệu không hợp lệ: ';
-      if (data.errors) {
-        const errorDetails = Object.values(data.errors).flat();
-        errorMessage += errorDetails.join(', ');
+    if (response.status === 201) {
+      // Nếu thanh toán qua MoMo
+      if (data.phuong_thuc_thanh_toan === 3) {
+        try {
+          // Gọi API MoMo để lấy URL thanh toán
+          const momoResponse = await axios.post('/api/momo/payment', {
+            booking_id: data.booking_id, // ID đặt sân vừa tạo
+            amount: data.Tong_tien, // Tổng tiền
+            description: `Thanh toán đặt sân ${yard_store.value?.Ten_san} vào ${selectedDate.value}`,
+          });
+
+          if (momoResponse.data && momoResponse.data.payUrl) {
+            // Redirect đến URL thanh toán MoMo
+            window.location.href = momoResponse.data.payUrl;
+            return; // Kết thúc xử lý tại đây
+          } else {
+            throw new Error('Không nhận được URL thanh toán từ MoMo');
+          }
+        } catch (momoError) {
+          console.error('Lỗi khi xử lý thanh toán MoMo:', momoError);
+          bookingError.value = 'Có lỗi xảy ra khi xử lý thanh toán MoMo. Vui lòng thử lại sau.';
+        }
       } else {
-        errorMessage += data.message || 'Vui lòng kiểm tra lại thông tin.';
+        // Xử lý khi không phải thanh toán qua MoMo
+        bookingSuccess.value = true;
+
+        // Reset form fields
+        customerName.value = '';
+        customerEmail.value = '';
+        customerPhone.value = '';
+        bookingNote.value = '';
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          title: 'Đặt sân thành công!',
+          text: 'Bạn đã đặt sân thành công!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
       }
-      bookingError.value = errorMessage;
-    } else if (response.status === 201 && data.status === 'success') {
-      bookingSuccess.value = true;
-
-      // Reset form fields
-      customerName.value = '';
-      customerEmail.value = '';
-      customerPhone.value = '';
-      bookingNote.value = '';
-
-      // Show SweetAlert2 success message
-      Swal.fire({
-        title: 'Đặt sân thành công!',
-        text: 'Bạn đã đặt sân thành công!',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
     } else {
       // Xử lý lỗi khác từ server
       bookingError.value = data.message || 'Có lỗi xảy ra khi đặt sân. Vui lòng thử lại sau.';
@@ -274,7 +284,6 @@ const submitBooking = async () => {
     isProcessing.value = false;
   }
 };
-
 // Function to copy text to clipboard
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
@@ -457,9 +466,7 @@ onMounted(() => {
                   <i class="bi bi-clock"></i>
                   <div>
                     <strong>Giờ chơi:</strong>
-                    <span>{{ formatTime(selectedSlot.Gio_bat_dau) }} - {{
-                        formatTime(selectedSlot.Gio_ket_thuc)
-                      }}</span>
+                    <span>{{ formatTime(selectedSlot.Gio_bat_dau) }} - {{ formatTime(selectedSlot.Gio_ket_thuc) }}</span>
                   </div>
                 </div>
                 <div v-if="selectedSlot" class="price-tag">
@@ -479,8 +486,7 @@ onMounted(() => {
               <i class="bi bi-person-fill"></i>
               Họ tên <span class="required">*</span>
             </label>
-            <input v-model="customerName" class="form-control custom-input" placeholder="Nhập họ tên của bạn"
-                   type="text">
+            <input v-model="customerName" class="form-control custom-input" placeholder="Nhập họ tên của bạn" type="text" />
           </div>
 
           <div class="form-group">
@@ -488,8 +494,7 @@ onMounted(() => {
               <i class="bi bi-telephone-fill"></i>
               Số điện thoại <span class="required">*</span>
             </label>
-            <input v-model="customerPhone" class="form-control custom-input" placeholder="Nhập số điện thoại"
-                   type="tel">
+            <input v-model="customerPhone" class="form-control custom-input" placeholder="Nhập số điện thoại" type="tel" />
           </div>
 
           <div class="form-group">
@@ -497,8 +502,7 @@ onMounted(() => {
               <i class="bi bi-envelope-fill"></i>
               Email
             </label>
-            <input v-model="customerEmail" class="form-control custom-input" placeholder="Nhập email của bạn"
-                   type="email">
+            <input v-model="customerEmail" class="form-control custom-input" placeholder="Nhập email của bạn" type="email" />
           </div>
 
           <div class="form-group">
@@ -506,8 +510,7 @@ onMounted(() => {
               <i class="bi bi-sticky-fill"></i>
               Ghi chú
             </label>
-            <textarea v-model="bookingNote" class="form-control custom-textarea" placeholder="Thêm ghi chú (nếu có)"
-                      rows="3"></textarea>
+            <textarea v-model="bookingNote" class="form-control custom-textarea" placeholder="Thêm ghi chú (nếu có)" rows="3"></textarea>
           </div>
 
           <div class="form-group payment-section">
@@ -517,21 +520,8 @@ onMounted(() => {
             </label>
 
             <div class="payment-options">
-              <div :class="{ 'active': paymentMethod == 1 }" class="payment-option" @click="paymentMethod = '1'">
-                <input id="payment1" v-model="paymentMethod" class="form-check-input" name="payment" type="radio"
-                       value="1">
-                <div class="payment-icon">
-                  <i class="bi bi-cash-coin"></i>
-                </div>
-                <div class="payment-text">
-                  <label class="payment-label" for="payment1">Thanh toán tại sân</label>
-                  <span class="payment-description">Thanh toán trực tiếp khi đến sân</span>
-                </div>
-              </div>
-
               <div :class="{ 'active': paymentMethod == 2 }" class="payment-option" @click="paymentMethod = '2'">
-                <input id="payment2" v-model="paymentMethod" class="form-check-input" name="payment" type="radio"
-                       value="2">
+                <input id="payment2" v-model="paymentMethod" class="form-check-input" name="payment" type="radio" value="2" />
                 <div class="payment-icon">
                   <i class="bi bi-bank"></i>
                 </div>
@@ -540,44 +530,15 @@ onMounted(() => {
                   <span class="payment-description">Chuyển khoản trước để giữ sân</span>
                 </div>
               </div>
-            </div>
 
-            <!-- Hiển thị thông tin chuyển khoản khi chọn phương thức chuyển khoản -->
-            <div v-if="paymentMethod == 2" class="bank-transfer-info">
-              <div class="bank-header">
-                <i class="bi bi-bank"></i>
-                <h5>Thông tin chuyển khoản</h5>
-              </div>
-              <div class="bank-details">
-                <div class="bank-row">
-                  <span class="bank-label">Ngân hàng:</span>
-                  <span class="bank-value">VIETCOMBANK</span>
+              <div :class="{ 'active': paymentMethod == 3 }" class="payment-option" @click="paymentMethod = '3'">
+                <input id="payment3" v-model="paymentMethod" class="form-check-input" name="payment" type="radio" value="3" />
+                <div class="payment-icon">
+                  <i class="bi bi-wallet2"></i>
                 </div>
-                <div class="bank-row">
-                  <span class="bank-label">Số tài khoản:</span>
-                  <span class="bank-value">1234567890</span>
-                  <button class="copy-btn" title="Sao chép số tài khoản" @click="copyToClipboard('1234567890')">
-                    <i class="bi bi-clipboard"></i>
-                  </button>
-                </div>
-                <div class="bank-row">
-                  <span class="bank-label">Chủ tài khoản:</span>
-                  <span class="bank-value">CÔNG TY TNHH KEYSPORT</span>
-                </div>
-                <div class="bank-row">
-                  <span class="bank-label">Nội dung:</span>
-                  <span class="bank-value message-value">{{ yard_store?.Ten_san }} - {{
-                      selectedDate
-                    }} - {{ customerName }}</span>
-                  <button class="copy-btn"
-                          title="Sao chép nội dung chuyển khoản"
-                          @click="copyToClipboard(`${yard_store?.Ten_san} - ${selectedDate} - ${customerName}`)">
-                    <i class="bi bi-clipboard"></i>
-                  </button>
-                </div>
-                <div class="transfer-warning">
-                  <i class="bi bi-exclamation-triangle-fill"></i>
-                  <span>Vui lòng chuyển khoản trong vòng 24h để giữ lịch đặt sân</span>
+                <div class="payment-text">
+                  <label class="payment-label" for="payment3">Thanh toán qua MoMo</label>
+                  <span class="payment-description">Thanh toán nhanh qua ví MoMo</span>
                 </div>
               </div>
             </div>
@@ -586,12 +547,12 @@ onMounted(() => {
           <div class="form-actions">
             <button class="cancel-btn" @click="closeBookingForm">Hủy</button>
             <button :disabled="isProcessing" class="confirm-btn" @click="submitBooking">
-                            <span v-if="isProcessing">
-                                <i class="bi bi-arrow-repeat"></i> Đang xử lý...
-                            </span>
-              <span v-else>
-                                <i class="bi bi-check-circle"></i> Xác nhận đặt sân
-                            </span>
+              <span v-if="isProcessing">
+                <i class="bi bi-arrow-repeat"></i> Đang xử lý...
+              </span>
+                      <span v-else>
+                <i class="bi bi-check-circle"></i> Xác nhận đặt sân
+              </span>
             </button>
           </div>
         </div>
