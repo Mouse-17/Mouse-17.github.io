@@ -63,8 +63,6 @@ class PaymentController extends Controller
             'Content-Type: application/json',
             'Content-Length: ' . strlen($requestBody)
         ]);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $requestBody);
 
         // Gửi request và nhận response
