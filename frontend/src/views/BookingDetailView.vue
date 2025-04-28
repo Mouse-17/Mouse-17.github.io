@@ -224,7 +224,7 @@ const submitBooking = async () => {
       if (data.phuong_thuc_thanh_toan === 3) {
         try {
           // Gọi API MoMo để lấy URL thanh toán
-          const momoResponse = await axios.post('/api/momo/payment', {
+          const momoResponse = await axios.post('https://momo-test.sililink.vn', {
             booking_id: data.booking_id, // ID đặt sân vừa tạo
             amount: data.Tong_tien, // Tổng tiền
             description: `Thanh toán đặt sân ${yard_store.value?.Ten_san} vào ${selectedDate.value}`,
